@@ -1,10 +1,10 @@
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Optional
 
 if TYPE_CHECKING:
     from .world import World
 
-from BaseClasses import CollectionRule, Region
-from rule_builder.rules import Rule
+from BaseClasses import Region
+from worlds.generic.Rules import CollectionRule
 
 from .conditions import required_level, required_level_and_zones
 
@@ -47,7 +47,7 @@ def create_all_regions(world: "World") -> None:
     world.multiworld.regions += [Region(r, world.player, world.multiworld) for r in ALL_REGIONS]
 
 
-def connect(r_from: Region, r_to: Region, rule: Optional[CollectionRule | Rule[Any]] = None):
+def connect(r_from: Region, r_to: Region, rule: Optional[CollectionRule] = None):
     r_from.connect(r_to, f"{r_from.name} -> {r_to.name}", rule)
 
 

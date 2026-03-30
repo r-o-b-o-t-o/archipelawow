@@ -4,8 +4,8 @@ if TYPE_CHECKING:
     from .data.items.zones import Zone
     from .world import World
 
-from BaseClasses import CollectionRule, CollectionState
-from worlds.generic.Rules import set_rule
+from BaseClasses import CollectionState
+from worlds.generic.Rules import CollectionRule, set_rule
 
 from .data.items.levels import LEVEL_UP
 
