@@ -71,7 +71,7 @@ These are the actions you take in-game to send rewards to yourself or other play
 
 8. **Connect AzerothCore**
    - Edit `archipelawow.conf` in `configs/module`
-   - Set `ArchipelaWoW.ArchipelagoServerHost` (e.g., `archipelago.gg` or your public IP)
+   - Set `ArchipelaWoW.ArchipelagoServerHost` (e.g., `archipelago.gg` or your public IP address)
    - Set `ArchipelaWoW.ArchipelagoServerPort` (port number from your room)
    - Make sure that `ArchipelaWoW.Enable = 1`
 
