@@ -10,7 +10,7 @@ An APWorld definition for the AzerothCore World of Warcraft server emulator, pro
 - [About](#-about)
 - [Features](#-features)
 - [Installation & Usage](#-installation--usage)
-- [Development](#-development)
+- [Development](#%EF%B8%8F-development)
 - [Contributing](#-contributing)
 - [License](#-license)
 
