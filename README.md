@@ -19,7 +19,7 @@ An APWorld definition for the AzerothCore World of Warcraft server emulator, pro
 
 ## 🏰 About
 
-ArchipelaWoW brings the magic of World of Warcraft to the Archipelago randomizer ecosystem. Experience Azeroth like never before with randomized progression, items, and locations across multiple worlds!
+ArchipelaWoW brings the magic of World of Warcraft to the Archipelago randomizer ecosystem. Experience Azeroth like never before with randomized progression and items across multiple worlds!
 
 ## ✨ Features
 
