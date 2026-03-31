@@ -3,6 +3,9 @@
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Archipelago](https://img.shields.io/badge/Archipelago-Compatible-green.svg)](https://github.com/ArchipelagoMW/Archipelago)
 
+> [!WARNING]
+> ArchipelaWoW is still very much in its infancy. Expect generation errors, features can be partly implemented, and more features are planned but not added yet.
+
 An APWorld definition for the AzerothCore World of Warcraft server emulator, providing specific progression logic for [Archipelago](https://github.com/ArchipelagoMW/Archipelago) - a multi-game multi-world randomizer framework.
 
 ## 📋 Table of Contents
