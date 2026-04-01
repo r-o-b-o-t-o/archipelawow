@@ -6,7 +6,7 @@
 > [!WARNING]
 > ArchipelaWoW is still very much in its infancy. Expect generation errors, features can be partly implemented, and more features are planned but not added yet.
 
-An APWorld definition for the AzerothCore World of Warcraft server emulator, providing specific progression logic for [Archipelago](https://github.com/ArchipelagoMW/Archipelago) - a multi-game multi-world randomizer framework.
+An [APWorld](https://archipelago.miraheze.org/wiki/APWorld) definition for the [AzerothCore](https://www.azerothcore.org/) World of Warcraft server emulator, providing specific progression logic for [Archipelago](https://github.com/ArchipelagoMW/Archipelago) - a multi-game multi-world randomizer framework.
 
 ## 📋 Table of Contents
 
@@ -49,7 +49,7 @@ These are the actions you take in-game to send rewards to yourself or other play
    - Follow the [**official installation guide**](https://www.azerothcore.org/wiki/classic-installation)
 
 2. **Add the ArchipelaWoW Module**
-   - Install [**`mod-I-found-your-sword`**](https://github.com/r-o-b-o-t-o/mod-i-found-your-sword) to your AzerothCore installation
+   - Add [**`mod-I-found-your-sword`**](https://github.com/r-o-b-o-t-o/mod-i-found-your-sword) to your AzerothCore installation
 
 3. **Install Archipelago**
    - Download and install [**Archipelago**](https://github.com/ArchipelagoMW/Archipelago/releases)
@@ -79,8 +79,8 @@ These are the actions you take in-game to send rewards to yourself or other play
    - Make sure that `ArchipelaWoW.Enable = 1`
 
 9. **Start Your Server**
-   - Launch AzerothCore server
-   - Or run `reload config` in `worldserver` console if already running
+   - Start your AzerothCore server (`authserver` and `worldserver`)
+   - Or run `reload config` in the `worldserver` console if already running
 
 10. **Link Your Character**
     - Create a fresh character and log in
