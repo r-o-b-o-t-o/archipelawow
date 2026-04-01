@@ -73,7 +73,7 @@ These are the actions you take in-game to send rewards to yourself or other play
    - Or host locally by clicking "Host" in the Archipelago Launcher
 
 8. **Connect AzerothCore**
-   - Edit `archipelawow.conf` in `configs/module`
+   - Edit `archipelawow.conf` in `configs/modules` or `etc/modules`
    - Set `ArchipelaWoW.ArchipelagoServerHost` (e.g., `archipelago.gg` or your public IP address)
    - Set `ArchipelaWoW.ArchipelagoServerPort` (port number from your room)
    - Make sure that `ArchipelaWoW.Enable = 1`
