@@ -55,7 +55,7 @@ These are the actions you take in-game to send rewards to yourself or other play
    - Download and install [**Archipelago**](https://github.com/ArchipelagoMW/Archipelago/releases)
 
 4. **Install the APWorld**
-   - Download `azerothcore.apworld` from the [Releases page](https://github.com/r-o-b-o-t-o/archipelawow/releases)
+   - Download `worldofwarcraft.apworld` from the [Releases page](https://github.com/r-o-b-o-t-o/archipelawow/releases)
    - Install by double-clicking the `.apworld` file, or:
      - Open Archipelago Launcher → "Install APWorld"
      - Or manually place in the `custom_worlds` folder
@@ -97,11 +97,11 @@ These are the actions you take in-game to send rewards to yourself or other play
 1. **Clone the Repository**
    ```bash
    cd archipelago/worlds
-   git clone https://github.com/r-o-b-o-t-o/archipelawow.git azerothcore
+   git clone https://github.com/r-o-b-o-t-o/archipelawow.git worldofwarcraft
    ```
 
 2. **Open in VSCode**
-   - Open `archipelago/worlds/azerothcore` folder in VSCode
+   - Open the `archipelago/worlds/worldofwarcraft` folder in VSCode
    - Copy `.env.example` to `.env`
    - Configure `PYTHONPATH` in `.env`:
      - Uncomment the appropriate line for your OS
