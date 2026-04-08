@@ -21,6 +21,18 @@ class WoWItemsContainer(ItemContainer):
                 items += GLYPHS_PALADIN
             case CharacterClass.option_hunter:
                 items += GLYPHS_HUNTER
+            case CharacterClass.option_shaman:
+                items += GLYPHS_SHAMAN
+            case CharacterClass.option_rogue:
+                items += GLYPHS_ROGUE
+            case CharacterClass.option_druid:
+                items += GLYPHS_DRUID
+            case CharacterClass.option_mage:
+                items += GLYPHS_MAGE
+            case CharacterClass.option_warlock:
+                items += GLYPHS_WARLOCK
+            case CharacterClass.option_priest:
+                items += GLYPHS_PRIEST
 
         return items
 
