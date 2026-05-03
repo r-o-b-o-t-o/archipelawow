@@ -12,7 +12,7 @@ from .item_registry import Item
 
 class WoWItemsContainer(ItemContainer):
     def build_pool(self, world: "World"):
-        items = [*BAGS, GOLD_POUCH]
+        items = [*BAGS]
 
         match world.options.character_class:
             case CharacterClass.option_warrior:
@@ -67,5 +67,3 @@ HUGE_BROWN_SACK = WoWItem("Huge Brown Sack", 4499, ItemClassification.filler, po
 TRAVELERS_BACKPACK = WoWItem("Traveler's Backpack", 4500, ItemClassification.filler, pool_count=2)
 FROSTWEAVE_BAG = WoWItem("Frostweave Bag", 41599, ItemClassification.filler, pool_count=2)
 BAGS = [BROWN_LEATHER_SATCHEL, HUGE_BROWN_SACK, TRAVELERS_BACKPACK, FROSTWEAVE_BAG]
-
-GOLD_POUCH = WoWItem("Gold Pouch", 38539, ItemClassification.filler, pool_count=1)  # TODO: create actual item
