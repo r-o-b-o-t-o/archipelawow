@@ -40,7 +40,7 @@ class AchievementsContainer(LocationContainer):
         result: list[tuple[str, Location]] = []
 
         for loc in locations:
-            region = regions.LEVELS_01_10
+            region = regions.LEVELS_01_05
             if loc.zone:
                 if world.is_alliance() and loc.zone.region_a:
                     region = loc.zone.region_a

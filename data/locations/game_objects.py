@@ -32,9 +32,9 @@ class GameObjectsContainer(LocationContainer):
 
 GAME_OBJECTS_CONTAINER = GameObjectsContainer()
 
-BATTERED_CHEST = GameObject("Battered Chest", [2843, 2849, 106318, 106319], regions.LEVELS_01_10, LocationProgressType.EXCLUDED)
-LARGE_SOLID_CHEST = GameObject("Large Solid Chest", [74448, 75298, 75299, 75300, 153462, 153463], regions.LEVELS_01_10, LocationProgressType.EXCLUDED)
-LARGE_IRON_BOUND_CHEST = GameObject("Large Iron Bound Chest", [74447, 75295, 75296, 75297], regions.LEVELS_01_10, LocationProgressType.EXCLUDED)
-LARGE_MITHRIL_BOUND_CHEST = GameObject("Large Mithril Bound Chest", [131978, 153468, 153469], regions.LEVELS_01_10, LocationProgressType.EXCLUDED)
+BATTERED_CHEST = GameObject("Battered Chest", [2843, 2849, 106318, 106319], regions.LEVELS_01_05, LocationProgressType.EXCLUDED)
+LARGE_SOLID_CHEST = GameObject("Large Solid Chest", [74448, 75298, 75299, 75300, 153462, 153463], regions.LEVELS_01_05, LocationProgressType.EXCLUDED)
+LARGE_IRON_BOUND_CHEST = GameObject("Large Iron Bound Chest", [74447, 75295, 75296, 75297], regions.LEVELS_01_05, LocationProgressType.EXCLUDED)
+LARGE_MITHRIL_BOUND_CHEST = GameObject("Large Mithril Bound Chest", [131978, 153468, 153469], regions.LEVELS_01_05, LocationProgressType.EXCLUDED)
 
 CHESTS = [BATTERED_CHEST, LARGE_SOLID_CHEST, LARGE_IRON_BOUND_CHEST, LARGE_MITHRIL_BOUND_CHEST]

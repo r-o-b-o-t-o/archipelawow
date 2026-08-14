@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from Options import Accessibility, Choice, DeathLink, OptionGroup, PerGameCommonOptions, ProgressionBalancing, StartInventoryPool
+from Options import Accessibility, Choice, DeathLink, NamedRange, OptionGroup, PerGameCommonOptions, ProgressionBalancing, StartInventoryPool, Toggle
 
 
 class Goal(Choice):
@@ -69,11 +69,72 @@ class CharacterClass(Choice):
     default = option_warrior
 
 
+class QuestsAllStartingZones(Toggle):
+    """
+    Include quests from other races' starting zones (levels 1-10).
+    """
+
+    display_name = "All starting zones"
+
+
+class QuestsIncludeDungeons(Toggle):
+    """
+    Include quests that take place inside dungeons.
+    """
+
+    display_name = "Dungeons"
+
+
+class QuestsDensity(NamedRange):
+    """
+    Percentage of the available quests turned into locations.
+    Quests are picked at random, with a quota per level bracket so that every bracket keeps a comparable share of locations.
+    Brackets will always have at least 5 quests, no matter how low this is set.
+    """
+
+    display_name = "Quest density"
+
+    range_start = 10
+    range_end = 100
+    default = 25
+
+    special_range_names = {
+        "minimal": 10,
+        "sparse": 25,
+        "half": 50,
+        "most": 75,
+        "all": 100,
+    }
+
+
+class QuestsMaxPartySize(NamedRange):
+    """
+    Highest suggested party size for a quest to become a location.
+    "Solo" keeps only the quests one player can finish alone, and every step above it opens up the group quests written for that many players.
+    """
+
+    display_name = "Maximum party size"
+
+    range_start = 1
+    range_end = 5
+    default = 1
+
+    special_range_names = {
+        "solo": 1,
+        "duo": 2,
+        "full_group": 5,
+    }
+
+
 @dataclass
 class Options(PerGameCommonOptions):
     goal: Goal
     character_race: CharacterRace
     character_class: CharacterClass
+    quests_density: QuestsDensity
+    quests_all_starting_zones: QuestsAllStartingZones
+    quests_include_dungeons: QuestsIncludeDungeons
+    quests_max_party_size: QuestsMaxPartySize
     death_link: DeathLink
     start_inventory_from_pool: StartInventoryPool
 
@@ -81,6 +142,7 @@ class Options(PerGameCommonOptions):
 option_groups = [
     OptionGroup("General Options", [Goal]),
     OptionGroup("Character Options", [CharacterRace, CharacterClass]),
+    OptionGroup("Quest Options", [QuestsDensity, QuestsAllStartingZones, QuestsMaxPartySize, QuestsIncludeDungeons]),
     OptionGroup("Advanced Options", [DeathLink, ProgressionBalancing, Accessibility]),
 ]
 

@@ -11,7 +11,7 @@ from .data.items.levels import LEVEL_UP
 
 
 def set_location_rule(location: str, item: str, world: "World"):
-    set_rule(world.get_location(location), lambda state: state.has(item, world.player))
+    set_rule(world.get_location(location), has_item(item, world))
 
 
 def combine_rules(*args: Optional[CollectionRule], operator: Literal["and", "or"] = "and") -> CollectionRule:

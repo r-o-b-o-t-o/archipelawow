@@ -18,6 +18,14 @@ class Side(IntEnum):
 
 
 class ZonesContainer(ItemContainer):
+    def __init__(self) -> None:
+        super().__init__()
+        self.zones: dict[int, "Zone"] = {}
+
+    def add(self, zone: "Zone"):
+        self.zones[zone.zone_id] = zone
+        super().add(zone)
+
     def build_pool(self, world: "World"):
         zones: list[Zone] = []
         zones += AZEROTH
@@ -74,7 +82,6 @@ class Zone(Item):
         self, name: str, icon: str, zone_id: int, region_a: str, region_h: str, teleport: Teleport, keys: list[int] = [], side=Side.CONTESTED
     ):
         super().__init__(name, ItemClassification.progression)
-        ZONES_CONTAINER.add(self)
         if icon.lower().startswith("zone") or icon.lower().startswith("boss") or icon.lower().startswith("dungeon"):
             self.icon = f"Icons/Achievement_{icon}"
         else:
@@ -86,11 +93,16 @@ class Zone(Item):
         self.keys = keys
         self.side = side
         self.gossip_menu = 0
+        self.starter_for_races: list[int] = []
+
+        ZONES_CONTAINER.add(self)
 
 
 ZONES_CONTAINER = ZonesContainer()
 
-L01 = regions.LEVELS_01_10
+L01 = regions.LEVELS_01_05
+# No alias for Levels 05-10: every starting zone covers levels 1 through 10 and is already assigned to
+# L01, and the next tier of zones opens at 10, so nothing unlocks at the 05-10 boundary but the level
 L10 = regions.LEVELS_10_15
 L15 = regions.LEVELS_15_20
 L20 = regions.LEVELS_20_25
@@ -101,8 +113,10 @@ L40 = regions.LEVELS_40_45
 L45 = regions.LEVELS_45_50
 L50 = regions.LEVELS_50_55
 L55 = regions.LEVELS_55_60
-OL = regions.OUTLAND
-NR = regions.NORTHREND
+L60 = regions.LEVELS_60_65
+L65 = regions.LEVELS_65_70
+L70 = regions.LEVELS_70_75
+L75 = regions.LEVELS_75_80
 A = Side.ALLIANCE
 H = Side.HORDE
 TP = Teleport
@@ -199,23 +213,23 @@ KALIMDOR = [
 ]
 
 # Outland
-BLADES_EDGE_MOUNTAINS = Zone("Blade's Edge Mountains", "Zone_BladesEdgeMtns_01", 3522, OL, OL, TP(530, 1066.78, 7095.34, 117.9, 6.05))
-HELLFIRE_PENINSULA = Zone("Hellfire Peninsula", "Zone_HellfirePeninsula_01", 3483, OL, OL, TP(530, -248.15, 921.88, 84.39, 1.57))
-NAGRAND = Zone("Nagrand", "Zone_Nagrand_01", 3518, OL, OL, TP(530, -1226.59, 6220.22, 58.53, 2.56))
-NETHERSTORM = Zone("Netherstorm", "Zone_Netherstorm_01", 3523, OL, OL, TP(530, 3374.05, 4332.54, 122.65, 4.82))
-SHADOWMOON_VALLEY = Zone("Shadowmoon Valley", "Zone_Shadowmoon", 3520, OL, OL, TP(530, -2822.06, 3225.49, 10.93, 4))
-TEROKKAR_FOREST = Zone("Terokkar Forest", "Zone_Terrokar", 3519, OL, OL, TP(530, -1219.57, 5298.67, 36.03, 3.86))
-ZANGARMARSH = Zone("Zangarmarsh", "Zone_Zangarmarsh", 3521, OL, OL, TP(530, -232.09, 5331.92, 25.55, 1.32))
+BLADES_EDGE_MOUNTAINS = Zone("Blade's Edge Mountains", "Zone_BladesEdgeMtns_01", 3522, L65, L65, TP(530, 1066.78, 7095.34, 117.9, 6.05))
+HELLFIRE_PENINSULA = Zone("Hellfire Peninsula", "Zone_HellfirePeninsula_01", 3483, L60, L60, TP(530, -248.15, 921.88, 84.39, 1.57))
+NAGRAND = Zone("Nagrand", "Zone_Nagrand_01", 3518, L60, L60, TP(530, -1226.59, 6220.22, 58.53, 2.56))
+NETHERSTORM = Zone("Netherstorm", "Zone_Netherstorm_01", 3523, L65, L65, TP(530, 3374.05, 4332.54, 122.65, 4.82))
+SHADOWMOON_VALLEY = Zone("Shadowmoon Valley", "Zone_Shadowmoon", 3520, L65, L65, TP(530, -2822.06, 3225.49, 10.93, 4))
+TEROKKAR_FOREST = Zone("Terokkar Forest", "Zone_Terrokar", 3519, L60, L60, TP(530, -1219.57, 5298.67, 36.03, 3.86))
+ZANGARMARSH = Zone("Zangarmarsh", "Zone_Zangarmarsh", 3521, L60, L60, TP(530, -232.09, 5331.92, 25.55, 1.32))
 
 # Northrend
-BOREAN_TUNDRA = Zone("Borean Tundra", "Zone_BoreanTundra_01", 3537, NR, NR, TP(571, 2380.61, 5699.21, 75.45, 4.41))
-DRAGONBLIGHT = Zone("Dragonblight", "Zone_DragonBlight_02", 65, NR, NR, TP(571, 3528.04, 3127.36, 21, 4.82))
-GRIZZLY_HILLS = Zone("Grizzly Hills", "Zone_GrizzlyHills_01", 394, NR, NR, TP(571, 3180.80, -1622.80, 39, 4.72))
-HOWLING_FJORD = Zone("Howling Fjord", "Zone_HowlingFjord_01", 495, NR, NR, TP(571, 1033.55, -4683.43, 198.42, 4.88))
-ICECROWN = Zone("Icecrown", "Zone_IceCrown_01", 210, NR, NR, TP(571, 6048.83, -133.33, 330.7, 0.71))
-SHOLAZAR_BASIN = Zone("Sholazar Basin", "Zone_Sholazar_01", 3711, NR, NR, TP(571, 4766.95, 5549.36, -11.43, 6))
-THE_STORM_PEAKS = Zone("The Storm Peaks", "Zone_StormPeaks_03", 67, NR, NR, TP(571, 5987.38, -513.54, 341.73, 5.7))
-ZULDRAK = Zone("Zul'Drak", "Zone_ZulDrak_02", 66, NR, NR, TP(571, 4825.15, -1495.77, 248.51, 5.54))
+BOREAN_TUNDRA = Zone("Borean Tundra", "Zone_BoreanTundra_01", 3537, L70, L70, TP(571, 2380.61, 5699.21, 75.45, 4.41))
+DRAGONBLIGHT = Zone("Dragonblight", "Zone_DragonBlight_02", 65, L70, L70, TP(571, 3528.04, 3127.36, 21, 4.82))
+GRIZZLY_HILLS = Zone("Grizzly Hills", "Zone_GrizzlyHills_01", 394, L70, L70, TP(571, 3180.80, -1622.80, 39, 4.72))
+HOWLING_FJORD = Zone("Howling Fjord", "Zone_HowlingFjord_01", 495, L70, L70, TP(571, 1033.55, -4683.43, 198.42, 4.88))
+ICECROWN = Zone("Icecrown", "Zone_IceCrown_01", 210, L75, L75, TP(571, 6048.83, -133.33, 330.7, 0.71))
+SHOLAZAR_BASIN = Zone("Sholazar Basin", "Zone_Sholazar_01", 3711, L75, L75, TP(571, 4766.95, 5549.36, -11.43, 6))
+THE_STORM_PEAKS = Zone("The Storm Peaks", "Zone_StormPeaks_03", 67, L75, L75, TP(571, 5987.38, -513.54, 341.73, 5.7))
+ZULDRAK = Zone("Zul'Drak", "Zone_ZulDrak_02", 66, L70, L70, TP(571, 4825.15, -1495.77, 248.51, 5.54))
 
 # Classic Dungeons
 BLACKFATHOM_DEEPS = Zone("Blackfathom Deeps", "Boss_Bazil_Akumai", 719, L20, L20, TP(48, -151.9, 107, -38.8, 4.53))
@@ -261,22 +275,22 @@ CLASSIC_DUNGEONS = [
 AZEROTH = [*EASTERN_KINGDOMS, *KALIMDOR]
 
 # Outland Dungeons
-AUCHENAI_CRYPTS = Zone("Auchenai Crypts", "Boss_Exarch_Maladaar", 3790, OL, OL, TP(558, -20.62, 0.14, -0.11, 0))
-HELLFIRE_RAMPARTS = Zone("Hellfire Ramparts", "Boss_OmarTheUnscarred_01", 3562, OL, OL, TP(543, -1355.24, 1641.12, 68.26, 0.67))
-MAGISTERS_TERRACE = Zone("Magisters' Terrace", "Boss_Kael'thasSunstrider_01", 4131, OL, OL, TP(585, 7.09, -0.45, -2.7, 0))
-MANA_TOMBS = Zone("Mana-Tombs", "Boss_Nexus_Prince_Shaffar", 3792, OL, OL, TP(557, -2.21, 0.95, -0.94, 3.14))
-OLD_HILLSBRAD_FOOTHILLS = Zone("Old Hillsbrad Foothills", "Boss_EpochHunter", 2367, OL, OL, TP(560, 2741.87, 1315.25, 14.03, 2.96))
-SETHEKK_HALLS = Zone("Sethekk Halls", "Boss_TalonKingIkiss", 3791, OL, OL, TP(556, -4.68, -0.09, 0.01, 0))
-SHADOW_LABYRINTH = Zone("Shadow Labyrinth", "Boss_Murmur_01", 3789, OL, OL, TP(555, -0.19, -0.21, -1.11, 3.14), keys=[27991])
-THE_ARCATRAZ = Zone("The Arcatraz", "Boss_Harbinger_Skyriss", 3848, OL, OL, TP(552, -1.23, 0.01, -0.19, 0), keys=[31084])
-THE_BLACK_MORASS = Zone("The Black Morass", "Boss_Aeonus_01", 2366, OL, OL, TP(269, -1496.24, 7034.7, 32.55, 1.76))
-THE_BLOOD_FURNACE = Zone("The Blood Furnace", "Boss_KelidanTheBreaker", 3713, OL, OL, TP(542, -4, 14.64, -44.7, 4.89))
-THE_BOTANICA = Zone("The Botanica", "Boss_WarpSplinter", 3847, OL, OL, TP(553, 40.04, -28.6, -1.10, 2.36))
-THE_MECHANAR = Zone("The Mechanar", "Boss_PathaleonTheCalculator", 3849, OL, OL, TP(554, -28.91, 0.68, -1.80, 0))
-THE_SHATTERED_HALLS = Zone("The Shattered Halls", "Boss_KargathBladefist_01", 3714, OL, OL, TP(540, -40.87, -19.75, -13.79, 1.11), keys=[28395])
-THE_SLAVE_PENS = Zone("The Slave Pens", "Boss_Quagmirran", 3717, OL, OL, TP(547, 120.1, -131.96, -0.79, 1.48))
-THE_STEAMVAULT = Zone("The Steamvault", "Boss_Warlord_Kalithresh", 3715, OL, OL, TP(545, -13.84, 6.75, -4.24, 0))
-THE_UNDERBOG = Zone("The Underbog", "Boss_theBlackStalker", 3716, OL, OL, TP(546, 16.27, -22.44, -2.74, 5.78))
+AUCHENAI_CRYPTS = Zone("Auchenai Crypts", "Boss_Exarch_Maladaar", 3790, L65, L65, TP(558, -20.62, 0.14, -0.11, 0))
+HELLFIRE_RAMPARTS = Zone("Hellfire Ramparts", "Boss_OmarTheUnscarred_01", 3562, L60, L60, TP(543, -1355.24, 1641.12, 68.26, 0.67))
+MAGISTERS_TERRACE = Zone("Magisters' Terrace", "Boss_Kael'thasSunstrider_01", 4131, L65, L65, TP(585, 7.09, -0.45, -2.7, 0))
+MANA_TOMBS = Zone("Mana-Tombs", "Boss_Nexus_Prince_Shaffar", 3792, L65, L65, TP(557, -2.21, 0.95, -0.94, 3.14))
+OLD_HILLSBRAD_FOOTHILLS = Zone("Old Hillsbrad Foothills", "Boss_EpochHunter", 2367, L65, L65, TP(560, 2741.87, 1315.25, 14.03, 2.96))
+SETHEKK_HALLS = Zone("Sethekk Halls", "Boss_TalonKingIkiss", 3791, L65, L65, TP(556, -4.68, -0.09, 0.01, 0))
+SHADOW_LABYRINTH = Zone("Shadow Labyrinth", "Boss_Murmur_01", 3789, L65, L65, TP(555, -0.19, -0.21, -1.11, 3.14), keys=[27991])
+THE_ARCATRAZ = Zone("The Arcatraz", "Boss_Harbinger_Skyriss", 3848, L65, L65, TP(552, -1.23, 0.01, -0.19, 0), keys=[31084])
+THE_BLACK_MORASS = Zone("The Black Morass", "Boss_Aeonus_01", 2366, L65, L65, TP(269, -1496.24, 7034.7, 32.55, 1.76))
+THE_BLOOD_FURNACE = Zone("The Blood Furnace", "Boss_KelidanTheBreaker", 3713, L60, L60, TP(542, -4, 14.64, -44.7, 4.89))
+THE_BOTANICA = Zone("The Botanica", "Boss_WarpSplinter", 3847, L65, L65, TP(553, 40.04, -28.6, -1.10, 2.36))
+THE_MECHANAR = Zone("The Mechanar", "Boss_PathaleonTheCalculator", 3849, L65, L65, TP(554, -28.91, 0.68, -1.80, 0))
+THE_SHATTERED_HALLS = Zone("The Shattered Halls", "Boss_KargathBladefist_01", 3714, L65, L65, TP(540, -40.87, -19.75, -13.79, 1.11), keys=[28395])
+THE_SLAVE_PENS = Zone("The Slave Pens", "Boss_Quagmirran", 3717, L60, L60, TP(547, 120.1, -131.96, -0.79, 1.48))
+THE_STEAMVAULT = Zone("The Steamvault", "Boss_Warlord_Kalithresh", 3715, L65, L65, TP(545, -13.84, 6.75, -4.24, 0))
+THE_UNDERBOG = Zone("The Underbog", "Boss_theBlackStalker", 3716, L60, L60, TP(546, 16.27, -22.44, -2.74, 5.78))
 OUTLAND_DUNGEONS = [
     AUCHENAI_CRYPTS,
     HELLFIRE_RAMPARTS,
@@ -306,18 +320,18 @@ OUTLAND = [
 ]
 
 # Northrend Dungeons
-AHNKAHET_THE_OLD_KINGDOM = Zone("Ahn'kahet: The Old Kingdom", "Dungeon_AzjolLowercity_Normal", 4494, NR, NR, TP(619, 340.76, -1105.37, 63.03, 0.55))
-AZJOL_NERUB = Zone("Azjol-Nerub", "Dungeon_AzjolUppercity_Normal", 4277, NR, NR, TP(601, 413.31, 795.97, 831.36, 5.5))
-DRAKTHARON_KEEP = Zone("Drak'Tharon Keep", "Dungeon_Drak'Tharon_Normal", 4196, NR, NR, TP(600, -517.34, -487.98, 11, 4.83))
-GUNDRAK = Zone("Gundrak", "Dungeon_Gundrak_Normal", 4416, NR, NR, TP(604, 1891.84, 832.17, 176.67, 2.1))
-HALLS_OF_LIGHTNING = Zone("Halls of Lightning", "Dungeon_Ulduar80_Normal", 4272, NR, NR, TP(602, 1331.47, 259.62, 53.4, 4.71))
-HALLS_OF_STONE = Zone("Halls of Stone", "Dungeon_Ulduar77_Normal", 4264, NR, NR, TP(599, 1153.24, 806.16, 195.94, 4.71))
-THE_CULLING_OF_STRATHOLME = Zone("The Culling of Stratholme", "Dungeon_CoTStratholme_Normal", 4100, NR, NR, TP(595, 1431.1, 556.92, 36.7, 5.16))
-THE_NEXUS = Zone("The Nexus", "Dungeon_Nexus70_Normal", 4265, NR, NR, TP(576, 145.87, -10.55, -16.62, 1.53))
-THE_OCULUS = Zone("The Oculus", "Dungeon_Nexus80_Normal", 4228, NR, NR, TP(578, 1055.93, 986.85, 361.1, 5.745))
-UTGARDE_KEEP = Zone("Utgarde Keep", "Dungeon_UtgardeKeep_Normal", 206, NR, NR, TP(574, 153.79, -86.55, 12.56, 0.3))
-UTGARDE_PINNACLE = Zone("Utgarde Pinnacle", "Dungeon_UtgardePinnacle_Normal", 1196, NR, NR, TP(575, 584.12, -327.97, 110.14, 3.12))
-VIOLET_HOLD = Zone("Violet Hold", "Dungeon_TheVioletHold_Normal", 4415, NR, NR, TP(608, 1808.82, 803.93, 44.37, 0), keys=[42482])
+AHNKAHET_THE_OLD_KINGDOM = Zone("Ahn'kahet: The Old Kingdom", "Dungeon_AzjolLowercity_Normal", 4494, L70, L70, TP(619, 340.76, -1105.37, 63.03, 0.55))
+AZJOL_NERUB = Zone("Azjol-Nerub", "Dungeon_AzjolUppercity_Normal", 4277, L70, L70, TP(601, 413.31, 795.97, 831.36, 5.5))
+DRAKTHARON_KEEP = Zone("Drak'Tharon Keep", "Dungeon_Drak'Tharon_Normal", 4196, L70, L70, TP(600, -517.34, -487.98, 11, 4.83))
+GUNDRAK = Zone("Gundrak", "Dungeon_Gundrak_Normal", 4416, L75, L75, TP(604, 1891.84, 832.17, 176.67, 2.1))
+HALLS_OF_LIGHTNING = Zone("Halls of Lightning", "Dungeon_Ulduar80_Normal", 4272, L75, L75, TP(602, 1331.47, 259.62, 53.4, 4.71))
+HALLS_OF_STONE = Zone("Halls of Stone", "Dungeon_Ulduar77_Normal", 4264, L75, L75, TP(599, 1153.24, 806.16, 195.94, 4.71))
+THE_CULLING_OF_STRATHOLME = Zone("The Culling of Stratholme", "Dungeon_CoTStratholme_Normal", 4100, L75, L75, TP(595, 1431.1, 556.92, 36.7, 5.16))
+THE_NEXUS = Zone("The Nexus", "Dungeon_Nexus70_Normal", 4265, L70, L70, TP(576, 145.87, -10.55, -16.62, 1.53))
+THE_OCULUS = Zone("The Oculus", "Dungeon_Nexus80_Normal", 4228, L75, L75, TP(578, 1055.93, 986.85, 361.1, 5.745))
+UTGARDE_KEEP = Zone("Utgarde Keep", "Dungeon_UtgardeKeep_Normal", 206, L70, L70, TP(574, 153.79, -86.55, 12.56, 0.3))
+UTGARDE_PINNACLE = Zone("Utgarde Pinnacle", "Dungeon_UtgardePinnacle_Normal", 1196, L75, L75, TP(575, 584.12, -327.97, 110.14, 3.12))
+VIOLET_HOLD = Zone("Violet Hold", "Dungeon_TheVioletHold_Normal", 4415, L70, L70, TP(608, 1808.82, 803.93, 44.37, 0), keys=[42482])
 NORTHREND_DUNGEONS = [
     AHNKAHET_THE_OLD_KINGDOM,
     AZJOL_NERUB,
@@ -343,6 +357,8 @@ NORTHREND = [
     ZULDRAK,
 ]
 
+EXPANSION_ZONE_IDS = {z.zone_id for z in [*OUTLAND, *OUTLAND_DUNGEONS, *NORTHREND, *NORTHREND_DUNGEONS]}
+
 
 for z in EASTERN_KINGDOMS:
     z.gossip_menu = 2
@@ -364,3 +380,13 @@ for z in OUTLAND_DUNGEONS:
 
 for z in NORTHREND_DUNGEONS:
     z.gossip_menu = 9
+
+ELWYNN_FOREST.starter_for_races = [1]
+DUN_MOROGH.starter_for_races = [3, 7]
+TELDRASSIL.starter_for_races = [4]
+AZUREMYST_ISLE.starter_for_races = [11]
+
+DUROTAR.starter_for_races = [2, 8]
+MULGORE.starter_for_races = [6]
+TIRISFAL_GLADES.starter_for_races = [5]
+EVERSONG_WOODS.starter_for_races = [10]

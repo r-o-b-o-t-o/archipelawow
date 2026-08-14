@@ -34,12 +34,11 @@ class World(BaseWorld):
     item_name_to_id = items.get_name_to_id_dict()
     locations = LocationRegistry.instance
     location_name_to_id = locations.get_name_to_id_dict()
-    origin_region_name = regions.LEVELS_01_10
+    origin_region_name = regions.LEVELS_01_05
 
     def create_regions(self) -> None:
         regions.create_and_connect_regions(self)
         self.locations.create_locations(self)
-        self.get_data_package_data()
 
     def set_rules(self) -> None:
         self.locations.set_rules(self)
