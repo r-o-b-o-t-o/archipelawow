@@ -4,7 +4,9 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from ...world import World
 
-from ...conditions import set_location_rule
+from worlds.generic.Rules import CollectionRule, set_rule
+
+from ...conditions import combine_rules, has_item, required_level
 from ...options import CharacterRace
 from ..items import zones
 from ..items.zones import ZONES_CONTAINER, Zone
@@ -65,11 +67,16 @@ class FlightPathsContainer(LocationContainer):
     def get_slot_data(self, world: "World"):
         return [[loc.node_id, loc.id] for loc in self.build_locations(world)]
 
-    def get_locations(self, world: "World") -> list[tuple[str, Location]]:
-        locations = self.build_locations(world)
-        result: list[tuple[str, Location]] = []
+    def build_placed_locations(self, world: "World") -> list[tuple[str, FlightPath]]:
+        """The flight paths that get a location, paired with the region they land in.
 
-        for loc in locations:
+        A zone carries a region per faction and leaves the other side blank, so a flight path in a zone
+        the player's faction has no bracket for gets no location at all. Rule setting reads the same list
+        rather than rebuilding it, or it would ask for locations that were never created.
+        """
+        result: list[tuple[str, FlightPath]] = []
+
+        for loc in self.build_locations(world):
             region: str | None = None
             if loc.zone:
                 if world.is_alliance() and loc.zone.region_a:
@@ -81,13 +88,17 @@ class FlightPathsContainer(LocationContainer):
 
         return result
 
-    def set_rules(self, world: "World"):
-        zones_in_pool = ZONES_CONTAINER.build_pool(world)
-        zone_ids = set([zone.id for zone in zones_in_pool])
+    def get_locations(self, world: "World") -> list[tuple[str, Location]]:
+        return [(region, loc) for region, loc in self.build_placed_locations(world)]
 
-        for fp in self.build_locations(world):
-            if fp.zone.id in zone_ids:
-                set_location_rule(fp.name, fp.zone.name, world)
+    def set_rules(self, world: "World"):
+        zone_ids = set([zone.id for zone in ZONES_CONTAINER.build_pool(world)])
+        # A level rule so capital cities are not needed too early, other flight paths are gated by their zone
+        level_rule = required_level(6, world)
+
+        for _, fp in self.build_placed_locations(world):
+            zone_rule: CollectionRule | None = has_item(fp.zone.name, world) if fp.zone.id in zone_ids else None
+            set_rule(world.get_location(fp.name), combine_rules(level_rule, zone_rule))
 
 
 FLIGHT_PATHS_CONTAINER = FlightPathsContainer()
