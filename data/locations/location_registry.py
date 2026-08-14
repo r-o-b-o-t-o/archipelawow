@@ -25,13 +25,11 @@ class LocationRegistry:
     def load_containers(self):
         from .achievements import ACHIEVEMENTS_CONTAINER
         from .flight_paths import FLIGHT_PATHS_CONTAINER
-        from .game_objects import GAME_OBJECTS_CONTAINER
         from .levels import LEVELS_CONTAINER
         from .quests import QUESTS_CONTAINER
 
         self.__containers["achievements"] = ACHIEVEMENTS_CONTAINER
         self.__containers["flightpaths"] = FLIGHT_PATHS_CONTAINER
-        self.__containers["gameobjects"] = GAME_OBJECTS_CONTAINER
         self.__containers["levels"] = LEVELS_CONTAINER
         self.__containers["quests"] = QUESTS_CONTAINER
 
