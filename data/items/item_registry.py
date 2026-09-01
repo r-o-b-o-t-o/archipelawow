@@ -24,6 +24,7 @@ class ItemRegistry:
         self.__containers: dict[str, ItemContainer] = {}
 
     def load_containers(self):
+        from .gear import GEAR_CONTAINER
         from .levels import LEVELS_CONTAINER
         from .money import MONEY_CONTAINER
         from .wow_items import WOW_ITEMS_CONTAINER
@@ -31,6 +32,7 @@ class ItemRegistry:
 
         self.__containers["levels"] = LEVELS_CONTAINER
         self.__containers["items"] = WOW_ITEMS_CONTAINER
+        self.__containers["gear"] = GEAR_CONTAINER
         self.__containers["zones"] = ZONES_CONTAINER
         self.__containers["money"] = MONEY_CONTAINER
 
@@ -62,8 +64,12 @@ class ItemRegistry:
         return slot_data
 
     def get_random_filler_item_name(self, world: "World") -> str:
-        # TODO: add fillers and weights for random pick
-        return "Gold Pouch"  # TODO: move to item containers
+        weights: dict[str, int] = {}
+        for container in self.__containers.values():
+            weights.update(container.get_filler_weights(world))
+
+        names = list(weights.keys())
+        return world.random.choices(names, weights=[weights[name] for name in names], k=1)[0]
 
     def get_items_for_pool(self, world: "World"):
         items: list[Item] = []

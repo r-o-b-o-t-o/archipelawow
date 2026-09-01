@@ -126,6 +126,38 @@ class QuestsMaxPartySize(NamedRange):
     }
 
 
+class GearRewardLevelWindow(NamedRange):
+    """
+    How many levels away you can be from a piece of gear's required level for it to be included in the random gear pool.
+    The window widens automatically until it has at least a few gear pieces to choose from, so a low setting value is a preference rather than a guarantee.
+    """
+
+    display_name = "Reward level window"
+
+    range_start = 0
+    range_end = 10
+    default = 3
+
+    special_range_names = {
+        "closest": 0,
+        "narrow": 1,
+        "standard": 3,
+        "wide": 5,
+        "very_wide": 10,
+    }
+
+
+class GearIncludeAllArmorTypes(Toggle):
+    """
+    Include armor of any type your class can wear, instead of only the heaviest one available. Can be worth enabling if you intend on playing a caster specialization.
+
+    No: a paladin would receive mail then plate around level 40; a druid would only ever receive leather.
+    Yes: a paladin would receive cloth, leather, mail and plate; a druid would receive cloth and leather.
+    """
+
+    display_name = "All armor types"
+
+
 @dataclass
 class Options(PerGameCommonOptions):
     goal: Goal
@@ -135,6 +167,8 @@ class Options(PerGameCommonOptions):
     quests_all_starting_zones: QuestsAllStartingZones
     quests_include_dungeons: QuestsIncludeDungeons
     quests_max_party_size: QuestsMaxPartySize
+    gear_reward_level_window: GearRewardLevelWindow
+    gear_include_all_armor_types: GearIncludeAllArmorTypes
     death_link: DeathLink
     start_inventory_from_pool: StartInventoryPool
 
@@ -143,6 +177,7 @@ option_groups = [
     OptionGroup("General Options", [Goal]),
     OptionGroup("Character Options", [CharacterRace, CharacterClass]),
     OptionGroup("Quest Options", [QuestsDensity, QuestsAllStartingZones, QuestsMaxPartySize, QuestsIncludeDungeons]),
+    OptionGroup("Gear Options", [GearRewardLevelWindow, GearIncludeAllArmorTypes]),
     OptionGroup("Advanced Options", [DeathLink, ProgressionBalancing, Accessibility]),
 ]
 

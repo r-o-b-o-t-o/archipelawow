@@ -31,3 +31,8 @@ class ItemContainer:
 
     def get_precollected_items(self, world: "World") -> list["Item"]:
         return []
+
+    def get_filler_weights(self, world: "World") -> dict[str, int]:
+        """The items this container offers as filler, and how often each should be picked
+        relative to the others. Containers holding nothing filler-worthy return nothing."""
+        return {}

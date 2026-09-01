@@ -58,7 +58,10 @@ class World(BaseWorld):
 
     def fill_slot_data(self) -> Mapping[str, Any]:
         return {
-            "options": self.options.as_dict("character_race", "character_class", "death_link"),
+            "options": self.options.as_dict(
+                "character_race", "character_class", "death_link",
+                "gear_reward_level_window", "gear_include_all_armor_types",
+            ),
             "locations": self.locations.get_slot_data(self),
             "items": self.items.get_slot_data(self),
             "goal": self.options.goal.value,
