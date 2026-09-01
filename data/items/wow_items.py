@@ -12,7 +12,7 @@ from .item_registry import Item
 
 class WoWItemsContainer(ItemContainer):
     def build_pool(self, world: "World"):
-        items = [*BAGS]
+        items = [*BAGS, *heirlooms_for(world)]
 
         match world.options.character_class:
             case CharacterClass.option_warrior:
@@ -61,6 +61,7 @@ from .glyphs.rogue import GLYPHS_ROGUE
 from .glyphs.shaman import GLYPHS_SHAMAN
 from .glyphs.warlock import GLYPHS_WARLOCK
 from .glyphs.warrior import GLYPHS_WARRIOR
+from .heirlooms import heirlooms_for
 
 BROWN_LEATHER_SATCHEL = WoWItem("Brown Leather Satchel", 4498, ItemClassification.filler, pool_count=2)
 HUGE_BROWN_SACK = WoWItem("Huge Brown Sack", 4499, ItemClassification.filler, pool_count=2)
