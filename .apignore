@@ -1,1 +1,6 @@
 .env*
+.vscode/
+.github/
+.editorconfig
+docs/*.xlsx
+docs/*.csv
