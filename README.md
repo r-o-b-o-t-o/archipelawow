@@ -36,6 +36,8 @@ These are the actions you take in-game to send rewards to yourself or other play
 - **Items**: Receive powerful gear and artifacts at unexpected times
 - **Zone Unlocks**: Access new areas through randomized progression
 - **Level Ups**: Increase your character level - these can be sent by other players or by completing location checks
+- **Progressive Upgrades**: Movement speed and experience rate bonuses to help you progress faster
+- **Eternal Food & Drink**: No more visiting the innkeeper every 2 hours
 
 ## 🚀 Installation & Usage
 

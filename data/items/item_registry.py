@@ -27,6 +27,7 @@ class ItemRegistry:
         from .gear import GEAR_CONTAINER
         from .levels import LEVELS_CONTAINER
         from .money import MONEY_CONTAINER
+        from .progressive import PROGRESSIVE_CONTAINER
         from .wow_items import WOW_ITEMS_CONTAINER
         from .zones import ZONES_CONTAINER
 
@@ -35,6 +36,7 @@ class ItemRegistry:
         self.__containers["gear"] = GEAR_CONTAINER
         self.__containers["zones"] = ZONES_CONTAINER
         self.__containers["money"] = MONEY_CONTAINER
+        self.__containers["progressive"] = PROGRESSIVE_CONTAINER
 
     def get_container(self, container_name: str):
         return self.__containers.get(container_name)

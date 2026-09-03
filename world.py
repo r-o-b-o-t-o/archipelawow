@@ -8,7 +8,7 @@ from worlds.AutoWorld import World as BaseWorld
 from . import constants, options, regions, rules
 from .data.items.item_registry import ItemRegistry
 from .data.locations.location_registry import LocationRegistry
-from .options import CharacterRace, Goal
+from .options import CharacterClass, CharacterRace, Goal
 from .web_world import WebWorld
 
 
@@ -59,8 +59,11 @@ class World(BaseWorld):
     def fill_slot_data(self) -> Mapping[str, Any]:
         return {
             "options": self.options.as_dict(
-                "character_race", "character_class", "death_link",
-                "gear_reward_level_window", "gear_include_all_armor_types",
+                "character_race",
+                "character_class",
+                "death_link",
+                "gear_reward_level_window",
+                "gear_include_all_armor_types",
             ),
             "locations": self.locations.get_slot_data(self),
             "items": self.items.get_slot_data(self),
@@ -81,6 +84,9 @@ class World(BaseWorld):
 
     def is_horde(self):
         return self.options.character_race.value in CharacterRace.horde
+
+    def uses_mana(self):
+        return self.options.character_class.value not in CharacterClass.no_mana
 
     def has_tbc_content(self):
         return self.level_cap() > 60

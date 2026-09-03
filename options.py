@@ -67,6 +67,9 @@ class CharacterClass(Choice):
     option_druid = 11
 
     default = option_warrior
+    # Warriors run on rage and rogues on energy, so anything that restores mana is dead weight
+    # for them.
+    no_mana = [option_warrior, option_rogue]
 
 
 class QuestsAllStartingZones(Toggle):
