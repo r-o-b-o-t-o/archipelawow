@@ -1,9 +1,9 @@
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from ...world import World
+    from ..world import World
 
-from ... import regions
+from .. import regions
 from .location_container import LocationContainer
 from .location_registry import Location
 

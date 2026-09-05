@@ -6,7 +6,7 @@ if TYPE_CHECKING:
 from BaseClasses import Region
 from worlds.generic.Rules import CollectionRule
 
-from .conditions import required_level_and_zones
+from .conditions import combine_rules, has_all, required_level_and_zones
 
 LEVELS_01_05 = "Levels 01-05"
 LEVELS_05_10 = "Levels 05-10"
@@ -83,7 +83,9 @@ def connect(r_from: Region, r_to: Region, rule: Optional[CollectionRule] = None)
 
 
 def connect_regions(world: "World") -> None:
-    from .data.items.zones import ZONES_CONTAINER
+    from .items.progressive import PROGRESSIVE_RIDING
+    from .items.spells import SPELLS_CONTAINER
+    from .items.zones import ZONES_CONTAINER
 
     zones_in_pool = ZONES_CONTAINER.build_pool(world)
     for i in range(1, len(ALL_REGIONS)):
@@ -96,7 +98,20 @@ def connect_regions(world: "World") -> None:
             list(filter(lambda z: z.region_h == r_to.name, zones_in_pool)),
             world,
         )
-        connect(r_from, r_to, rule)
+        # Moving up a bracket also asks for the abilities of the bracket before last, so a character
+        # cannot be expected to keep climbing on a kit the multiworld never handed over. The lag is
+        # deliberate: asking for the bracket just below would force every one of its spells into its
+        # own handful of locations, which leaves the fill nowhere to put them in a lean seed.
+        spells = SPELLS_CONTAINER.names_for_region(ALL_REGIONS[i - 2], world) if i >= 2 else []
+
+        # Riding asks for no such lag: a rank is bought the moment its level is reached, so a bracket
+        # can expect the ranks it is old enough for. Nothing is asked for where the ladder has no rung
+        # left to give, which is what keeps the rule off the last one.
+        riding_count = PROGRESSIVE_RIDING.required_count_for_region(r_to.name, world)
+        riding_rule = (lambda state, count=riding_count: state.has(PROGRESSIVE_RIDING.name, world.player, count)) \
+            if riding_count else None
+
+        connect(r_from, r_to, combine_rules(rule, has_all(spells, world), riding_rule))
 
 
 def get_region_by_level(level: int):

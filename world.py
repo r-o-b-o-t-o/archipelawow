@@ -6,8 +6,8 @@ from BaseClasses import Location as BaseLocation
 from worlds.AutoWorld import World as BaseWorld
 
 from . import constants, options, regions, rules
-from .data.items.item_registry import ItemRegistry
-from .data.locations.location_registry import LocationRegistry
+from .items.item_registry import ItemRegistry
+from .locations.location_registry import LocationRegistry
 from .options import CharacterClass, CharacterRace, Goal
 from .web_world import WebWorld
 
@@ -42,6 +42,7 @@ class World(BaseWorld):
 
     def set_rules(self) -> None:
         self.locations.set_rules(self)
+        rules.set_spell_placement_rules(self)
         rules.set_completion_conditions(self)
 
     def create_items(self) -> None:
@@ -64,6 +65,7 @@ class World(BaseWorld):
                 "death_link",
                 "gear_reward_level_window",
                 "gear_include_all_armor_types",
+                "spells_randomize_starter_abilities",
             ),
             "locations": self.locations.get_slot_data(self),
             "items": self.items.get_slot_data(self),

@@ -161,6 +161,17 @@ class GearIncludeAllArmorTypes(Toggle):
     display_name = "All armor types"
 
 
+class SpellsRandomizeStarterAbilities(Toggle):
+    """
+    Shuffle away the abilities your character should have on creation, such as a mage's Fireball or a warrior's Heroic Strike.
+
+    No: you keep your starting kit, and only the spells you would normally train become checks.
+    Yes: your starting abilities are moved to the multiworld, and your class trainer sells their checks like any other spell.
+    """
+
+    display_name = "Randomize starter abilities"
+
+
 @dataclass
 class Options(PerGameCommonOptions):
     goal: Goal
@@ -172,6 +183,7 @@ class Options(PerGameCommonOptions):
     quests_max_party_size: QuestsMaxPartySize
     gear_reward_level_window: GearRewardLevelWindow
     gear_include_all_armor_types: GearIncludeAllArmorTypes
+    spells_randomize_starter_abilities: SpellsRandomizeStarterAbilities
     death_link: DeathLink
     start_inventory_from_pool: StartInventoryPool
 
@@ -181,6 +193,7 @@ option_groups = [
     OptionGroup("Character Options", [CharacterRace, CharacterClass]),
     OptionGroup("Quest Options", [QuestsDensity, QuestsAllStartingZones, QuestsMaxPartySize, QuestsIncludeDungeons]),
     OptionGroup("Gear Options", [GearRewardLevelWindow, GearIncludeAllArmorTypes]),
+    OptionGroup("Spell Options", [SpellsRandomizeStarterAbilities]),
     OptionGroup("Advanced Options", [DeathLink, ProgressionBalancing, Accessibility]),
 ]
 

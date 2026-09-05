@@ -1,11 +1,11 @@
 from typing import TYPE_CHECKING, Iterable
 
 if TYPE_CHECKING:
-    from ...world import World
+    from ..world import World
 
 from BaseClasses import ItemClassification
 
-from ...options import CharacterClass
+from ..options import CharacterClass
 from .wow_items import WoWItem
 
 # Which classes a heirloom is worth sending to. Proficiency is the floor -- a class that cannot hold

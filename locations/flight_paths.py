@@ -2,12 +2,12 @@ from enum import IntEnum
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from ...world import World
+    from ..world import World
 
 from worlds.generic.Rules import CollectionRule, set_rule
 
-from ...conditions import combine_rules, has_item, required_level
-from ...options import CharacterRace
+from ..conditions import combine_rules, has_item, required_level
+from ..options import CharacterRace
 from ..items import zones
 from ..items.zones import ZONES_CONTAINER, Zone
 from .location_container import LocationContainer

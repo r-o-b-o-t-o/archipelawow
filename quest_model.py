@@ -2,6 +2,8 @@ import json
 import pkgutil
 from dataclasses import dataclass
 
+from .constants import DATA_PACKAGE
+
 
 @dataclass(frozen=True)
 class QuestZoneModel:
@@ -111,17 +113,15 @@ class QuestModel:
         return zones
 
 
-def load_quest_models_by_id(package: str, resource: str) -> dict[int, QuestModel]:
-    """Read the quest table shipped alongside `package`.
+def load_quest_models_by_id(resource: str) -> dict[int, QuestModel]:
+    """Read a quest table out of the data package.
 
-    Goes through pkgutil rather than the filesystem because an installed .apworld is a zip: the path
-    a module reports lives inside the archive, so opening it, or asking whether it exists, fails. The
-    failures here are raised rather than swallowed, so a packaging mistake cannot quietly generate a
-    world with no quests in it.
+    The failures here are raised rather than swallowed, so a packaging mistake cannot quietly
+    generate a world with no quests in it.
     """
-    raw = pkgutil.get_data(package, resource)
+    raw = pkgutil.get_data(DATA_PACKAGE, resource)
     if raw is None:
-        raise FileNotFoundError(f'Could not read "{resource}" from "{package}"')
+        raise FileNotFoundError(f'Could not read "{resource}" from "{DATA_PACKAGE}"')
 
     data = json.loads(raw.decode("utf-8"))
     if not isinstance(data, list):

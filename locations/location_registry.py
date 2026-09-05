@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from ...world import World
+    from ..world import World
 
 from BaseClasses import Location as BaseLocation
 from BaseClasses import LocationProgressType
@@ -27,11 +27,13 @@ class LocationRegistry:
         from .flight_paths import FLIGHT_PATHS_CONTAINER
         from .levels import LEVELS_CONTAINER
         from .quests import QUESTS_CONTAINER
+        from .spells import SPELLS_CONTAINER
 
         self.__containers["achievements"] = ACHIEVEMENTS_CONTAINER
         self.__containers["flightpaths"] = FLIGHT_PATHS_CONTAINER
         self.__containers["levels"] = LEVELS_CONTAINER
         self.__containers["quests"] = QUESTS_CONTAINER
+        self.__containers["spells"] = SPELLS_CONTAINER
 
     def get_container(self, container_name: str):
         return self.__containers.get(container_name)

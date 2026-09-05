@@ -1,13 +1,13 @@
 from typing import TYPE_CHECKING, Literal, Optional
 
 if TYPE_CHECKING:
-    from .data.items.zones import Zone
+    from .items.zones import Zone
     from .world import World
 
 from BaseClasses import CollectionState
 from worlds.generic.Rules import CollectionRule, set_rule
 
-from .data.items.levels import LEVEL_UP
+from .items.levels import LEVEL_UP
 
 
 def set_location_rule(location: str, item: str, world: "World"):

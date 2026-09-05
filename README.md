@@ -26,16 +26,19 @@ ArchipelaWoW brings the magic of World of Warcraft to the Archipelago randomizer
 ### 🎯 Location Checks
 These are the actions you take in-game to send rewards to yourself or other players in the multiworld, creating interconnected progression across different games and worlds.
 
-- **Dungeon Completions**: Conquer instances in unexpected orders
-- **Achievements**: Unlock feats of glory through randomized paths
-- **Flight Paths**: Discover aerial routes across Azeroth as you progress through the zones
+- **Dungeon Completions**
+- **Achievements**
+- **Flight Paths**
+- **Quests**
 - **Experience Gains**: Gaining experience completes checks but doesn't level up your character normally - your actual level stays the same until you receive level-up rewards
-- **Quests**: Complete missions in new sequences
+- **Spell Training**: Buying the first rank of a class spell, a weapon skill or a riding rank from your trainer sends a check instead of teaching it
 
 ### 🎁 Randomized Rewards
 - **Items**: Receive powerful gear and artifacts at unexpected times
 - **Zone Unlocks**: Access new areas through randomized progression
 - **Level Ups**: Increase your character level - these can be sent by other players or by completing location checks
+- **Spells & Skills**: The first rank of each class spell, plus the weapon skills your class can learn, arrive from the multiworld - once you have a first rank, your trainer sells the higher ones as usual
+- **Progressive Riding Skill**
 - **Progressive Upgrades**: Movement speed and experience rate bonuses to help you progress faster
 - **Eternal Food & Drink**: No more visiting the innkeeper every 2 hours
 

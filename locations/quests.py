@@ -3,16 +3,16 @@ from typing import TYPE_CHECKING
 from weakref import WeakKeyDictionary
 
 if TYPE_CHECKING:
-    from ...world import World
+    from ..world import World
 
 from worlds.generic.Rules import set_rule
 
-from ... import regions
-from ...conditions import combine_rules, has_all, required_level
+from .. import regions
+from ..conditions import combine_rules, has_all, required_level
 from ..items.zones import EXPANSION_ZONE_IDS, ZONES_CONTAINER, Zone
 from .location_container import LocationContainer
 from .location_registry import Location
-from .quest_model import QuestModel, load_quest_models_by_id
+from ..quest_model import QuestModel, load_quest_models_by_id
 
 STARTING_ZONES_MAX_LEVEL = 10
 MIN_QUESTS_PER_REGION = 5
@@ -70,7 +70,7 @@ class QuestsContainer(LocationContainer):
         self.quests[quest.quest_id] = quest
 
     def load_quests_json(self):
-        self.quests_json = load_quest_models_by_id(__name__, "quests.json")
+        self.quests_json = load_quest_models_by_id("quests.json")
 
         for id, data in self.quests_json.items():
             zone_ids = [z.id for z in [*data.start_zones, *data.objective_zones, *data.end_zones]]

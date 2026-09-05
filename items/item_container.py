@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
-    from ...world import World
+    from ..world import World
     from .item_registry import Item
 
 

@@ -1,12 +1,12 @@
 from typing import TYPE_CHECKING, Optional
 
 if TYPE_CHECKING:
-    from ...world import World
+    from ..world import World
 
 from worlds.generic.Rules import set_rule
 
-from ... import regions
-from ...conditions import required_level
+from .. import regions
+from ..conditions import required_level
 from ..items import zones
 from ..items.zones import Zone
 from .location_container import LocationContainer
