@@ -7,9 +7,9 @@ if TYPE_CHECKING:
 from worlds.generic.Rules import CollectionRule, set_rule
 
 from ..conditions import combine_rules, has_item, required_level
-from ..options import CharacterRace
 from ..items import zones
 from ..items.zones import ZONES_CONTAINER, Zone
+from ..options import CharacterRace
 from .location_container import LocationContainer
 from .location_registry import Location
 

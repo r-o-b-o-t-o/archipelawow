@@ -10,9 +10,9 @@ from worlds.generic.Rules import set_rule
 from .. import regions
 from ..conditions import combine_rules, has_all, required_level
 from ..items.zones import EXPANSION_ZONE_IDS, ZONES_CONTAINER, Zone
+from ..quest_model import QuestModel, load_quest_models_by_id
 from .location_container import LocationContainer
 from .location_registry import Location
-from ..quest_model import QuestModel, load_quest_models_by_id
 
 STARTING_ZONES_MAX_LEVEL = 10
 MIN_QUESTS_PER_REGION = 5

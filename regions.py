@@ -108,8 +108,7 @@ def connect_regions(world: "World") -> None:
         # can expect the ranks it is old enough for. Nothing is asked for where the ladder has no rung
         # left to give, which is what keeps the rule off the last one.
         riding_count = PROGRESSIVE_RIDING.required_count_for_region(r_to.name, world)
-        riding_rule = (lambda state, count=riding_count: state.has(PROGRESSIVE_RIDING.name, world.player, count)) \
-            if riding_count else None
+        riding_rule = (lambda state, count=riding_count: state.has(PROGRESSIVE_RIDING.name, world.player, count)) if riding_count else None
 
         connect(r_from, r_to, combine_rules(rule, has_all(spells, world), riding_rule))
 

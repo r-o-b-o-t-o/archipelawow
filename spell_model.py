@@ -123,8 +123,7 @@ class SpellModel:
         if not isinstance(value, dict):
             return ()
 
-        return tuple((int(class_id), race_mask) for class_id, race_mask in value.items()
-                     if str(class_id).isdecimal() and isinstance(race_mask, int))
+        return tuple((int(class_id), race_mask) for class_id, race_mask in value.items() if str(class_id).isdecimal() and isinstance(race_mask, int))
 
     def races_of_class(self, class_id: int) -> int:
         """The races of one class a weapon skill is still sold to, or no race at all."""

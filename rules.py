@@ -78,6 +78,6 @@ def set_spell_placement_rules(world: "World") -> None:
             continue
 
         region_level = regions.REGION_LEVELS[region.name]
-        add_item_rule(location, lambda item, level=region_level: (
-            item.player != world.player or SPELLS_CONTAINER.can_place_at_level(item.name, level, world)
-        ))
+        add_item_rule(
+            location, lambda item, level=region_level: (item.player != world.player or SPELLS_CONTAINER.can_place_at_level(item.name, level, world))
+        )
