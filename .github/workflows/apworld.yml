@@ -67,13 +67,19 @@ jobs:
           echo "version=$version" >> "$GITHUB_OUTPUT"
 
       - name: Load it the way an installation would
-        # Installed where a player installs one, with the source folder taken away, so what answers
-        # for the game is the archive rather than the checkout it was packed from.
+        # Installed where a player installs one. Every world folder goes, this one included, bar the
+        # generic world a seed always needs: what answers for the game is then the archive rather
+        # than the checkout it was packed from, and nothing else is even there to answer instead.
+        # The worlds shipped with Archipelago each want packages of their own that nothing here
+        # installs, and a page of their import failures would bury the one line that matters.
         working-directory: archipelago
+        env:
+          # Without this a missing package stops the step on an interactive prompt to install it
+          SKIP_REQUIREMENTS_UPDATE: "1"
         run: |
           mkdir -p custom_worlds
           mv build/apworlds/worldofwarcraft.apworld custom_worlds/
-          rm -rf worlds/worldofwarcraft
+          find worlds -mindepth 1 -maxdepth 1 -type d ! -name generic ! -name '_*' -exec rm -rf {} +
           python - <<'PY'
           import worlds
           from worlds.AutoWorld import AutoWorldRegister
@@ -84,6 +90,7 @@ jobs:
           world = AutoWorldRegister.world_types[game]
           print(f"loaded {game} {world.world_version}, {len(world.item_name_to_id)} items, "
                 f"{len(world.location_name_to_id)} locations")
+          print("worlds registered:", sorted(AutoWorldRegister.world_types))
           PY
 
       - name: Upload the apworld
