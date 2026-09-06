@@ -95,34 +95,51 @@ These are the actions you take in-game to send rewards to yourself or other play
 ## 🛠️ Development
 
 ### Prerequisites
-- [Archipelago source installation](https://github.com/ArchipelagoMW/Archipelago/blob/main/docs/running%20from%20source.md)
+- [Git](https://git-scm.com/downloads)
+- [uv](https://docs.astral.sh/uv/getting-started/installation/) - the commands below use it, but a plain `venv` + `pip` works just as well
 
 ### Setup
 
-1. **Clone the Repository**
+1. **Clone Archipelago and this repository**
+
    ```bash
-   cd archipelago/worlds
-   git clone https://github.com/r-o-b-o-t-o/archipelawow.git worldofwarcraft
+   git clone https://github.com/ArchipelagoMW/Archipelago.git archipelago
+   git clone https://github.com/r-o-b-o-t-o/archipelawow.git archipelago/worlds/worldofwarcraft
+   cd archipelago
    ```
 
-2. **Open in VSCode**
-   - Open the `archipelago/worlds/worldofwarcraft` folder in VSCode
-   - Copy `.env.example` to `.env`
-   - Configure `PYTHONPATH` in `.env`:
-     - Uncomment the appropriate line for your OS
-     - Or set: `PYTHONPATH=${PYTHONPATH};C:\absolute\path\to\archipelago`
+2. **Install the dependencies**
 
-3. **Build the APWorld**
    ```bash
-   # From archipelago directory
-   Launcher.py "Build APWorlds" -- "World of Warcraft"
+   uv python install 3.13
+   uv venv --python 3.13
+   uv pip install pip
+   uv pip install -r requirements.txt
    ```
 
-4. **Host Development Games**
-   ```bash
-   # From archipelago directory
-   python WebHost.py
+3. **Write a web host config**
+
+   PowerShell:
+   ```powershell
+   "PORT: 8080" | Out-File -FilePath "config.yaml"
    ```
+
+   Bash:
+   ```bash
+   echo "PORT: 8080" > config.yaml
+   ```
+
+4. **Run the web host**
+
+   ```bash
+   uv run WebHost.py
+   ```
+
+   From there you can fill in options at http://localhost:8080/games/World%20of%20Warcraft/player-options and generate games at http://localhost:8080/generate. Restart the web host to pick up changes to the code.
+
+5. **Set up your editor** (optional)
+
+   Open the `archipelago/worlds/worldofwarcraft` folder in VSCode, copy `.env.example` to `.env`, and uncomment the `PYTHONPATH` line for your OS so that imports from the Archipelago core resolve properly.
 
 ## 🤝 Contributing
 
