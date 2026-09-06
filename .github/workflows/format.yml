@@ -1,0 +1,51 @@
+name: Format
+
+on:
+  push:
+    branches:
+      - master
+      - ci
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Pinned so a release of either cannot turn the build red on its own. Bump them when the editor
+  # extensions behind .vscode/settings.json move, so a save and a build still agree.
+  BLACK_VERSION: "26.5.1"
+  ISORT_VERSION: "9.0.1"
+
+jobs:
+  format:
+    name: Black and isort
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Install the formatters
+        run: pip install "black==${{ env.BLACK_VERSION }}" "isort==${{ env.ISORT_VERSION }}"
+
+      - name: Check formatting
+        # The width comes from black-formatter.args in .vscode/settings.json, so what the editor
+        # writes on save is what passes here.
+        run: black --check --diff --line-length=150 .
+
+      - name: Check import order
+        # organizeImports on save is isort, and the black profile is what keeps it from rewrapping an
+        # import block black would then put back.
+        run: isort --check-only --diff --profile black --line-length 150 .

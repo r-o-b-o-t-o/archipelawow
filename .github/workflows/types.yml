@@ -1,0 +1,65 @@
+name: Types
+
+on:
+  push:
+    branches:
+      - master
+      - ci
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # The Archipelago this world declares as its minimum in archipelago.json. Its BaseClasses, Options
+  # and worlds modules are what the imports resolve against, so bump the two together.
+  AP_VERSION: "0.6.4"
+  # Pylance is a Visual Studio Code extension with no command line of its own, so CI runs Pyright,
+  # the type checker Pylance is built on and the source of the same diagnostics.
+  PYRIGHT_VERSION: "1.1.407"
+
+jobs:
+  pyright:
+    name: Pyright
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out Archipelago ${{ env.AP_VERSION }}
+        uses: actions/checkout@v7
+        with:
+          repository: ArchipelagoMW/Archipelago
+          ref: ${{ env.AP_VERSION }}
+          path: archipelago
+
+      # An apworld is a package inside worlds/, and its imports read that way: BaseClasses and
+      # Options sit at the Archipelago root and the relative imports climb to worlds.worldofwarcraft.
+      # Checking it out where it is meant to live is what lets Pyright resolve any of that.
+      - name: Check out this world into the Archipelago tree
+        uses: actions/checkout@v7
+        with:
+          path: archipelago/worlds/worldofwarcraft
+
+      - name: Configure Pyright
+        # Only this world is checked; Archipelago itself is along for its types. "basic" is the mode
+        # this world is clean at. "standard" adds seven findings that are idiomatic rather than
+        # wrong -- containers narrowing add() to their own type, and the options override every
+        # Archipelago world writes -- so raising it means addressing those first.
+        run: |
+          cat > archipelago/pyrightconfig.json <<'JSON'
+          {
+            "include": ["worlds/worldofwarcraft"],
+            "typeCheckingMode": "basic",
+            "pythonVersion": "3.12"
+          }
+          JSON
+
+      - name: Run Pyright
+        working-directory: archipelago
+        run: npx --yes pyright@${{ env.PYRIGHT_VERSION }}
