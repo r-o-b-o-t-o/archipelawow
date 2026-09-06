@@ -68,7 +68,7 @@ class SpellModel:
     id: int
     name: str
     class_id: int
-    class_mask: int
+    class_races: tuple[tuple[int, int], ...]
     req_level: int
     req_skill_rank: int
     taught_spells: tuple[int, ...]
@@ -84,7 +84,8 @@ class SpellModel:
 
         spell_id = data.get("id")
         name = data.get("name")
-        kind = KIND_NAMES.get(data.get("kind"))
+        raw_kind = data.get("kind")
+        kind = KIND_NAMES.get(raw_kind) if isinstance(raw_kind, str) else None
         if not isinstance(spell_id, int) or not isinstance(name, str) or kind is None:
             return None
 
@@ -92,7 +93,7 @@ class SpellModel:
             id=spell_id,
             name=name,
             class_id=SpellModel._to_int(data.get("classId")),
-            class_mask=SpellModel._to_int(data.get("classMask")),
+            class_races=SpellModel._to_class_races(data.get("classRaces")),
             req_level=SpellModel._to_int(data.get("reqLevel")),
             req_skill_rank=SpellModel._to_int(data.get("reqSkillRank")),
             taught_spells=tuple(SpellModel._to_int_list(data.get("taughtSpells"))),
@@ -111,6 +112,23 @@ class SpellModel:
         if not isinstance(value, list):
             return []
         return [item for item in value if isinstance(item, int)]
+
+    @staticmethod
+    def _to_class_races(value: object) -> tuple[tuple[int, int], ...]:
+        """The races of each class a weapon skill is sold to, keyed by class id.
+
+        Only the weapon skills carry this, and only as an object: JSON has no integer keys, so the
+        class ids come back as strings.
+        """
+        if not isinstance(value, dict):
+            return ()
+
+        return tuple((int(class_id), race_mask) for class_id, race_mask in value.items()
+                     if str(class_id).isdecimal() and isinstance(race_mask, int))
+
+    def races_of_class(self, class_id: int) -> int:
+        """The races of one class a weapon skill is still sold to, or no race at all."""
+        return next((races for spell_class, races in self.class_races if spell_class == class_id), 0)
 
     def is_learnable_by(self, world: "World") -> bool:
         """Whether this seed's character could ever train this spell.
@@ -134,10 +152,15 @@ class SpellModel:
             return False
 
         character_class = world.options.character_class.value
-        if self.kind == SpellKind.WEAPON and not self.class_mask & (1 << (character_class - 1)):
-            # A weapon skill is one entry for every class that can buy it, so the mask answers here
-            # where a class spell answers with the class it belongs to
-            return False
+        if self.kind == SpellKind.WEAPON:
+            # A weapon skill is one entry for every race and class that can buy it, so the entry
+            # answers here where a class spell answers with the class it belongs to. Race counts for
+            # as much as class: a weapon master sells nothing a character was created holding, and
+            # which weapon that is comes down to race -- a troll hunter starts with Bows, a draenei
+            # one with Crossbows, and each can buy what the other started with.
+            races = self.races_of_class(character_class)
+            if not races & (1 << (world.options.character_race.value - 1)):
+                return False
 
         if self.kind in (SpellKind.CLASS, SpellKind.STARTER) and self.class_id != character_class:
             return False
