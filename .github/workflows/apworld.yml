@@ -55,6 +55,14 @@ jobs:
           pip install bsdiff4 certifi colorama jellyfish orjson pathspec platformdirs PyYAML schema
           typing_extensions websockets
 
+      # The builder loads every world in the tree to find this one, and each of the others wants
+      # packages this job has no reason to install, so their import failures would bury both steps
+      # below. Out they go, bar the generic world a seed always needs and the support packages named
+      # with a leading underscore.
+      - name: Take the other worlds out of the tree
+        working-directory: archipelago
+        run: find worlds -mindepth 1 -maxdepth 1 -type d ! -name generic ! -name '_*' ! -name worldofwarcraft -exec rm -rf {} +
+
       - name: Build the apworld
         id: build
         working-directory: archipelago
@@ -67,11 +75,8 @@ jobs:
           echo "version=$version" >> "$GITHUB_OUTPUT"
 
       - name: Load it the way an installation would
-        # Installed where a player installs one. Every world folder goes, this one included, bar the
-        # generic world a seed always needs: what answers for the game is then the archive rather
-        # than the checkout it was packed from, and nothing else is even there to answer instead.
-        # The worlds shipped with Archipelago each want packages of their own that nothing here
-        # installs, and a page of their import failures would bury the one line that matters.
+        # Installed where a player installs one, and the checkout it was packed from taken away with
+        # the rest, so the archive is the only thing left that can answer for the game.
         working-directory: archipelago
         env:
           # Without this a missing package stops the step on an interactive prompt to install it
@@ -79,7 +84,7 @@ jobs:
         run: |
           mkdir -p custom_worlds
           mv build/apworlds/worldofwarcraft.apworld custom_worlds/
-          find worlds -mindepth 1 -maxdepth 1 -type d ! -name generic ! -name '_*' -exec rm -rf {} +
+          rm -rf worlds/worldofwarcraft
           python - <<'PY'
           import worlds
           from worlds.AutoWorld import AutoWorldRegister
