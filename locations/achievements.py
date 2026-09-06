@@ -22,7 +22,7 @@ class Achievement(Location):
         self.required_level = required_level
 
 
-class AchievementsContainer(LocationContainer):
+class AchievementsContainer(LocationContainer[Achievement]):
     def build_locations(self, world: "World"):
         locations = [*MISC, *CLASSIC_DUNGEONS]
         if world.has_tbc_content():

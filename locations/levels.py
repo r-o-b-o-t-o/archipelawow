@@ -16,7 +16,7 @@ class Level(Location):
         self.region = region
 
 
-class LevelsContainer(LocationContainer):
+class LevelsContainer(LocationContainer[Level]):
     def __init__(self) -> None:
         super().__init__()
         self.all_levels: list[Level] = []

@@ -27,7 +27,7 @@ class GearQuality(IntEnum):
     RARE = 3
 
 
-class GearContainer(ItemContainer):
+class GearContainer(ItemContainer["GearItem"]):
     def build_pool(self, world: "World"):
         return list(ALL_GEAR)
 

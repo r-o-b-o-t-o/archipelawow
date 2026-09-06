@@ -31,7 +31,7 @@ WEAPON_SKILL_LOGIC_REGION = regions.LEVELS_10_15
 PLACEMENT_LEVEL_WINDOW = 10
 
 
-class SpellsContainer(ItemContainer):
+class SpellsContainer(ItemContainer["SpellItem"]):
     def __init__(self) -> None:
         super().__init__()
         self.all_spells: list["SpellItem"] = []
@@ -43,15 +43,13 @@ class SpellsContainer(ItemContainer):
     def build_pool(self, world: "World") -> list["SpellItem"]:
         # Riding is not here: its ranks are a ladder, so they are handed out as the progressive item
         # in progressive.py rather than as one item each.
-        return [item for item in self.all_spells
-                if item.data.kind != SpellKind.RIDING and item.data.is_learnable_by(world)]
+        return [item for item in self.all_spells if item.data.kind != SpellKind.RIDING and item.data.is_learnable_by(world)]
 
     def get_slot_data(self, world: "World"):
         # The taught spells matter for the handful of trainer entries that are a wrapper: the game
         # teaches those by casting the entry rather than learning it, so the server has to know what
         # comes out the other side to keep it out of the character's hands until the item arrives.
-        return [[item.id, item.data.id, item.data.req_level, list(item.data.taught_spells)]
-                for item in self.build_pool(world)]
+        return [[item.id, item.data.id, item.data.req_level, list(item.data.taught_spells)] for item in self.build_pool(world)]
 
     def get_items_for_pool(self, world: "World") -> list[Item]:
         # One copy per spell, matching the one location the seed opens for it
@@ -92,9 +90,9 @@ class SpellItem(Item):
         # The bracket this spell is asked for in, which is the one it is trained in except for the
         # weapon skills -- see WEAPON_SKILL_LOGIC_REGION. It says nothing about where the spell's own
         # check sits: that follows the level its trainer asks for, and is worked out per location.
-        self.logic_region = (WEAPON_SKILL_LOGIC_REGION
-                             if data.kind == SpellKind.WEAPON and data.req_level <= 1
-                             else regions.get_region_by_level(data.req_level))
+        self.logic_region = (
+            WEAPON_SKILL_LOGIC_REGION if data.kind == SpellKind.WEAPON and data.req_level <= 1 else regions.get_region_by_level(data.req_level)
+        )
 
 
 SPELLS_CONTAINER = SpellsContainer()

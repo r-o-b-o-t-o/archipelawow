@@ -22,7 +22,7 @@ class ProgressiveType(IntEnum):
     RIDING = 5
 
 
-class ProgressiveContainer(ItemContainer):
+class ProgressiveContainer(ItemContainer["ProgressiveItem"]):
     def build_pool(self, world: "World"):
         pool = list(ALL_PROGRESSIVE)
 
@@ -34,8 +34,7 @@ class ProgressiveContainer(ItemContainer):
         return pool
 
     def get_slot_data(self, world: "World"):
-        return [[item.id, item.type, item.steps_for(world), item.levels_for(world)]
-                for item in self.build_pool(world)]
+        return [[item.id, item.type, item.steps_for(world), item.levels_for(world)] for item in self.build_pool(world)]
 
     def get_items_for_pool(self, world: "World") -> list[Item]:
         # One copy per step, so a track that lost its top rungs to the seed's goal puts that many
@@ -55,8 +54,7 @@ class ProgressiveItem(Item):
     WoW item to hand over. The server holds on the last step if a stray extra copy ever shows up.
     """
 
-    def __init__(self, name: str, type: ProgressiveType, steps: list[int], expansion_gated=False,
-                 classification=ItemClassification.useful):
+    def __init__(self, name: str, type: ProgressiveType, steps: list[int], expansion_gated=False, classification=ItemClassification.useful):
         super().__init__(name, classification)
         PROGRESSIVE_CONTAINER.add(self)
         self.type = type
@@ -89,8 +87,7 @@ class ProgressiveItem(Item):
 
 def _riding_ladder() -> list:
     """Every riding rank the game has, slowest first, whatever a given seed can reach."""
-    return sorted((spell for spell in SPELL_MODELS if spell.kind == SpellKind.RIDING),
-                  key=lambda spell: spell.req_level)
+    return sorted((spell for spell in SPELL_MODELS if spell.kind == SpellKind.RIDING), key=lambda spell: spell.req_level)
 
 
 # Artisan Riding, the fastest rank there is. It is the one rung the region rules never ask for: it
@@ -111,13 +108,12 @@ class ProgressiveRidingItem(ProgressiveItem):
     """
 
     def __init__(self):
-        super().__init__("Progressive Riding Skill", ProgressiveType.RIDING, [],
-                         classification=ItemClassification.progression)
+        super().__init__("Progressive Riding Skill", ProgressiveType.RIDING, [], classification=ItemClassification.progression)
 
     def ranks_for(self, world: "World"):
-        return sorted((spell for spell in SPELL_MODELS
-                       if spell.kind == SpellKind.RIDING and spell.is_learnable_by(world)),
-                      key=lambda spell: spell.req_level)
+        return sorted(
+            (spell for spell in SPELL_MODELS if spell.kind == SpellKind.RIDING and spell.is_learnable_by(world)), key=lambda spell: spell.req_level
+        )
 
     def steps_for(self, world: "World") -> list[int]:
         return [spell.id for spell in self.ranks_for(world)]
@@ -138,8 +134,7 @@ class ProgressiveRidingItem(ProgressiveItem):
         if level is None:
             return 0
 
-        return sum(1 for rank in self.ranks_for(world)
-                   if rank.id != UNGATED_RIDING_RANK_ID and rank.req_level <= level)
+        return sum(1 for rank in self.ranks_for(world) if rank.id != UNGATED_RIDING_RANK_ID and rank.req_level <= level)
 
 
 PROGRESSIVE_CONTAINER = ProgressiveContainer()

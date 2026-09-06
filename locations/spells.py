@@ -27,7 +27,7 @@ class Spell(Location):
         self.region = regions.get_region_by_level(data.req_level)
 
 
-class SpellsContainer(LocationContainer):
+class SpellsContainer(LocationContainer[Spell]):
     def __init__(self) -> None:
         super().__init__()
         self.all_spells: list[Spell] = []
@@ -63,8 +63,7 @@ class SpellsContainer(LocationContainer):
             if loc.data.kind in (SpellKind.RIDING, SpellKind.MOUNT):
                 needed = sum(1 for rank in riding_ranks if rank < loc.data.req_skill_rank)
                 if needed:
-                    riding_rule = (lambda state, needed=needed:
-                                   state.has(PROGRESSIVE_RIDING.name, world.player, needed))
+                    riding_rule = lambda state, needed=needed: state.has(PROGRESSIVE_RIDING.name, world.player, needed)
 
             if level_rule or riding_rule:
                 set_rule(world.get_location(loc.name), combine_rules(level_rule, riding_rule))

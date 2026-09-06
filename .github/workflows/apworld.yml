@@ -1,0 +1,106 @@
+name: APWorld
+
+on:
+  push:
+    branches:
+      - master
+      - ci
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # The Archipelago that packs the apworld, which is a different question from the one this world
+  # runs on: the builder, and the .apignore it reads, arrived in 0.6.7, while what it writes still
+  # loads on the older core archipelago.json names as the minimum.
+  AP_VERSION: "0.6.7"
+
+jobs:
+  build:
+    name: Build and load
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out Archipelago ${{ env.AP_VERSION }}
+        uses: actions/checkout@v7
+        with:
+          repository: ArchipelagoMW/Archipelago
+          ref: ${{ env.AP_VERSION }}
+          path: archipelago
+
+      # The builder packs a world from worlds/, names the archive after the folder it came from, and
+      # that name is the module Archipelago imports, so the checkout path decides all three.
+      - name: Check out this world into the Archipelago tree
+        uses: actions/checkout@v7
+        with:
+          path: archipelago/worlds/worldofwarcraft
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Install what building and loading a world takes
+        # Not requirements.txt: that pulls in Kivy and a git checkout of KivyMD for the launcher UI,
+        # which a component run from the command line never opens. pathspec is what reads .apignore.
+        run: >
+          pip install bsdiff4 certifi colorama jellyfish orjson pathspec platformdirs PyYAML schema
+          typing_extensions websockets
+
+      # The builder loads every world in the tree to find this one, and each of the others wants
+      # packages this job has no reason to install, so their import failures would bury both steps
+      # below. Out they go, bar the generic world a seed always needs and the support packages named
+      # with a leading underscore.
+      - name: Take the other worlds out of the tree
+        working-directory: archipelago
+        run: find worlds -mindepth 1 -maxdepth 1 -type d ! -name generic ! -name '_*' ! -name worldofwarcraft -exec rm -rf {} +
+
+      - name: Build the apworld
+        id: build
+        working-directory: archipelago
+        env:
+          # Without this the launcher stops on an interactive pip prompt
+          SKIP_REQUIREMENTS_UPDATE: "1"
+        run: |
+          python Launcher.py "Build APWorlds" -- "World of Warcraft"
+          version=$(python -c "import json; print(json.load(open('worlds/worldofwarcraft/archipelago.json'))['world_version'])")
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Load it the way an installation would
+        # Installed where a player installs one, and the checkout it was packed from taken away with
+        # the rest, so the archive is the only thing left that can answer for the game.
+        working-directory: archipelago
+        env:
+          # Without this a missing package stops the step on an interactive prompt to install it
+          SKIP_REQUIREMENTS_UPDATE: "1"
+        run: |
+          mkdir -p custom_worlds
+          mv build/apworlds/worldofwarcraft.apworld custom_worlds/
+          rm -rf worlds/worldofwarcraft
+          python - <<'PY'
+          import worlds
+          from worlds.AutoWorld import AutoWorldRegister
+
+          game = "World of Warcraft"
+          assert game in AutoWorldRegister.world_types, f"{game} did not register from the apworld"
+
+          world = AutoWorldRegister.world_types[game]
+          print(f"loaded {game} {world.world_version}, {len(world.item_name_to_id)} items, "
+                f"{len(world.location_name_to_id)} locations")
+          print("worlds registered:", sorted(AutoWorldRegister.world_types))
+          PY
+
+      - name: Upload the apworld
+        uses: actions/upload-artifact@v7
+        with:
+          name: worldofwarcraft-${{ steps.build.outputs.version }}
+          path: archipelago/custom_worlds/worldofwarcraft.apworld
+          if-no-files-found: error

@@ -35,6 +35,8 @@ def reachable_zone_names(zone_list: list["Zone"], world: "World") -> list[str]:
 
 
 def set_completion_conditions(world: "World") -> None:
+    goal_zones: list[Zone] = []
+
     match world.options.goal.value:
         case Goal.option_classic_dungeonmaster:
             goal_zones = zones.CLASSIC_DUNGEONS
@@ -78,6 +80,6 @@ def set_spell_placement_rules(world: "World") -> None:
             continue
 
         region_level = regions.REGION_LEVELS[region.name]
-        add_item_rule(location, lambda item, level=region_level: (
-            item.player != world.player or SPELLS_CONTAINER.can_place_at_level(item.name, level, world)
-        ))
+        add_item_rule(
+            location, lambda item, level=region_level: (item.player != world.player or SPELLS_CONTAINER.can_place_at_level(item.name, level, world))
+        )

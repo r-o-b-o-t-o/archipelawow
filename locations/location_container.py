@@ -1,13 +1,17 @@
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Generic, TypeVar
 
 if TYPE_CHECKING:
     from ..world import World
     from .location_registry import Location
 
+# What a container holds. A container is written for one kind of location, and saying so is what lets
+# it narrow add() and the lookups to that kind without promising the base class something wider.
+LocationT = TypeVar("LocationT", bound="Location")
 
-class LocationContainer:
+
+class LocationContainer(Generic[LocationT]):
     def __init__(self) -> None:
-        self.__all_locations: dict[int, "Location"] = {}
+        self.__all_locations: dict[int, LocationT] = {}
         self.__name_to_id: dict[str, int] = {}
 
     def get_name_to_id_dict(self):
@@ -19,7 +23,7 @@ class LocationContainer:
             return None
         return self.__all_locations.get(id)
 
-    def add(self, location: "Location"):
+    def add(self, location: LocationT, /):
         self.__all_locations[location.id] = location
         self.__name_to_id[location.name] = location.id
 

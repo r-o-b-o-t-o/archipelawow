@@ -1,13 +1,17 @@
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Generic, TypeVar
 
 if TYPE_CHECKING:
     from ..world import World
     from .item_registry import Item
 
+# What a container holds. A container is written for one kind of item, and saying so is what lets it
+# narrow add() and the lookups to that kind without promising the base class something wider.
+ItemT = TypeVar("ItemT", bound="Item")
 
-class ItemContainer:
+
+class ItemContainer(Generic[ItemT]):
     def __init__(self) -> None:
-        self.__all_items: dict[int, "Item"] = {}
+        self.__all_items: dict[int, ItemT] = {}
         self.__name_to_id: dict[str, int] = {}
 
     def get_name_to_id_dict(self):
@@ -19,7 +23,7 @@ class ItemContainer:
             return None
         return self.__all_items.get(id)
 
-    def add(self, item: "Item"):
+    def add(self, item: ItemT, /):
         self.__all_items[item.id] = item
         self.__name_to_id[item.name] = item.id
 

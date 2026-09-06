@@ -6,6 +6,8 @@
             "source.organizeImports": "explicit"
         },
     },
+    "python.analysis.diagnosticMode": "workspace",
+    "python.analysis.typeCheckingMode": "standard",
     "python.envFile": "${workspaceFolder}/.env",
     "python.terminal.useEnvFile": true,
     "black-formatter.args": ["--line-length=150"]
