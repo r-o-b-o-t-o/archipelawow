@@ -22,7 +22,7 @@ class ProgressiveType(IntEnum):
     RIDING = 5
 
 
-class ProgressiveContainer(ItemContainer):
+class ProgressiveContainer(ItemContainer["ProgressiveItem"]):
     def build_pool(self, world: "World"):
         pool = list(ALL_PROGRESSIVE)
 

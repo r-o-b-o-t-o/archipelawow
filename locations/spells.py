@@ -27,7 +27,7 @@ class Spell(Location):
         self.region = regions.get_region_by_level(data.req_level)
 
 
-class SpellsContainer(LocationContainer):
+class SpellsContainer(LocationContainer[Spell]):
     def __init__(self) -> None:
         super().__init__()
         self.all_spells: list[Spell] = []

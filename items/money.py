@@ -9,7 +9,7 @@ from .item_container import ItemContainer
 from .item_registry import Item
 
 
-class MoneyContainer(ItemContainer):
+class MoneyContainer(ItemContainer["GoldPouch"]):
     def get_slot_data(self, world: "World"):
         return GOLD_POUCH.id
 

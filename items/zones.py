@@ -17,7 +17,7 @@ class Side(IntEnum):
     HORDE = 3
 
 
-class ZonesContainer(ItemContainer):
+class ZonesContainer(ItemContainer["Zone"]):
     def __init__(self) -> None:
         super().__init__()
         self.zones: dict[int, "Zone"] = {}

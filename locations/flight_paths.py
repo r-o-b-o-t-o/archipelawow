@@ -29,7 +29,7 @@ class FlightPath(Location):
         self.side = side
 
 
-class FlightPathsContainer(LocationContainer):
+class FlightPathsContainer(LocationContainer[FlightPath]):
     def build_locations(self, world: "World"):
         locations = [*EASTERN_KINGDOMS, *KALIMDOR]
         if world.has_tbc_content():

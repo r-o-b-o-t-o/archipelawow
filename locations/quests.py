@@ -57,7 +57,7 @@ class Quest(Location):
         QUESTS_CONTAINER.add(self)
 
 
-class QuestsContainer(LocationContainer):
+class QuestsContainer(LocationContainer[Quest]):
     def __init__(self) -> None:
         super().__init__()
         self.quests: dict[int, Quest] = {}

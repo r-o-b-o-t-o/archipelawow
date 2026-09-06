@@ -31,7 +31,7 @@ WEAPON_SKILL_LOGIC_REGION = regions.LEVELS_10_15
 PLACEMENT_LEVEL_WINDOW = 10
 
 
-class SpellsContainer(ItemContainer):
+class SpellsContainer(ItemContainer["SpellItem"]):
     def __init__(self) -> None:
         super().__init__()
         self.all_spells: list["SpellItem"] = []

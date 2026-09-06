@@ -9,7 +9,7 @@ from .item_container import ItemContainer
 from .item_registry import Item
 
 
-class LevelsContainer(ItemContainer):
+class LevelsContainer(ItemContainer["Level"]):
     def build_pool(self, world: "World"):
         levels = 59
 

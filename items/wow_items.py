@@ -10,7 +10,7 @@ from .item_container import ItemContainer
 from .item_registry import Item
 
 
-class WoWItemsContainer(ItemContainer):
+class WoWItemsContainer(ItemContainer["WoWItem"]):
     def build_pool(self, world: "World"):
         items = [*BAGS, *heirlooms_for(world)]
 
