@@ -47,16 +47,15 @@ jobs:
           path: archipelago/worlds/worldofwarcraft
 
       - name: Configure Pyright
-        # Only this world is checked; Archipelago itself is along for its types. "basic" is the mode
-        # this world is clean at. "standard" adds seven findings that are idiomatic rather than
-        # wrong -- containers narrowing add() to their own type, and the options override every
-        # Archipelago world writes -- so raising it means addressing those first.
+        # Only this world is checked; Archipelago itself is along for its types. The mode is the one
+        # Pylance runs in the editor, and the Python version is the oldest Archipelago itself will
+        # start on, so syntax newer than that is caught here rather than by a player.
         run: |
           cat > archipelago/pyrightconfig.json <<'JSON'
           {
             "include": ["worlds/worldofwarcraft"],
-            "typeCheckingMode": "basic",
-            "pythonVersion": "3.12"
+            "typeCheckingMode": "standard",
+            "pythonVersion": "3.11"
           }
           JSON
 

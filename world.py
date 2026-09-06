@@ -28,7 +28,7 @@ class World(BaseWorld):
     game = constants.GAME_NAME
     web = WebWorld()
     options_dataclass = options.Options
-    options: options.Options
+    options: options.Options  # pyright: ignore[reportIncompatibleVariableOverride]
 
     items = ItemRegistry.instance
     item_name_to_id = items.get_name_to_id_dict()

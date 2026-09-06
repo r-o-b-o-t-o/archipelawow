@@ -35,6 +35,8 @@ def reachable_zone_names(zone_list: list["Zone"], world: "World") -> list[str]:
 
 
 def set_completion_conditions(world: "World") -> None:
+    goal_zones: list[Zone] = []
+
     match world.options.goal.value:
         case Goal.option_classic_dungeonmaster:
             goal_zones = zones.CLASSIC_DUNGEONS
