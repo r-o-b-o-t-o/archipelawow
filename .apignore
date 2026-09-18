@@ -4,3 +4,4 @@
 .editorconfig
 docs/*.xlsx
 docs/*.csv
+CLAUDE.md
