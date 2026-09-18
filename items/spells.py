@@ -49,7 +49,22 @@ class SpellsContainer(ItemContainer["SpellItem"]):
         # The taught spells matter for the handful of trainer entries that are a wrapper: the game
         # teaches those by casting the entry rather than learning it, so the server has to know what
         # comes out the other side to keep it out of the character's hands until the item arrives.
-        return [[item.id, item.data.id, item.data.req_level, list(item.data.taught_spells)] for item in self.build_pool(world)]
+        # Only what the seed holds back is listed. A starting ability left alone stays out of it even
+        # when a wrapper teaches it -- Judgement casts Seal of Righteousness on the way -- since the
+        # character was created holding it, and the server takes back whatever is listed here.
+        kept_starters = self.kept_starters(world)
+        return [
+            [item.id, item.data.id, item.data.req_level, [spell for spell in item.data.taught_spells if spell not in kept_starters]]
+            for item in self.build_pool(world)
+        ]
+
+    def kept_starters(self, world: "World") -> set[int]:
+        """The starting abilities of this seed's class that the character keeps from creation."""
+        if world.options.spells_randomize_starter_abilities:
+            return set()
+
+        character_class = world.options.character_class.value
+        return {item.data.id for item in self.all_spells if item.data.kind == SpellKind.STARTER and item.data.class_id == character_class}
 
     def get_items_for_pool(self, world: "World") -> list[Item]:
         # One copy per spell, matching the one location the seed opens for it
