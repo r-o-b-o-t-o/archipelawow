@@ -293,11 +293,12 @@ class QuestsContainer(LocationContainer[Quest]):
                 continue
 
             data = self.quests_json[quest.quest_id]
-            if data.is_breadcrumb:
-                # Breadcrumbs point at a chain the player can also walk up to, and the game takes them
-                # away once they do, so they make unreliable locations. They stay in the table because
-                # the chains behind them list them as prerequisites -- which is why this is not one of
-                # the `is_blocked` reasons: skipping a breadcrumb must not strip out what it leads to
+            if data.is_missable:
+                # The game takes these away once the player gets to another quest first -- a breadcrumb's
+                # target, for one -- so they make unreliable locations. They stay in the table because other
+                # quests can list them as one way in among several -- which is why this is not one of the
+                # `is_blocked` reasons: skipping a missable quest must not strip out what it leads to. A quest
+                # that can only be reached through a missable one is marked missable by the extractor itself
                 continue
 
             if quest.quest_id in unreachable_quests:
