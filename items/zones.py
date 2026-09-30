@@ -245,7 +245,7 @@ SCARLET_MONASTERY = Zone("Scarlet Monastery", "INV_Helmet_52", 796, L30, L30, TP
 SCHOLOMANCE = Zone("Scholomance", "Spell_Holy_SenseUndead", 2057, L55, L55, TP(289, 196.37, 127.05, 135.91, 6.09))
 SHADOWFANG_KEEP = Zone("Shadowfang Keep", "Boss_ArchmageArugal", 209, L15, L15, TP(33, -228.24, 2111.87, 77.9, 5.92))
 STRATHOLME = Zone("Stratholme", "Spell_DeathKnight_ArmyOfTheDead", 2017, L55, L55, TP(329, 3395.1, -3380.25, 143.7, 0), keys=[12382])
-SUNKEN_TEMPLE = Zone("Sunken Temple", "Boss_ShadeOfEranikus", 1417, L45, L45, TP(109, -319.2, 100, -130.8, 3.19))
+SUNKEN_TEMPLE = Zone("Sunken Temple", "Boss_ShadeOfEranikus", 1477, L45, L45, TP(109, -319.2, 100, -130.8, 3.19))
 THE_DEADMINES = Zone("The Deadmines", "Boss_EdwinVancleef", 1581, L15, L15, TP(36, -16.4, -383.1, 62.78, 1.86))
 THE_STOCKADE = Zone("The Stockade", "Boss_Bazil_Thredd", 717, L20, L20, TP(34, 54.2, 0.68, -17.3, 0))
 ULDAMAN = Zone("Uldaman", "Boss_Archaedas", 1337, L35, L35, TP(70, -226.8, 49.1, -45, 1.39))
