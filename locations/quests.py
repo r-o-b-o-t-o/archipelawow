@@ -38,12 +38,12 @@ def get_quest_region(level: int, zones: list[Zone]) -> str:
 
 
 class Quest(Location):
-    def __init__(self, name: str, quest_id: int, level: int, region: str, zones: list[Zone] | None = None, display_zone=True):
+    def __init__(self, name: str, quest_id: int, level: int, region: str, zones: list[Zone] | None = None, sort_name: str | None = None):
         zones = list(zones) if zones else []
 
         name = f"Quest: {name}"
-        if display_zone and len(zones) > 0:
-            name += f" ({zones[0].name})"
+        if sort_name:
+            name += f" ({sort_name})"
 
         super().__init__(name)
         self.quest_id = quest_id
@@ -75,14 +75,14 @@ class QuestsContainer(LocationContainer[Quest]):
         for id, data in self.quests_json.items():
             zone_ids = [z.id for z in [*data.start_zones, *data.objective_zones, *data.end_zones]]
             if data.quest_sort_area:
-                zone_ids.insert(0, data.quest_sort_area.id)
-            # Dedupe in place so the sort area stays in front and the location is named after it
+                zone_ids.append(data.quest_sort_area.id)
             quest_zones = list(filter(None, [ZONES_CONTAINER.zones.get(id) for id in dict.fromkeys(zone_ids)]))
 
             level = data.recommended_level or data.min_level or 1
             region = get_quest_region(level, quest_zones)
+            sort = data.quest_sort_area or data.quest_sort
 
-            Quest(name=data.display_title, quest_id=id, level=level, region=region, zones=quest_zones)
+            Quest(name=data.display_title, quest_id=id, level=level, region=region, zones=quest_zones, sort_name=sort.name if sort else None)
 
         self.resolve_requirements()
 

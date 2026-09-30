@@ -34,6 +34,8 @@ class QuestModel:
     races: list[int] | None
     classes: list[int] | None
     quest_sort_area: QuestZoneModel | None
+    # Not a zone, but it comes in the same id and name shape
+    quest_sort: QuestZoneModel | None
     is_missable: bool
     is_dungeon: bool
     requires_any: list[int]
@@ -71,6 +73,7 @@ class QuestModel:
             races=QuestModel._to_int_list_or_none(data.get("races")),
             classes=QuestModel._to_int_list_or_none(data.get("classes")),
             quest_sort_area=QuestZoneModel.from_dict(data.get("questSortArea")),
+            quest_sort=QuestZoneModel.from_dict(data.get("questSort")),
             is_missable=QuestModel._to_bool(data.get("isMissable")),
             is_dungeon=QuestModel._to_bool(data.get("isDungeon")),
             requires_any=QuestModel._to_int_list(data.get("requiresAny")),
