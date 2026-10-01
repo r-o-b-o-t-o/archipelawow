@@ -322,10 +322,11 @@ class QuestsContainer(LocationContainer[Quest]):
         for q in self.build_locations(world):
             # A quest lists every zone either faction might use for it, so the list is a superset of what
             # this player needs -- "The Islander" names all six capitals -- and zones outside the pool are
-            # dropped rather than treated as requirements. The level rule stands alone because a quest
-            # whose only zones are cities still has a level, and its region gates just the bracket floor
+            # dropped rather than treated as requirements. The level is the quest's own or the highest its
+            # zones open at, and stands alone because a quest with no zone left in the pool still has a
+            # level, and its region gates just the bracket floor
             required_zones = [z for z in q.required_zones if z in zones_in_pool]
-            level_rule = required_level(q.required_level, world)
+            level_rule = required_level(max([q.required_level, *[z.level(world) for z in required_zones]]), world)
             zones_rule = has_all([z.name for z in required_zones], world) if len(required_zones) > 0 else None
             set_rule(world.get_location(q.name), combine_rules(zones_rule, level_rule))
 

@@ -37,6 +37,12 @@ def has_item(item: str, world: "World") -> CollectionRule:
     return lambda state: state.has(item, world.player)
 
 
+def has_zone(zone: "Zone", world: "World") -> CollectionRule:
+    """A zone's item, and the level the zone opens at: a zone handed over early is not expected to be used early."""
+    level = zone.level(world)
+    return combine_rules(has_item(zone.name, world), required_level(level, world) if level > 1 else None)
+
+
 def has_all(items: list[str], world: "World") -> CollectionRule:
     return lambda state: state.has_all([item for item in items], world.player)
 

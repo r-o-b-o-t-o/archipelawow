@@ -6,7 +6,7 @@ if TYPE_CHECKING:
 
 from worlds.generic.Rules import CollectionRule, set_rule
 
-from ..conditions import combine_rules, has_item, required_level
+from ..conditions import combine_rules, has_zone, required_level
 from ..items import zones
 from ..items.zones import ZONES_CONTAINER, Zone
 from ..options import CharacterRace
@@ -97,7 +97,7 @@ class FlightPathsContainer(LocationContainer[FlightPath]):
         level_rule = required_level(6, world)
 
         for _, fp in self.build_placed_locations(world):
-            zone_rule: CollectionRule | None = has_item(fp.zone.name, world) if fp.zone.id in zone_ids else None
+            zone_rule: CollectionRule | None = has_zone(fp.zone, world) if fp.zone.id in zone_ids else None
             set_rule(world.get_location(fp.name), combine_rules(level_rule, zone_rule))
 
 

@@ -92,6 +92,14 @@ class Zone(Item):
 
         ZONES_CONTAINER.add(self)
 
+    def region(self, world: "World") -> str:
+        """The bracket the zone is filed under for the world's faction, empty where that faction has none."""
+        return self.region_a if world.is_alliance() else self.region_h
+
+    def level(self, world: "World") -> int:
+        """The level the zone opens at for the world's faction, or 0 where that faction has no bracket for it."""
+        return regions.REGION_LEVELS.get(self.region(world), 0)
+
 
 ZONES_CONTAINER = ZonesContainer()
 
