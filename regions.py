@@ -85,9 +85,9 @@ def connect(r_from: Region, r_to: Region, rule: Optional[CollectionRule] = None)
 def connect_regions(world: "World") -> None:
     from .items.progressive import PROGRESSIVE_RIDING
     from .items.spells import SPELLS_CONTAINER
-    from .items.zones import ZONES_CONTAINER
+    from .items.zones import CAPITAL_CITIES, ZONES_CONTAINER
 
-    zones_in_pool = ZONES_CONTAINER.build_pool(world)
+    zones_in_pool = [zone for zone in ZONES_CONTAINER.build_pool(world) if zone not in CAPITAL_CITIES]
     for i in range(1, len(ALL_REGIONS)):
         r_from = world.get_region(ALL_REGIONS[i - 1])
         r_to = world.get_region(ALL_REGIONS[i])

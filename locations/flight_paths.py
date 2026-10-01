@@ -6,7 +6,7 @@ if TYPE_CHECKING:
 
 from worlds.generic.Rules import CollectionRule, set_rule
 
-from ..conditions import combine_rules, has_zone, required_level
+from ..conditions import combine_rules, has_zone
 from ..items import zones
 from ..items.zones import ZONES_CONTAINER, Zone
 from ..options import CharacterRace
@@ -21,12 +21,14 @@ class Side(IntEnum):
 
 
 class FlightPath(Location):
-    def __init__(self, name: str, zone: Zone, node_id: int, side: Side):
+    def __init__(self, name: str, zone: Zone, node_id: int, side: Side, reached_through: list[Zone] | None = None):
         super().__init__(f"Flight Path: {name} ({zone.name})")
         FLIGHT_PATHS_CONTAINER.add(self)
         self.zone = zone
         self.node_id = node_id
         self.side = side
+        # Zones of which one is needed on top of `zone`, for a flight master that zone does not lead to
+        self.reached_through = reached_through or []
 
 
 class FlightPathsContainer(LocationContainer[FlightPath]):
@@ -93,12 +95,12 @@ class FlightPathsContainer(LocationContainer[FlightPath]):
 
     def set_rules(self, world: "World"):
         zone_ids = set([zone.id for zone in ZONES_CONTAINER.build_pool(world)])
-        # A level rule so capital cities are not needed too early, other flight paths are gated by their zone
-        level_rule = required_level(6, world)
 
         for _, fp in self.build_placed_locations(world):
             zone_rule: CollectionRule | None = has_zone(fp.zone, world) if fp.zone.id in zone_ids else None
-            set_rule(world.get_location(fp.name), combine_rules(level_rule, zone_rule))
+            through = [has_zone(zone, world) for zone in fp.reached_through if zone.id in zone_ids]
+            through_rule = combine_rules(*through, operator="or") if through else None
+            set_rule(world.get_location(fp.name), combine_rules(zone_rule, through_rule))
 
 
 FLIGHT_PATHS_CONTAINER = FlightPathsContainer()
@@ -108,7 +110,7 @@ AERIE_PEAK = FlightPath("Aerie Peak", zones.THE_HINTERLANDS, 43, Side.ALLIANCE)
 BOOTY_BAY_A = FlightPath("Booty Bay [A]", zones.STRANGLETHORN_VALE, 19, Side.ALLIANCE)
 CHILLWIND_CAMP = FlightPath("Chillwind Camp", zones.WESTERN_PLAGUELANDS, 66, Side.ALLIANCE)
 DARKSHIRE = FlightPath("Darkshire", zones.DUSKWOOD, 12, Side.ALLIANCE)
-IRONFORGE = FlightPath("Ironforge", zones.DUN_MOROGH, 6, Side.ALLIANCE)
+IRONFORGE = FlightPath("Ironforge", zones.IRONFORGE, 6, Side.ALLIANCE)
 LAKESHIRE = FlightPath("Lakeshire", zones.REDRIDGE_MOUNTAINS, 5, Side.ALLIANCE)
 LIGHTS_HOPE_CHAPEL_A = FlightPath("Light's Hope Chapel [A]", zones.EASTERN_PLAGUELANDS, 67, Side.ALLIANCE)
 MENETHIL_HARBOR = FlightPath("Menethil Harbor", zones.WETLANDS, 7, Side.ALLIANCE)
@@ -118,7 +120,7 @@ REBEL_CAMP = FlightPath("Rebel Camp", zones.STRANGLETHORN_VALE, 195, Side.ALLIAN
 REFUGE_POINTE = FlightPath("Refuge Pointe", zones.ARATHI_HIGHLANDS, 16, Side.ALLIANCE)
 SENTINEL_HILL = FlightPath("Sentinel Hill", zones.WESTFALL, 4, Side.ALLIANCE)
 SOUTHSHORE = FlightPath("Southshore", zones.HILLSBRAD_FOOTHILLS, 14, Side.ALLIANCE)
-STORMWIND = FlightPath("Stormwind", zones.ELWYNN_FOREST, 2, Side.ALLIANCE)
+STORMWIND = FlightPath("Stormwind", zones.STORMWIND_CITY, 2, Side.ALLIANCE)
 THELSAMAR = FlightPath("Thelsamar", zones.LOCH_MODAN, 8, Side.ALLIANCE)
 THORIUM_POINT_A = FlightPath("Thorium Point [A]", zones.SEARING_GORGE, 74, Side.ALLIANCE)
 
@@ -136,7 +138,7 @@ THE_BULWARK = FlightPath("The Bulwark", zones.TIRISFAL_GLADES, 384, Side.HORDE)
 THE_SEPULCHER = FlightPath("The Sepulcher", zones.SILVERPINE_FOREST, 10, Side.HORDE)
 THORIUM_POINT_H = FlightPath("Thorium Point [H]", zones.SEARING_GORGE, 75, Side.HORDE)
 TRANQUILLIEN = FlightPath("Tranquillien", zones.GHOSTLANDS, 83, Side.HORDE)
-UNDERCITY = FlightPath("Undercity", zones.TIRISFAL_GLADES, 11, Side.HORDE)
+UNDERCITY = FlightPath("Undercity", zones.UNDERCITY, 11, Side.HORDE)
 
 THONDRORIL_RIVER = FlightPath("Thondroril River", zones.WESTERN_PLAGUELANDS, 383, Side.BOTH)
 
@@ -186,13 +188,15 @@ FEATHERMOON = FlightPath("Feathermoon", zones.FERALAS, 41, Side.ALLIANCE)
 FOREST_SONG = FlightPath("Forest Song", zones.ASHENVALE, 167, Side.ALLIANCE)
 GADGETZAN_A = FlightPath("Gadgetzan [A]", zones.TANARIS, 39, Side.ALLIANCE)
 NIJELS_POINT = FlightPath("Nijel's Point", zones.DESOLACE, 37, Side.ALLIANCE)
-RUTTHERAN_VILLAGE = FlightPath("Rut'theran Village", zones.TELDRASSIL, 27, Side.ALLIANCE)
+# Rut'theran Village sits below the tree, cut off from the rest of Teldrassil: only the portal in
+# Darnassus and the boat from Auberdine lead there
+RUTTHERAN_VILLAGE = FlightPath("Rut'theran Village", zones.TELDRASSIL, 27, Side.ALLIANCE, [zones.DARNASSUS, zones.DARKSHORE])
 STONETALON_PEAK = FlightPath("Stonetalon Peak", zones.STONETALON_MOUNTAINS, 33, Side.ALLIANCE)
 TALONBRANCH_GLADE = FlightPath("Talonbranch Glade", zones.FELWOOD, 65, Side.ALLIANCE)
 TALRENDIS_POINT = FlightPath("Talrendis Point", zones.AZSHARA, 64, Side.ALLIANCE)
 THALANAAR = FlightPath("Thalanaar", zones.FERALAS, 31, Side.ALLIANCE)
 THERAMORE_ISLE = FlightPath("Theramore Isle", zones.DUSTWALLOW_MARSH, 32, Side.ALLIANCE)
-THE_EXODAR = FlightPath("The Exodar", zones.AZUREMYST_ISLE, 94, Side.ALLIANCE)
+THE_EXODAR = FlightPath("The Exodar", zones.THE_EXODAR, 94, Side.ALLIANCE)
 
 BLOODVENOM_POST = FlightPath("Bloodvenom Post", zones.FELWOOD, 48, Side.HORDE)
 BRACKENWALL_VILLAGE = FlightPath("Brackenwall Village", zones.DUSTWALLOW_MARSH, 55, Side.HORDE)
@@ -202,13 +206,13 @@ CENARION_HOLD_H = FlightPath("Cenarion Hold [H]", zones.SILITHUS, 72, Side.HORDE
 EVERLOOK_H = FlightPath("Everlook [H]", zones.WINTERSPRING, 53, Side.HORDE)
 FREEWIND_POST = FlightPath("Freewind Post", zones.THOUSAND_NEEDLES, 30, Side.HORDE)
 GADGETZAN_H = FlightPath("Gadgetzan [H]", zones.TANARIS, 40, Side.HORDE)
-ORGRIMMAR = FlightPath("Orgrimmar", zones.DUROTAR, 23, Side.HORDE)
+ORGRIMMAR = FlightPath("Orgrimmar", zones.ORGRIMMAR, 23, Side.HORDE)
 RATCHET = FlightPath("Ratchet", zones.THE_BARRENS, 80, Side.HORDE)
 SHADOWPREY_VILLAGE = FlightPath("Shadowprey Village", zones.DESOLACE, 38, Side.HORDE)
 SPLINTERTREE_POST = FlightPath("Splintertree Post", zones.ASHENVALE, 61, Side.HORDE)
 SUN_ROCK_RETREAT = FlightPath("Sun Rock Retreat", zones.STONETALON_MOUNTAINS, 29, Side.HORDE)
 THE_CROSSROADS = FlightPath("Crossroads", zones.THE_BARRENS, 25, Side.HORDE)
-THUNDER_BLUFF = FlightPath("Thunder Bluff", zones.MULGORE, 22, Side.HORDE)
+THUNDER_BLUFF = FlightPath("Thunder Bluff", zones.THUNDER_BLUFF, 22, Side.HORDE)
 VALORMOK = FlightPath("Valormok", zones.AZSHARA, 44, Side.HORDE)
 ZORAMGAR_OUTPOST = FlightPath("Zoram'gar Outpost", zones.ASHENVALE, 58, Side.HORDE)
 

@@ -104,8 +104,10 @@ class Zone(Item):
 ZONES_CONTAINER = ZonesContainer()
 
 L01 = regions.LEVELS_01_05
-# No alias for Levels 05-10: every starting zone covers levels 1 through 10 and is already assigned to
-# L01, and the next tier of zones opens at 10, so nothing unlocks at the 05-10 boundary but the level
+# Only the capital cities: every starting zone covers levels 1 through 10 and is already assigned to L01,
+# and the next tier of zones opens at 10. A capital is no place to level, but filing it here keeps the
+# seed from expecting the player to go there before level 5 -- see CAPITAL_CITIES
+L05 = regions.LEVELS_05_10
 L10 = regions.LEVELS_10_15
 L15 = regions.LEVELS_15_20
 L20 = regions.LEVELS_20_25
@@ -137,14 +139,18 @@ ELWYNN_FOREST = Zone("Elwynn Forest", "Zone_ElwynnForest", 12, L01, "", TP(0, -8
 EVERSONG_WOODS = Zone("Eversong Woods", "Zone_EversongWoods", 3430, "", L01, TP(530, 10349.6, -6357.29, 33.41, 5.32), side=H)
 GHOSTLANDS = Zone("Ghostlands", "Zone_Ghostlands", 3433, "", L10, TP(530, 7995.21, -6879.2, 59.12, 2.98), side=H)
 HILLSBRAD_FOOTHILLS = Zone("Hillsbrad Foothills", "Zone_HillsbradFoothills", 267, L30, L20, TP(0, -498.81, -1183.35, 80.37, 2.18))
+IRONFORGE = Zone("Ironforge", "Spell_Arcane_TeleportIronForge", 1537, L05, "", TP(0, -4994.53, -956.16, 502.25, 5.67), side=A)
 LOCH_MODAN = Zone("Loch Modan", "Zone_LochModan", 38, L10, "", TP(0, -5634.49, -2525.38, 376.98, 4), side=A)
 REDRIDGE_MOUNTAINS = Zone("Redridge Mountains", "Zone_RedridgeMountains", 44, L15, "", TP(0, -9619.71, -1774.12, 52.81, 4.76), side=A)
 SEARING_GORGE = Zone("Searing Gorge", "Zone_SearingGorge_01", 51, L45, L45, TP(0, -6812.25, -1714.05, 277.11, 1.65))
+SILVERMOON_CITY = Zone("Silvermoon City", "Spell_Arcane_TeleportSilvermoon", 3487, "", L05, TP(530, 9467.56, -7277.7, 14.77, 6.27), side=H)
 SILVERPINE_FOREST = Zone("Silverpine Forest", "Zone_Silverpine_01", 130, "", L10, TP(0, 1462.47, 662.02, 46.47, 2.13), side=H)
+STORMWIND_CITY = Zone("Stormwind City", "Spell_Arcane_TeleportStormWind", 1519, L05, "", TP(0, -8884.46, 576.48, 94.09, 0.71), side=A)
 STRANGLETHORN_VALE = Zone("Stranglethorn Vale", "Zone_Stranglethorn_01", 33, L30, L30, TP(0, -11965.1, -89.99, 31.56, 5.1))
 SWAMP_OF_SORROWS = Zone("Swamp of Sorrows", "Zone_SwampSorrows_01", 8, "", L35, TP(0, -10515.52, -2377, 80.42, 5.79))
 THE_HINTERLANDS = Zone("The Hinterlands", "Zone_Hinterlands_01", 47, L40, L45, TP(0, 45.39, -1953.78, 155.99, 5.98))
 TIRISFAL_GLADES = Zone("Tirisfal Glades", "Zone_TirisfalGlades_01", 85, "", L01, TP(0, 1676.71, 1678.31, 121.68, 3.14), side=H)
+UNDERCITY = Zone("Undercity", "Spell_Arcane_TeleportUnderCity", 1497, "", L05, TP(0, 1834.23, 238.46, 60.35, 3.19), side=H)
 WESTERN_PLAGUELANDS = Zone("Western Plaguelands", "Zone_WesternPlaguelands_01", 28, L50, L50, TP(0, 1631.83, -1393.31, 67.51, 3.58))
 WESTFALL = Zone("Westfall", "Zone_WestFall_01", 40, L10, "", TP(0, -9817.96, 852.6, 26.96, 2.15))
 WETLANDS = Zone("Wetlands", "Zone_Wetlands_01", 11, L20, "", TP(0, -4469.739, -2690.02, 266.04, 0.76), side=A)
@@ -160,14 +166,18 @@ EASTERN_KINGDOMS = [
     EVERSONG_WOODS,
     GHOSTLANDS,
     HILLSBRAD_FOOTHILLS,
+    IRONFORGE,
     LOCH_MODAN,
     REDRIDGE_MOUNTAINS,
     SEARING_GORGE,
+    SILVERMOON_CITY,
     SILVERPINE_FOREST,
+    STORMWIND_CITY,
     STRANGLETHORN_VALE,
     SWAMP_OF_SORROWS,
     THE_HINTERLANDS,
     TIRISFAL_GLADES,
+    UNDERCITY,
     WESTERN_PLAGUELANDS,
     WESTFALL,
     WETLANDS,
@@ -179,18 +189,22 @@ AZSHARA = Zone("Azshara", "Zone_Azshara_01", 16, L45, L45, TP(1, 2805.87, -3806.
 AZUREMYST_ISLE = Zone("Azuremyst Isle", "Zone_AzuremystIsle_01", 3524, L01, "", TP(530, -3961.6, -13931.2, 101, 2.1), side=A)
 BLOODMYST_ISLE = Zone("Bloodmyst Isle", "Zone_BloodmystIsle_01", 3525, L10, "", TP(530, -2794, -12209.33, 16.31, 0.05), side=A)
 DARKSHORE = Zone("Darkshore", "Zone_Darkshore_01", 148, L10, "", TP(1, 6452.3, 657.38, 9.91, 4.39), side=A)
+DARNASSUS = Zone("Darnassus", "Spell_Arcane_TeleportDarnassus", 1657, L05, "", TP(1, 9955.21, 2142.96, 1328.49, 1.59), side=A)
 DESOLACE = Zone("Desolace", "Zone_Desolace", 405, L30, L30, TP(1, 275.81, 1834.67, 86.12, 3.44))
 DUROTAR = Zone("Durotar", "Zone_Durotar", 14, "", L01, TP(1, -618.52, -4251.67, 38.72, 0), side=H)
 DUSTWALLOW_MARSH = Zone("Dustwallow Marsh", "Zone_DustwallowMarsh", 15, L35, L40, TP(1, -3040.83, -3098.25, 65.06, 4.28))
 FELWOOD = Zone("Felwood", "Zone_Felwood", 361, L50, L50, TP(1, 3589.11, -1516.15, 169.88, 0.13))
 FERALAS = Zone("Feralas", "Zone_Feralas", 357, L40, L40, TP(1, -4273.42, -713.23, -26.89, 1.55))
 MULGORE = Zone("Mulgore", "Zone_Mulgore_01", 215, "", L01, TP(1, -2917.58, -257.98, 53, 0), side=H)
+ORGRIMMAR = Zone("Orgrimmar", "Spell_Arcane_TeleportOrgrimmar", 1637, "", L05, TP(1, 1503.32, -4414.48, 22.12, 0.07), side=H)
 SILITHUS = Zone("Silithus", "Zone_Silithus_01", 1377, L55, L55, TP(1, -6309.21, -357.35, -1.02, 2.21))
 STONETALON_MOUNTAINS = Zone("Stonetalon Mountains", "Zone_Stonetalon_01", 406, L20, L20, TP(1, -217.57, -744, 4.63, 1))
 TANARIS = Zone("Tanaris", "Zone_Tanaris_01", 440, L45, L45, TP(1, -6853.43, -3754.62, 36.03, 3.16))
 TELDRASSIL = Zone("Teldrassil", "Zone_Darnassus", 141, L01, "", TP(1, 10311.3, 832.5, 1327, 5.7), side=A)
 THE_BARRENS = Zone("The Barrens", "Zone_Barrens_01", 17, "", L10, TP(1, 257.94, -3496.47, 28.75, 1.94))
+THE_EXODAR = Zone("The Exodar", "Spell_Arcane_TeleportExodar", 3557, L05, "", TP(530, -4017.51, -11899.35, -1.49, 1.06), side=A)
 THOUSAND_NEEDLES = Zone("Thousand Needles", "Zone_ThousandNeedles_01", 400, L25, L25, TP(1, -4586.42, -1858.81, 86.2, 2.91))
+THUNDER_BLUFF = Zone("Thunder Bluff", "Spell_Arcane_TeleportThunderBluff", 1638, "", L05, TP(1, -1283.78, 135.48, 131.63, 5.12), side=H)
 UNGORO_CRATER = Zone("Un'Goro Crater", "Zone_UnGoroCrater_01", 490, L50, L50, TP(1, -7944.5, -2119.57, -218.12, 0.41))
 WINTERSPRING = Zone("Winterspring", "Zone_Winterspring", 618, L55, L55, TP(1, 6892.34, -2302.42, 585.38, 3.5))
 KALIMDOR = [
@@ -199,18 +213,22 @@ KALIMDOR = [
     AZUREMYST_ISLE,
     BLOODMYST_ISLE,
     DARKSHORE,
+    DARNASSUS,
     DESOLACE,
     DUROTAR,
     DUSTWALLOW_MARSH,
     FELWOOD,
     FERALAS,
     MULGORE,
+    ORGRIMMAR,
     SILITHUS,
     STONETALON_MOUNTAINS,
     TANARIS,
     TELDRASSIL,
     THE_BARRENS,
+    THE_EXODAR,
     THOUSAND_NEEDLES,
+    THUNDER_BLUFF,
     UNGORO_CRATER,
     WINTERSPRING,
 ]
@@ -276,6 +294,12 @@ CLASSIC_DUNGEONS = [
     ZULFARRAK,
 ]
 AZEROTH = [*EASTERN_KINGDOMS, *KALIMDOR]
+
+# Filed under Levels 05-10 for the level their own checks ask for, but kept out of the rule that opens the
+# bracket, which every zone of the later brackets is part of: the fill would have to place all four of a
+# faction's capitals in the handful of locations below level 5, which measured over 150 seeds at the default
+# quest density took it from 147 successful fills down to 114
+CAPITAL_CITIES = [DARNASSUS, IRONFORGE, ORGRIMMAR, SILVERMOON_CITY, STORMWIND_CITY, THE_EXODAR, THUNDER_BLUFF, UNDERCITY]
 
 # Outland Dungeons
 AUCHENAI_CRYPTS = Zone("Auchenai Crypts", "Boss_Exarch_Maladaar", 3790, L65, L65, TP(558, -20.62, 0.14, -0.11, 0))
