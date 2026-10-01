@@ -186,7 +186,7 @@ SILITHUS = Zone("Silithus", "Zone_Silithus_01", 1377, L55, L55, TP(1, -6309.21, 
 STONETALON_MOUNTAINS = Zone("Stonetalon Mountains", "Zone_Stonetalon_01", 406, L20, L20, TP(1, -217.57, -744, 4.63, 1))
 TANARIS = Zone("Tanaris", "Zone_Tanaris_01", 440, L45, L45, TP(1, -6853.43, -3754.62, 36.03, 3.16))
 TELDRASSIL = Zone("Teldrassil", "Zone_Darnassus", 141, L01, "", TP(1, 10311.3, 832.5, 1327, 5.7), side=A)
-THE_BARRENS = Zone("The Barrens", "Zone_Barrens_01", 17, "", L10, TP(1, 315.04, -3742.17, 35.11, 1.62))
+THE_BARRENS = Zone("The Barrens", "Zone_Barrens_01", 17, "", L10, TP(1, 257.94, -3496.47, 28.75, 1.94))
 THOUSAND_NEEDLES = Zone("Thousand Needles", "Zone_ThousandNeedles_01", 400, L25, L25, TP(1, -4586.42, -1858.81, 86.2, 2.91))
 UNGORO_CRATER = Zone("Un'Goro Crater", "Zone_UnGoroCrater_01", 490, L50, L50, TP(1, -7944.5, -2119.57, -218.12, 0.41))
 WINTERSPRING = Zone("Winterspring", "Zone_Winterspring", 618, L55, L55, TP(1, 6892.34, -2302.42, 585.38, 3.5))
