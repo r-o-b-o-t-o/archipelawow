@@ -3,12 +3,13 @@ from typing import Any
 
 from BaseClasses import Item as BaseItem
 from BaseClasses import Location as BaseLocation
+from Options import OptionError
 from worlds.AutoWorld import World as BaseWorld
 
 from . import constants, options, regions, rules
 from .items.item_registry import ItemRegistry
 from .locations.location_registry import LocationRegistry
-from .options import CharacterClass, CharacterRace, Goal
+from .options import PLAYABLE_COMBINATIONS, CharacterClass, CharacterRace, Goal
 from .web_world import WebWorld
 
 
@@ -35,6 +36,14 @@ class World(BaseWorld):
     locations = LocationRegistry.instance
     location_name_to_id = locations.get_name_to_id_dict()
     origin_region_name = regions.LEVELS_01_05
+
+    def generate_early(self) -> None:
+        # Options.__post_init__ has already rerolled any pair the YAML weights allow a playable one for.
+        race, character_class = self.options.character_race, self.options.character_class
+        if (race.value, character_class.value) not in PLAYABLE_COMBINATIONS:
+            races = " or ".join(CharacterRace.get_option_name(value) for value in race.weights)
+            classes = " or ".join(CharacterClass.get_option_name(value) for value in character_class.weights)
+            raise OptionError(f"{self.player_name}: {classes} is not available for {races}.")
 
     def create_regions(self) -> None:
         regions.create_and_connect_regions(self)

@@ -1,6 +1,20 @@
+import random
+from collections import Counter
 from dataclasses import dataclass
+from typing import Any, Self
 
-from Options import Accessibility, Choice, DeathLink, NamedRange, OptionGroup, PerGameCommonOptions, ProgressionBalancing, StartInventoryPool, Toggle
+from Options import (
+    Accessibility,
+    Choice,
+    DeathLink,
+    NamedRange,
+    OptionError,
+    OptionGroup,
+    PerGameCommonOptions,
+    ProgressionBalancing,
+    StartInventoryPool,
+    Toggle,
+)
 
 
 class Goal(Choice):
@@ -26,7 +40,36 @@ class Goal(Choice):
     default = option_classic_dungeonmaster
 
 
-class CharacterRace(Choice):
+class RerollableChoice(Choice):
+    """A choice that keeps the YAML weight of each value, so the world may reroll it from them."""
+
+    # Generate.py then hands from_any the YAML value as written instead of drawing one from its weights.
+    supports_weighting = False
+
+    def __init__(self, value: int):
+        super().__init__(value)
+        self.weights: dict[int, float] = {value: 1}
+
+    @classmethod
+    def from_any(cls, data: Any) -> Self:
+        if isinstance(data, list):
+            data = Counter(data)
+        elif not isinstance(data, dict):
+            data = {data: 1}
+        weights: dict[int, float] = {}
+        for key, weight in data.items():
+            values = list(cls.name_lookup) if str(key).lower() == "random" else [super().from_any(key).value]
+            for value in values:
+                weights[value] = weights.get(value, 0) + int(weight) / len(values)
+        weights = {value: weight for value, weight in weights.items() if weight > 0}
+        if not weights:
+            raise OptionError("All options are weighted as zero.")
+        option = cls(random.choices(list(weights), list(weights.values()))[0])
+        option.weights = weights
+        return option
+
+
+class CharacterRace(RerollableChoice):
     """
     Your character's race.
     """
@@ -49,7 +92,7 @@ class CharacterRace(Choice):
     horde = [option_orc, option_undead, option_tauren, option_troll, option_blood_elf]
 
 
-class CharacterClass(Choice):
+class CharacterClass(RerollableChoice):
     """
     Your character's class.
     """
@@ -70,6 +113,22 @@ class CharacterClass(Choice):
     # Warriors run on rage and rogues on energy, so anything that restores mana is dead weight
     # for them.
     no_mana = [option_warrior, option_rogue]
+    # The races each class is open to, by CharacterRace value.
+    races = {
+        option_warrior: [1, 2, 3, 4, 5, 6, 7, 8, 11],
+        option_paladin: [1, 3, 10, 11],
+        option_hunter: [2, 3, 4, 6, 8, 10, 11],
+        option_rogue: [1, 2, 3, 4, 5, 7, 8, 10],
+        option_priest: [1, 3, 4, 5, 8, 10, 11],
+        option_shaman: [2, 6, 8, 11],
+        option_mage: [1, 5, 7, 8, 10, 11],
+        option_warlock: [1, 2, 5, 7, 10],
+        option_druid: [4, 6],
+    }
+
+
+# Every (race, class) pair a character can be created as.
+PLAYABLE_COMBINATIONS = [(race, character_class) for character_class, races in CharacterClass.races.items() for race in races]
 
 
 class QuestsAllStartingZones(Toggle):
@@ -186,6 +245,22 @@ class Options(PerGameCommonOptions):
     spells_randomize_starter_abilities: SpellsRandomizeStarterAbilities
     death_link: DeathLink
     start_inventory_from_pool: StartInventoryPool
+
+    def __post_init__(self) -> None:
+        # Rerolled as the options are assembled rather than in generate_early, so that what reads them first (such as
+        # --csv_output) already sees the final pair. Like the YAML draw itself, this uses Archipelago's seeded global random.
+        race, character_class = self.character_race, self.character_class
+        if (race.value, character_class.value) in PLAYABLE_COMBINATIONS:
+            return
+
+        combinations = [
+            (race_id, class_id) for race_id, class_id in PLAYABLE_COMBINATIONS if race_id in race.weights and class_id in character_class.weights
+        ]
+        # With nothing to reroll into, the pair is left for generate_early to report under the player's name.
+        if combinations:
+            # Weighting each combination by the YAML weights of its race and class is the same as rerolling both until they make one.
+            weights = [race.weights[race_id] * character_class.weights[class_id] for race_id, class_id in combinations]
+            race.value, character_class.value = random.choices(combinations, weights)[0]
 
 
 option_groups = [
