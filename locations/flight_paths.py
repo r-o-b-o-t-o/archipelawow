@@ -22,7 +22,7 @@ class Side(IntEnum):
 
 class FlightPath(Location):
     def __init__(self, name: str, zone: Zone, node_id: int, side: Side, reached_through: list[Zone] | None = None):
-        super().__init__(f"Flight Path: {name} ({zone.name})")
+        super().__init__(f"Flight Path: {name}" if name == zone.name else f"Flight Path: {name} ({zone.name})")
         FLIGHT_PATHS_CONTAINER.add(self)
         self.zone = zone
         self.node_id = node_id
