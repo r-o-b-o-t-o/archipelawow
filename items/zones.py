@@ -56,13 +56,8 @@ class ZonesContainer(ItemContainer["Zone"]):
         return list(self.build_pool(world))
 
     def get_precollected_items(self, world: "World") -> list[Item]:
-        precollected: list[Zone] = []
-        if world.is_alliance():
-            precollected += [z for z in [ELWYNN_FOREST, DUN_MOROGH, TELDRASSIL, AZUREMYST_ISLE]]
-        else:
-            precollected += [z for z in [DUROTAR, MULGORE, TIRISFAL_GLADES, EVERSONG_WOODS]]
-
-        return list(precollected)
+        race = world.options.character_race.value
+        return [z for z in self.zones.values() if race in z.starter_for_races]
 
 
 class Teleport:
