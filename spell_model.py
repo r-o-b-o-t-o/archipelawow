@@ -69,6 +69,7 @@ class SpellModel:
     name: str
     class_id: int
     class_races: tuple[tuple[int, int], ...]
+    trainer_zones: tuple[tuple[int, int], ...]
     req_level: int
     req_skill_rank: int
     taught_spells: tuple[int, ...]
@@ -93,7 +94,8 @@ class SpellModel:
             id=spell_id,
             name=name,
             class_id=SpellModel._to_int(data.get("classId")),
-            class_races=SpellModel._to_class_races(data.get("classRaces")),
+            class_races=SpellModel._to_int_pairs(data.get("classRaces")),
+            trainer_zones=SpellModel._to_int_pairs(data.get("trainerZones")),
             req_level=SpellModel._to_int(data.get("reqLevel")),
             req_skill_rank=SpellModel._to_int(data.get("reqSkillRank")),
             taught_spells=tuple(SpellModel._to_int_list(data.get("taughtSpells"))),
@@ -114,16 +116,20 @@ class SpellModel:
         return [item for item in value if isinstance(item, int)]
 
     @staticmethod
-    def _to_class_races(value: object) -> tuple[tuple[int, int], ...]:
-        """The races of each class a weapon skill is sold to, keyed by class id.
-
-        Only the weapon skills carry this, and only as an object: JSON has no integer keys, so the
-        class ids come back as strings.
-        """
+    def _to_int_pairs(value: object) -> tuple[tuple[int, int], ...]:
+        """An object of integers keyed by id. JSON has no integer keys, so the ids come back as strings."""
         if not isinstance(value, dict):
             return ()
 
-        return tuple((int(class_id), race_mask) for class_id, race_mask in value.items() if str(class_id).isdecimal() and isinstance(race_mask, int))
+        return tuple((int(key), item) for key, item in value.items() if str(key).isdecimal() and isinstance(item, int))
+
+    def zones_teaching(self, race: int) -> list[int]:
+        """The zones a trainer selling this spell stands in that will teach it to `race`.
+
+        Only weapon masters and mount trainers are listed. A racial riding trainer turns the other races
+        away, which is what leaves an orc only Orgrimmar to learn riding in before Outland.
+        """
+        return [zone for zone, races in self.trainer_zones if not races or races & (1 << (race - 1))]
 
     def races_of_class(self, class_id: int) -> int:
         """The races of one class a weapon skill is still sold to, or no race at all."""
