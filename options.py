@@ -37,7 +37,7 @@ class Goal(Choice):
     option_level_70 = 12
     option_level_80 = 13
 
-    default = option_classic_dungeonmaster
+    default = option_level_60
 
 
 class RerollableChoice(Choice):
@@ -319,4 +319,23 @@ option_groups = [
     OptionGroup("Advanced Options", [DeathLink, ProgressionBalancing, Accessibility]),
 ]
 
-option_presets = {}
+option_presets = {
+    "Classic Dungeonmaster": {
+        "goal": Goal.option_classic_dungeonmaster,
+        "quests_include_dungeons": True,
+        "classic_dungeonsanity": ClassicDungeonsanity.option_all,
+    },
+    "Outland Dungeonmaster": {
+        "goal": Goal.option_outland_dungeonmaster,
+        "quests_include_dungeons": True,
+        "classic_dungeonsanity": ClassicDungeonsanity.option_completion,
+        "outland_dungeonsanity": OutlandDungeonsanity.option_all,
+    },
+    "Northrend Dungeonmaster": {
+        "goal": Goal.option_northrend_dungeonmaster,
+        "quests_include_dungeons": True,
+        "classic_dungeonsanity": ClassicDungeonsanity.option_completion,
+        "outland_dungeonsanity": OutlandDungeonsanity.option_completion,
+        "northrend_dungeonsanity": NorthrendDungeonsanity.option_all,
+    },
+}
