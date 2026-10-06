@@ -9,9 +9,9 @@ Archipelago APWorld for World of Warcraft 3.3.5a. It runs inside an Archipelago 
   location names and IDs, and every key of `fill_slot_data()` in `world.py`, are parsed by the module
   (`src/network/AP_Client.cpp`). A change to any of those on one side needs a matching change on the
   other.
-- `archipelawow-data-extractor` — generates `data/quests.json` and `data/spells.json`. Never hand-edit
-  them: change the extractor and regenerate. A change to their shape needs a matching change in
-  `quest_model.py` / `spell_model.py` here.
+- `archipelawow-data-extractor` — generates `data/quests.json`, `data/spells.json` and
+  `data/bosses.json`. Never hand-edit them: change the extractor and regenerate. A change to their
+  shape needs a matching change in `quest_model.py` / `spell_model.py` / `boss_model.py` here.
 
 ## Code
 

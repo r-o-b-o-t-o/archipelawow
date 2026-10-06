@@ -26,7 +26,7 @@ ArchipelaWoW brings the magic of World of Warcraft to the Archipelago randomizer
 ### 🎯 Location Checks
 These are the actions you take in-game to send rewards to yourself or other players in the multiworld, creating interconnected progression across different games and worlds.
 
-- **Dungeon Completions**
+- **Dungeon Completions & Bosses**
 - **Achievements**
 - **Flight Paths**
 - **Quests**

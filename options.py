@@ -188,6 +188,49 @@ class QuestsMaxPartySize(NamedRange):
     }
 
 
+class Dungeonsanity(Choice):
+    option_none = 0
+    option_completion = 1
+    option_all = 2
+
+    default = option_none
+
+
+class ClassicDungeonsanity(Dungeonsanity):
+    """
+    What becomes a location in the classic dungeons.
+    None: nothing.
+    Completion: completing each dungeon, through its achievement.
+    All: completing each dungeon, and defeating each of its bosses.
+    Bosses summoned with an item from outside the dungeon (Avatar of Hakkar, Kirtonos the Herald, Gahz'rilla) are left out.
+    """
+
+    display_name = "Classic dungeonsanity"
+
+
+class OutlandDungeonsanity(Dungeonsanity):
+    """
+    What becomes a location in the Burning Crusade dungeons.
+    None: nothing.
+    Completion: completing each dungeon, through its achievement.
+    All: completing each dungeon, and defeating each of its bosses.
+    """
+
+    display_name = "Outland dungeonsanity"
+
+
+class NorthrendDungeonsanity(Dungeonsanity):
+    """
+    What becomes a location in the Wrath of the Lich King dungeons.
+    None: nothing.
+    Completion: completing each dungeon, through its achievement.
+    All: completing each dungeon, and defeating each of its bosses.
+    The Violet Hold's First and Second Prisoner are left out, since the run picks its prisoners at random.
+    """
+
+    display_name = "Northrend dungeonsanity"
+
+
 class GearRewardLevelWindow(NamedRange):
     """
     How many levels away you can be from a piece of gear's required level for it to be included in the random gear pool.
@@ -240,6 +283,9 @@ class Options(PerGameCommonOptions):
     quests_all_starting_zones: QuestsAllStartingZones
     quests_include_dungeons: QuestsIncludeDungeons
     quests_max_party_size: QuestsMaxPartySize
+    classic_dungeonsanity: ClassicDungeonsanity
+    outland_dungeonsanity: OutlandDungeonsanity
+    northrend_dungeonsanity: NorthrendDungeonsanity
     gear_reward_level_window: GearRewardLevelWindow
     gear_include_all_armor_types: GearIncludeAllArmorTypes
     spells_randomize_starter_abilities: SpellsRandomizeStarterAbilities
@@ -267,6 +313,7 @@ option_groups = [
     OptionGroup("General Options", [Goal]),
     OptionGroup("Character Options", [CharacterRace, CharacterClass]),
     OptionGroup("Quest Options", [QuestsDensity, QuestsAllStartingZones, QuestsMaxPartySize, QuestsIncludeDungeons]),
+    OptionGroup("Dungeon Options", [ClassicDungeonsanity, OutlandDungeonsanity, NorthrendDungeonsanity]),
     OptionGroup("Gear Options", [GearRewardLevelWindow, GearIncludeAllArmorTypes]),
     OptionGroup("Spell Options", [SpellsRandomizeStarterAbilities]),
     OptionGroup("Advanced Options", [DeathLink, ProgressionBalancing, Accessibility]),

@@ -9,6 +9,7 @@ from .. import regions
 from ..conditions import required_level
 from ..items import zones
 from ..items.zones import Zone
+from ..options import Dungeonsanity
 from .location_container import LocationContainer
 from .location_registry import Location
 
@@ -24,10 +25,12 @@ class Achievement(Location):
 
 class AchievementsContainer(LocationContainer[Achievement]):
     def build_locations(self, world: "World"):
-        locations = [*MISC, *CLASSIC_DUNGEONS]
-        if world.has_tbc_content():
+        locations = [*MISC]
+        if world.options.classic_dungeonsanity.value != Dungeonsanity.option_none:
+            locations += CLASSIC_DUNGEONS
+        if world.has_tbc_content() and world.options.outland_dungeonsanity.value != Dungeonsanity.option_none:
             locations += OUTLAND_DUNGEONS
-        if world.has_wotlk_content():
+        if world.has_wotlk_content() and world.options.northrend_dungeonsanity.value != Dungeonsanity.option_none:
             locations += NORTHREND_DUNGEONS
 
         return locations
