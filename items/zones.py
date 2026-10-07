@@ -298,7 +298,7 @@ AZEROTH = [*EASTERN_KINGDOMS, *KALIMDOR]
 # Filed under Levels 05-10 for the level their own checks ask for, but kept out of the rule that opens the
 # bracket, which every zone of the later brackets is part of: the fill would have to place all four of a
 # faction's capitals in the handful of locations below level 5, which measured over 150 seeds at the default
-# quest density took it from 147 successful fills down to 114
+# questsanity took it from 147 successful fills down to 114
 CAPITAL_CITIES = [DARNASSUS, IRONFORGE, ORGRIMMAR, SILVERMOON_CITY, STORMWIND_CITY, THE_EXODAR, THUNDER_BLUFF, UNDERCITY]
 
 # Outland Dungeons

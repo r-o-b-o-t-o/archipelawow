@@ -147,14 +147,14 @@ class QuestsIncludeDungeons(Toggle):
     display_name = "Dungeons"
 
 
-class QuestsDensity(NamedRange):
+class Questsanity(NamedRange):
     """
     Percentage of the available quests turned into locations.
     Quests are picked at random, with a quota per level bracket so that every bracket keeps a comparable share of locations.
     Brackets will always have at least 5 quests, no matter how low this is set.
     """
 
-    display_name = "Quest density"
+    display_name = "Questsanity"
 
     range_start = 10
     range_end = 100
@@ -279,7 +279,7 @@ class Options(PerGameCommonOptions):
     goal: Goal
     character_race: CharacterRace
     character_class: CharacterClass
-    quests_density: QuestsDensity
+    questsanity: Questsanity
     quests_all_starting_zones: QuestsAllStartingZones
     quests_include_dungeons: QuestsIncludeDungeons
     quests_max_party_size: QuestsMaxPartySize
@@ -312,7 +312,7 @@ class Options(PerGameCommonOptions):
 option_groups = [
     OptionGroup("General Options", [Goal]),
     OptionGroup("Character Options", [CharacterRace, CharacterClass]),
-    OptionGroup("Quest Options", [QuestsDensity, QuestsAllStartingZones, QuestsMaxPartySize, QuestsIncludeDungeons]),
+    OptionGroup("Quest Options", [Questsanity, QuestsAllStartingZones, QuestsMaxPartySize, QuestsIncludeDungeons]),
     OptionGroup("Dungeon Options", [ClassicDungeonsanity, OutlandDungeonsanity, NorthrendDungeonsanity]),
     OptionGroup("Gear Options", [GearRewardLevelWindow, GearIncludeAllArmorTypes]),
     OptionGroup("Spell Options", [SpellsRandomizeStarterAbilities]),

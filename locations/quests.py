@@ -268,7 +268,7 @@ class QuestsContainer(LocationContainer[Quest]):
         brackets cannot re-introduce the imbalance the quota is there to avoid.
         """
         available = self.filter_locations(world)
-        density = world.options.quests_density.value
+        density = world.options.questsanity.value
         if density >= 100:
             return available
 
