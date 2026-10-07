@@ -3,10 +3,10 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from ..world import World
 
-from worlds.generic.Rules import set_rule
+from rule_builder.rules import Has, Or, Rule
 
 from .. import regions
-from ..conditions import combine_rules, has_zone, required_level
+from ..conditions import has_zone, required_level
 from ..items.progressive import PROGRESSIVE_RIDING
 from ..items.zones import ZONES_CONTAINER, Zone
 from ..spell_model import SPELL_DISPLAY_NAMES, SPELL_MODELS, SpellKind, SpellModel
@@ -78,22 +78,19 @@ class SpellsContainer(LocationContainer[Spell]):
             # The region only gates the bracket floor, while a trainer refuses to teach a spell one
             # level early, so the exact level is a rule of its own. A weapon master asks for no level
             # at all for most of what it sells, which leaves nothing to say.
-            level_rule = required_level(loc.data.req_level, world) if loc.data.req_level > 1 else None
+            rule: Rule = required_level(loc.data.req_level)
 
             # Anything a mount trainer sells is priced in riding skill: a rank is only sold to a
             # character holding the one below it, and Cold Weather Flying only to one that has
             # reached Expert. Both come out as a number of ladder items to hold first.
-            riding_rule = None
             if loc.data.kind in (SpellKind.RIDING, SpellKind.MOUNT):
-                needed = sum(1 for rank in riding_ranks if rank < loc.data.req_skill_rank)
-                if needed:
-                    riding_rule = lambda state, needed=needed: state.has(PROGRESSIVE_RIDING.name, world.player, needed)
+                rule &= Has(PROGRESSIVE_RIDING.name, sum(1 for rank in riding_ranks if rank < loc.data.req_skill_rank))
 
             zone_rules = [has_zone(zone, world) for zone in self.trainer_zones(loc, zones_in_pool, world)]
-            zone_rule = combine_rules(*zone_rules, operator="or") if zone_rules else None
+            if zone_rules:
+                rule &= Or(*zone_rules)
 
-            if level_rule or riding_rule or zone_rule:
-                set_rule(world.get_location(loc.name), combine_rules(level_rule, riding_rule, zone_rule))
+            world.set_rule(world.get_location(loc.name), rule)
 
 
 SPELLS_CONTAINER = SpellsContainer()

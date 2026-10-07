@@ -5,10 +5,10 @@ from weakref import WeakKeyDictionary
 if TYPE_CHECKING:
     from ..world import World
 
-from worlds.generic.Rules import set_rule
+from rule_builder.rules import HasAll
 
 from .. import regions
-from ..conditions import combine_rules, has_all, required_level
+from ..conditions import required_level
 from ..items.zones import EXPANSION_ZONE_IDS, ZONES_CONTAINER, Zone
 from ..quest_model import QuestModel, load_quest_models_by_id
 from .location_container import LocationContainer
@@ -326,9 +326,8 @@ class QuestsContainer(LocationContainer[Quest]):
             # zones open at, and stands alone because a quest with no zone left in the pool still has a
             # level, and its region gates just the bracket floor
             required_zones = [z for z in q.required_zones if z in zones_in_pool]
-            level_rule = required_level(max([q.required_level, *[z.level(world) for z in required_zones]]), world)
-            zones_rule = has_all([z.name for z in required_zones], world) if len(required_zones) > 0 else None
-            set_rule(world.get_location(q.name), combine_rules(zones_rule, level_rule))
+            level_rule = required_level(max([q.required_level, *[z.level(world) for z in required_zones]]))
+            world.set_rule(world.get_location(q.name), HasAll(*[z.name for z in required_zones]) & level_rule)
 
 
 QUESTS_CONTAINER = QuestsContainer()

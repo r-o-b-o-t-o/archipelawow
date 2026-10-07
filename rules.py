@@ -4,10 +4,10 @@ if TYPE_CHECKING:
     from .items.zones import Zone
     from .world import World
 
+from rule_builder.rules import HasAll
 from worlds.generic.Rules import add_item_rule
 
 from . import regions
-from .conditions import has_all
 from .items import zones
 from .items.spells import SPELLS_CONTAINER
 from .items.zones import ZONES_CONTAINER
@@ -56,7 +56,7 @@ def set_completion_conditions(world: "World") -> None:
         case Goal.option_level_80:
             goal_zones = zones.NORTHREND
 
-    world.multiworld.completion_condition[world.player] = has_all(reachable_zone_names(goal_zones, world), world)
+    world.set_completion_rule(HasAll(*reachable_zone_names(goal_zones, world)))
 
 
 def set_spell_placement_rules(world: "World") -> None:

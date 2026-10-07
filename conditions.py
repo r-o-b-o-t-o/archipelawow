@@ -1,63 +1,24 @@
-from typing import TYPE_CHECKING, Literal, Optional
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from .items.zones import Zone
     from .world import World
 
-from BaseClasses import CollectionState
-from worlds.generic.Rules import CollectionRule, set_rule
+from rule_builder.rules import Has, HasAll, Rule
 
 from .items.levels import LEVEL_UP
 
 
-def set_location_rule(location: str, item: str, world: "World"):
-    set_rule(world.get_location(location), has_item(item, world))
+def required_level(level: int) -> Rule:
+    # Has resolves to True for a count below 1, which is the first level
+    return Has(LEVEL_UP.name, level - 1)
 
 
-def combine_rules(*args: Optional[CollectionRule], operator: Literal["and", "or"] = "and") -> CollectionRule:
-    def f(state: CollectionState) -> bool:
-        for rule in args:
-            if not rule:
-                continue
-            result = rule(state)
-            if operator == "and" and result is False:
-                return False
-            if operator == "or" and result is True:
-                return True
-        return operator == "and"
-
-    return f
-
-
-def required_level(level: int, world: "World") -> CollectionRule:
-    return lambda state: state.has(LEVEL_UP.name, world.player, level - 1)
-
-
-def has_item(item: str, world: "World") -> CollectionRule:
-    return lambda state: state.has(item, world.player)
-
-
-def has_zone(zone: "Zone", world: "World") -> CollectionRule:
+def has_zone(zone: "Zone", world: "World") -> Rule:
     """A zone's item, and the level the zone opens at: a zone handed over early is not expected to be used early."""
-    level = zone.level(world)
-    return combine_rules(has_item(zone.name, world), required_level(level, world) if level > 1 else None)
+    return Has(zone.name) & required_level(zone.level(world))
 
 
-def has_all(items: list[str], world: "World") -> CollectionRule:
-    return lambda state: state.has_all([item for item in items], world.player)
-
-
-def has_any(items: list[str], world: "World") -> CollectionRule:
-    return lambda state: state.has_any([item for item in items], world.player)
-
-
-def required_level_and_items(level: int, alliance_items: list[str], horde_items: list[str], world: "World") -> CollectionRule:
-    level_condition = required_level(level, world)
-
-    if world.is_alliance():
-        return combine_rules(level_condition, has_all(alliance_items, world))
-    return combine_rules(level_condition, has_all(horde_items, world))
-
-
-def required_level_and_zones(level: int, alliance_zones: list["Zone"], horde_zones: list["Zone"], world: "World"):
-    return required_level_and_items(level, [i.name for i in alliance_zones], [i.name for i in horde_zones], world)
+def required_level_and_zones(level: int, alliance_zones: list["Zone"], horde_zones: list["Zone"], world: "World") -> Rule:
+    zones = alliance_zones if world.is_alliance() else horde_zones
+    return required_level(level) & HasAll(*[zone.name for zone in zones])

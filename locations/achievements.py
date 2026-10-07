@@ -3,8 +3,6 @@ from typing import TYPE_CHECKING, Optional
 if TYPE_CHECKING:
     from ..world import World
 
-from worlds.generic.Rules import set_rule
-
 from .. import regions
 from ..conditions import required_level
 from ..items import zones
@@ -56,9 +54,8 @@ class AchievementsContainer(LocationContainer[Achievement]):
 
     def set_rules(self, world: "World"):
         for ach in self.build_locations(world):
-            lvl = ach.required_level or -1
-            if lvl > 1:
-                set_rule(world.get_location(ach.name), required_level(lvl, world))
+            if ach.required_level:
+                world.set_rule(world.get_location(ach.name), required_level(ach.required_level))
 
 
 ACHIEVEMENTS_CONTAINER = AchievementsContainer()

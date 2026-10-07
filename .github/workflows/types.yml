@@ -20,7 +20,7 @@ concurrency:
 env:
   # The Archipelago this world declares as its minimum in archipelago.json. Its BaseClasses, Options
   # and worlds modules are what the imports resolve against, so bump the two together.
-  AP_VERSION: "0.6.4"
+  AP_VERSION: "0.6.7"
   # Pylance is a Visual Studio Code extension with no command line of its own, so CI runs Pyright,
   # the type checker Pylance is built on and the source of the same diagnostics.
   PYRIGHT_VERSION: "1.1.407"

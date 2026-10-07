@@ -19,8 +19,8 @@ concurrency:
 
 env:
   # The Archipelago that packs the apworld, which is a different question from the one this world
-  # runs on: the builder, and the .apignore it reads, arrived in 0.6.7, while what it writes still
-  # loads on the older core archipelago.json names as the minimum.
+  # runs on, the minimum archipelago.json names: the builder, and the .apignore it reads, arrived
+  # in 0.6.7.
   AP_VERSION: "0.6.7"
 
 jobs:

@@ -1,12 +1,12 @@
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from .world import World
 
 from BaseClasses import Region
-from worlds.generic.Rules import CollectionRule
+from rule_builder.rules import Has, HasAll
 
-from .conditions import combine_rules, has_all, required_level_and_zones
+from .conditions import required_level_and_zones
 
 LEVELS_01_05 = "Levels 01-05"
 LEVELS_05_10 = "Levels 05-10"
@@ -78,10 +78,6 @@ def create_all_regions(world: "World") -> None:
     world.multiworld.regions += [Region(r, world.player, world.multiworld) for r in ALL_REGIONS]
 
 
-def connect(r_from: Region, r_to: Region, rule: Optional[CollectionRule] = None):
-    r_from.connect(r_to, f"{r_from.name} -> {r_to.name}", rule)
-
-
 def connect_regions(world: "World") -> None:
     from .items.progressive import PROGRESSIVE_RIDING
     from .items.spells import SPELLS_CONTAINER
@@ -108,9 +104,8 @@ def connect_regions(world: "World") -> None:
         # can expect the ranks it is old enough for. Nothing is asked for where the ladder has no rung
         # left to give, which is what keeps the rule off the last one.
         riding_count = PROGRESSIVE_RIDING.required_count_for_region(r_to.name, world)
-        riding_rule = (lambda state, count=riding_count: state.has(PROGRESSIVE_RIDING.name, world.player, count)) if riding_count else None
 
-        connect(r_from, r_to, combine_rules(rule, has_all(spells, world), riding_rule))
+        world.create_entrance(r_from, r_to, rule & HasAll(*spells) & Has(PROGRESSIVE_RIDING.name, riding_count), f"{r_from.name} -> {r_to.name}")
 
 
 def get_region_by_level(level: int):

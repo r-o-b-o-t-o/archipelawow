@@ -3,10 +3,8 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from ..world import World
 
-from worlds.generic.Rules import set_rule
-
 from ..boss_model import BOSS_MODELS, BossModel
-from ..conditions import combine_rules, has_zone, required_level
+from ..conditions import has_zone, required_level
 from ..items.zones import Zone
 from ..options import Dungeonsanity
 from . import achievements
@@ -44,7 +42,7 @@ class BossesContainer(LocationContainer[Boss]):
 
     def set_rules(self, world: "World"):
         for boss in self.build_locations(world):
-            set_rule(world.get_location(boss.name), combine_rules(has_zone(boss.zone, world), required_level(boss.required_level, world)))
+            world.set_rule(world.get_location(boss.name), has_zone(boss.zone, world) & required_level(boss.required_level))
 
 
 BOSSES_CONTAINER = BossesContainer()

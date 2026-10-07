@@ -4,9 +4,9 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from ..world import World
 
-from worlds.generic.Rules import CollectionRule, set_rule
+from rule_builder.rules import And, Or, Rule
 
-from ..conditions import combine_rules, has_zone
+from ..conditions import has_zone
 from ..items import zones
 from ..items.zones import ZONES_CONTAINER, Zone
 from ..options import CharacterRace
@@ -97,10 +97,11 @@ class FlightPathsContainer(LocationContainer[FlightPath]):
         zone_ids = set([zone.id for zone in ZONES_CONTAINER.build_pool(world)])
 
         for _, fp in self.build_placed_locations(world):
-            zone_rule: CollectionRule | None = has_zone(fp.zone, world) if fp.zone.id in zone_ids else None
+            rules: list[Rule] = [has_zone(fp.zone, world)] if fp.zone.id in zone_ids else []
             through = [has_zone(zone, world) for zone in fp.reached_through if zone.id in zone_ids]
-            through_rule = combine_rules(*through, operator="or") if through else None
-            set_rule(world.get_location(fp.name), combine_rules(zone_rule, through_rule))
+            if through:
+                rules.append(Or(*through))
+            world.set_rule(world.get_location(fp.name), And(*rules))
 
 
 FLIGHT_PATHS_CONTAINER = FlightPathsContainer()
