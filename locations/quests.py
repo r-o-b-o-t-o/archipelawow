@@ -15,7 +15,6 @@ from .location_container import LocationContainer
 from .location_registry import Location
 
 STARTING_ZONES_MAX_LEVEL = 10
-MIN_QUESTS_PER_REGION = 5
 
 
 def get_quest_region(level: int, zones: list[Zone]) -> str:
@@ -278,7 +277,7 @@ class QuestsContainer(LocationContainer[Quest]):
 
         picked: list[Quest] = []
         for quests in by_region.values():
-            quota = min(len(quests), max(MIN_QUESTS_PER_REGION, math.ceil(len(quests) * density / 100)))
+            quota = math.ceil(len(quests) * density / 100)
             picked += sorted(world.random.sample(quests, quota), key=lambda q: q.id)
 
         return picked

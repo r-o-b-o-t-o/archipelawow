@@ -151,16 +151,16 @@ class Questsanity(NamedRange):
     """
     Percentage of the available quests turned into locations.
     Quests are picked at random, with a quota per level bracket so that every bracket keeps a comparable share of locations.
-    Brackets will always have at least 5 quests, no matter how low this is set.
     """
 
     display_name = "Questsanity"
 
-    range_start = 10
+    range_start = 0
     range_end = 100
     default = 25
 
     special_range_names = {
+        "none": 0,
         "minimal": 10,
         "sparse": 25,
         "half": 50,
