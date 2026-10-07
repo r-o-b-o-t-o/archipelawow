@@ -9,6 +9,7 @@ from worlds.AutoWorld import World as BaseWorld
 from . import constants, options, regions, rules
 from .items.item_registry import ItemRegistry
 from .locations.location_registry import LocationRegistry
+from .logic_export import export_logic
 from .options import PLAYABLE_COMBINATIONS, CharacterClass, CharacterRace, Goal
 from .web_world import WebWorld
 
@@ -80,6 +81,7 @@ class World(BaseWorld):
             "items": self.items.get_slot_data(self),
             "goal": self.options.goal.value,
             "maxlevel": self.level_cap(),
+            "logic": export_logic(self),
         }
 
     def level_cap(self) -> int:

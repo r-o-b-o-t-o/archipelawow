@@ -12,6 +12,9 @@ Archipelago APWorld for World of Warcraft 3.3.5a. It runs inside an Archipelago 
 - `archipelawow-data-extractor` — generates `data/quests.json`, `data/spells.json` and
   `data/bosses.json`. Never hand-edit them: change the extractor and regenerate. A change to their
   shape needs a matching change in `quest_model.py` / `spell_model.py` / `boss_model.py` here.
+- `archipelawow-launcher` — its tracker reads `fill_slot_data()` too: the `logic` key that
+  `logic_export.py` builds, and the `locations`, `items`, `options`, `goal` and `maxlevel` keys. A
+  change to their shape needs a matching change there.
 
 ## Code
 
@@ -20,6 +23,9 @@ Archipelago APWorld for World of Warcraft 3.3.5a. It runs inside an Archipelago 
   unbeatable) and let the user decide whether they are worth handling.
 - Comment only when the code isn't obvious or there is an implication a future maintainer could easily
   miss. Keep comments brief and don't restate the code.
+- Rules are built with Archipelago's rule builder (`rule_builder.rules`), never as lambdas, and only
+  from the rules the launcher's tracker evaluates (`TRACKER_RULES`): `logic_export.py` sends them to
+  trackers and fails generation on any other. A new one needs support in the launcher first.
 - Development uses Python 3.13, but the code must run on 3.11, the oldest Archipelago starts on: no
   newer syntax or stdlib. CI type-checks with pyright in `standard` mode at 3.11.
 - Formatting is `black` and `isort --profile black`, both at line length 150; CI rejects anything else.
