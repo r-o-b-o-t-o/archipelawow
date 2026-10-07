@@ -30,6 +30,7 @@ These are the actions you take in-game to send rewards to yourself or other play
 - **Achievements**
 - **Flight Paths**
 - **Quests**
+- **Exploration**: Discovering the subzones the exploration achievements ask for
 - **Experience Gains**: Gaining experience completes checks but doesn't level up your character normally - your actual level stays the same until you receive level-up rewards
 - **Spell Training**: Buying the first rank of a class spell, a weapon skill or a riding rank from your trainer sends a check instead of teaching it
 

@@ -188,6 +188,27 @@ class QuestsMaxPartySize(NamedRange):
     }
 
 
+class Explorersanity(NamedRange):
+    """
+    Percentage of the subzones from the exploration achievements turned into locations.
+    """
+
+    display_name = "Explorersanity"
+
+    range_start = 0
+    range_end = 100
+    default = 0
+
+    special_range_names = {
+        "none": 0,
+        "minimal": 10,
+        "sparse": 25,
+        "half": 50,
+        "most": 75,
+        "all": 100,
+    }
+
+
 class Dungeonsanity(Choice):
     option_none = 0
     option_completion = 1
@@ -286,6 +307,7 @@ class Options(PerGameCommonOptions):
     classic_dungeonsanity: ClassicDungeonsanity
     outland_dungeonsanity: OutlandDungeonsanity
     northrend_dungeonsanity: NorthrendDungeonsanity
+    explorersanity: Explorersanity
     gear_reward_level_window: GearRewardLevelWindow
     gear_include_all_armor_types: GearIncludeAllArmorTypes
     spells_randomize_starter_abilities: SpellsRandomizeStarterAbilities
@@ -314,6 +336,7 @@ option_groups = [
     OptionGroup("Character Options", [CharacterRace, CharacterClass]),
     OptionGroup("Quest Options", [Questsanity, QuestsAllStartingZones, QuestsMaxPartySize, QuestsIncludeDungeons]),
     OptionGroup("Dungeon Options", [ClassicDungeonsanity, OutlandDungeonsanity, NorthrendDungeonsanity]),
+    OptionGroup("Exploration Options", [Explorersanity]),
     OptionGroup("Gear Options", [GearRewardLevelWindow, GearIncludeAllArmorTypes]),
     OptionGroup("Spell Options", [SpellsRandomizeStarterAbilities]),
     OptionGroup("Advanced Options", [DeathLink, ProgressionBalancing, Accessibility]),
