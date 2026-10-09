@@ -1,4 +1,5 @@
 from typing import TYPE_CHECKING
+from weakref import WeakKeyDictionary
 
 if TYPE_CHECKING:
     from ..world import World
@@ -20,6 +21,10 @@ SKILL_PER_LEVEL = 5
 # SkillLine.dbc
 SKILL_DEFENSE = 95
 
+# How many weapon skills a seed picks among those its character can raise, on top of Defense. Each is a grind to its
+# cap, and all of them would come to well over a hundred checks for most classes.
+PICKED_WEAPON_SKILLS = 3
+
 
 class Skill(Location):
     """Raising a weapon skill or Defense to its cap at the last level of a bracket."""
@@ -36,29 +41,43 @@ class SkillsContainer(LocationContainer[Skill]):
     def __init__(self) -> None:
         super().__init__()
         self.all_skills: list[Skill] = []
+        # The container is a singleton shared by every player, and the roll must not be re-rolled per caller
+        self.__skills_cache: "WeakKeyDictionary[World, dict[int, str | None]]" = WeakKeyDictionary()
 
     def add(self, location: Skill):
         super().add(location)
         self.all_skills.append(location)
 
     def skill_items(self, world: "World") -> dict[int, str | None]:
-        """The skills this seed's character can raise, by id, each with the item teaching it or None for a starting one."""
+        """The skills that are locations for this world, by id, each with the item teaching it or None for a starting one.
+
+        Rolled once so that every caller sees the same set.
+        """
+        skills = self.__skills_cache.get(world)
+        if skills is None:
+            skills = self.pick_skills(world)
+            self.__skills_cache[world] = skills
+
+        return skills
+
+    def pick_skills(self, world: "World") -> dict[int, str | None]:
         if world.options.character_class.value in CharacterClass.pure_casters:
             return {}
 
         character_class, race = world.options.character_class.value, world.options.character_race.value
         items = {item.data.id: item.name for item in SPELL_ITEMS_CONTAINER.build_pool(world) if item.data.kind == SpellKind.WEAPON}
-        skills: dict[int, str | None] = {}
+        available: dict[int, str | None] = {}
         for skill in SKILL_MODELS:
-            # Bear and cat form raise Defense but no weapon skill
-            if character_class == CharacterClass.option_druid and skill.id != SKILL_DEFENSE:
-                continue
-
             if skill.is_starting_skill_of(character_class, race):
-                skills[skill.id] = None
+                available[skill.id] = None
             elif skill.spell in items:
-                skills[skill.id] = items[skill.spell]
-        return skills
+                available[skill.id] = items[skill.spell]
+
+        # Bear and cat form raise Defense but no weapon skill
+        count = 0 if character_class == CharacterClass.option_druid else PICKED_WEAPON_SKILLS
+        weapons = [skill_id for skill_id in available if skill_id != SKILL_DEFENSE]
+        picked = set(world.random.sample(weapons, min(count, len(weapons))))
+        return {skill_id: item for skill_id, item in available.items() if skill_id == SKILL_DEFENSE or skill_id in picked}
 
     def build_locations(self, world: "World") -> list[Skill]:
         skills = self.skill_items(world)

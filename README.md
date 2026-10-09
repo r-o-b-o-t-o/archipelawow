@@ -33,7 +33,7 @@ These are the actions you take in-game to send rewards to yourself or other play
 - **Exploration**: Discovering the subzones the exploration achievements ask for
 - **Experience Gains**: Gaining experience completes checks but doesn't level up your character normally - your actual level stays the same until you receive level-up rewards
 - **Spell Training**: Buying the first rank of a class spell, a weapon skill or a riding rank from your trainer sends a check instead of teaching it
-- **Weapon Skills & Defense**: Raising Defense and each weapon skill your character can learn to 25, 50, 75... - the cap at the last level of each 5-level bracket. Druids only have Defense, and priests, mages and warlocks don't have these
+- **Weapon Skills & Defense**: Raising Defense and 3 weapon skills your character can learn, picked at random for each seed, to 25, 50, 75... - the cap at the last level of each 5-level bracket. Druids only have Defense, and priests, mages and warlocks don't have these
 
 ### 🎁 Randomized Rewards
 - **Items**: Receive powerful gear and artifacts at unexpected times
