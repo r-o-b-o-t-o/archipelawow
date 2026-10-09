@@ -17,6 +17,9 @@ from .location_registry import Location
 # A skill's cap is five times the character's level
 SKILL_PER_LEVEL = 5
 
+# SkillLine.dbc
+SKILL_DEFENSE = 95
+
 
 class Skill(Location):
     """Raising a weapon skill or Defense to its cap at the last level of a bracket."""
@@ -47,6 +50,10 @@ class SkillsContainer(LocationContainer[Skill]):
         items = {item.data.id: item.name for item in SPELL_ITEMS_CONTAINER.build_pool(world) if item.data.kind == SpellKind.WEAPON}
         skills: dict[int, str | None] = {}
         for skill in SKILL_MODELS:
+            # Bear and cat form raise Defense but no weapon skill
+            if character_class == CharacterClass.option_druid and skill.id != SKILL_DEFENSE:
+                continue
+
             if skill.is_starting_skill_of(character_class, race):
                 skills[skill.id] = None
             elif skill.spell in items:
