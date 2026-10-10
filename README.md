@@ -46,11 +46,51 @@ These are the actions you take in-game to send rewards to yourself or other play
 
 ## 🚀 Installation & Usage
 
-### Prerequisites
+### ⚡ Easy Installation (Windows)
+
+The [**ArchipelaWoW Launcher**](https://github.com/r-o-b-o-t-o/archipelawow-launcher) installs a ready-to-run AzerothCore server with the ArchipelaWoW module, installs the APWorld in Archipelago, edits player options and tracks your checks on the world maps. Its server comes prebuilt, so it can't take other modules: follow the [manual setup](#-manual-setup) for that.
+
+1. **Install the Launcher**
+   - Download it from the [latest release](https://github.com/r-o-b-o-t-o/archipelawow-launcher/releases/latest): `ArchipelaWoW.Launcher-win-Setup.exe` installs it, `ArchipelaWoW.Launcher-win-Portable.zip` keeps everything in the folder you extract it to (keep that folder close to the root of a drive, e.g. `C:\Games\ArchipelaWoW`)
+
+2. **Set Up the Server**
+   - Follow the launcher's **Setup** page: it installs the server, the database, the configuration and the client data, then asks who can join the realm (this computer, your local network, or friends over the internet)
+
+3. **Install Archipelago and the APWorld**
+   - Download and install [**Archipelago**](https://github.com/ArchipelagoMW/Archipelago/releases)
+   - Install the APWorld from the launcher's **APWorld** page
+
+4. **Configure Your Game**
+   - Make each player's options on the launcher's **Player options** page
+   - Export them to the `Players` folder of your Archipelago installation
+
+5. **Generate and Host Your Multiworld**
+   - Click "Generate" in the Archipelago Launcher
+   - Upload the game from Archipelago's `output` folder to [archipelago.gg](https://archipelago.gg/uploads), or host it locally by clicking "Host" in the Archipelago Launcher
+
+6. **Connect the Server**
+   - Start the servers from the launcher's **Dashboard**
+   - Enter your room's server, port and password in its **Archipelago room** card
+   - Create a game account in its **Game account** card
+
+7. **Link Your Character**
+   - Set `set realmlist 127.0.0.1` in your client's `Data\<locale>\realmlist.wtf`
+   - Other players use the address the setup shows instead of `127.0.0.1`
+   - Create a fresh character and log in
+   - Use command: `.ap connect SlotName` (where SlotName matches your player options)
+   - An Archipelago Stone will appear in your inventory for mod interaction
+
+The launcher's [README](https://github.com/r-o-b-o-t-o/archipelawow-launcher#readme) covers updating, playing with friends and the tracker.
+
+### 🔧 Manual Setup
+
+On other systems, or to build AzerothCore with your own modules, set everything up yourself.
+
+#### Prerequisites
 - [AzerothCore Server](https://www.azerothcore.org/wiki/classic-installation)
 - [Archipelago](https://github.com/ArchipelagoMW/Archipelago/releases)
 
-### Step-by-Step Setup
+#### Step-by-Step Setup
 
 1. **Install AzerothCore**
    - Follow the [**official installation guide**](https://www.azerothcore.org/wiki/classic-installation)
