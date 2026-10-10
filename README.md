@@ -1,7 +1,7 @@
 # 🌍 ArchipelaWoW
 
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Archipelago](https://img.shields.io/badge/Archipelago-Compatible-green.svg)](https://github.com/ArchipelagoMW/Archipelago)
+[![APWorld](https://github.com/r-o-b-o-t-o/archipelawow/actions/workflows/apworld.yml/badge.svg)](https://github.com/r-o-b-o-t-o/archipelawow/actions/workflows/apworld.yml)
 
 > [!WARNING]
 > ArchipelaWoW is still very much in its infancy. Expect generation errors, features can be partly implemented, and more features are planned but not added yet.
