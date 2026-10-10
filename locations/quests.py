@@ -261,26 +261,10 @@ class QuestsContainer(LocationContainer[Quest]):
         return locations
 
     def pick_locations(self, world: "World") -> list[Quest]:
-        """Trim the eligible quests down to the requested density, filling each level bracket with its own quota.
-
-        Quotas are computed after filtering so that races, classes and starting zones cutting unevenly into the
-        brackets cannot re-introduce the imbalance the quota is there to avoid.
-        """
-        available = self.filter_locations(world)
-        density = world.options.questsanity.value
-        if density >= 100:
-            return available
-
-        by_region: dict[str, list[Quest]] = {}
-        for quest in available:
-            by_region.setdefault(quest.region, []).append(quest)
-
-        picked: list[Quest] = []
-        for quests in by_region.values():
-            quota = math.ceil(len(quests) * density / 100)
-            picked += sorted(world.random.sample(quests, quota), key=lambda q: q.id)
-
-        return picked
+        """Trim the eligible quests down to the requested density."""
+        quests = self.filter_locations(world)
+        count = math.ceil(len(quests) * world.options.questsanity.value / 100)
+        return sorted(world.random.sample(quests, count), key=lambda q: q.id)
 
     def filter_locations(self, world: "World") -> list[Quest]:
         """Every quest this world could hold a location on, before the density roll."""

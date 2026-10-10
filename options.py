@@ -152,7 +152,6 @@ class QuestsIncludeDungeons(Toggle):
 class Questsanity(NamedRange):
     """
     Percentage of the available quests turned into locations.
-    Quests are picked at random, with a quota per level bracket so that every bracket keeps a comparable share of locations.
     """
 
     display_name = "Questsanity"
