@@ -5,35 +5,15 @@ if TYPE_CHECKING:
 
 from BaseClasses import ItemClassification
 
-from ..options import CharacterClass
+from ..glyph_model import GLYPH_MODELS, GlyphModel
 from .item_container import ItemContainer
 from .item_registry import Item
 
 
 class WoWItemsContainer(ItemContainer["WoWItem"]):
     def build_pool(self, world: "World"):
-        items = [*BAGS, *heirlooms_for(world)]
-
-        match world.options.character_class:
-            case CharacterClass.option_warrior:
-                items += GLYPHS_WARRIOR
-            case CharacterClass.option_paladin:
-                items += GLYPHS_PALADIN
-            case CharacterClass.option_hunter:
-                items += GLYPHS_HUNTER
-            case CharacterClass.option_shaman:
-                items += GLYPHS_SHAMAN
-            case CharacterClass.option_rogue:
-                items += GLYPHS_ROGUE
-            case CharacterClass.option_druid:
-                items += GLYPHS_DRUID
-            case CharacterClass.option_mage:
-                items += GLYPHS_MAGE
-            case CharacterClass.option_warlock:
-                items += GLYPHS_WARLOCK
-            case CharacterClass.option_priest:
-                items += GLYPHS_PRIEST
-
+        items: list[WoWItem] = [*BAGS, *heirlooms_for(world)]
+        items += [glyph for glyph in GLYPHS if glyph.model.class_id == world.options.character_class.value]
         return items
 
     def get_slot_data(self, world: "World"):
@@ -50,17 +30,16 @@ class WoWItem(Item):
         self.wow_item_id = wow_item_id
 
 
+class Glyph(WoWItem):
+    def __init__(self, model: GlyphModel):
+        super().__init__(model.name, model.id, ItemClassification.filler if model.minor else ItemClassification.useful)
+        self.model = model
+
+
 WOW_ITEMS_CONTAINER = WoWItemsContainer()
 
-from .glyphs.druid import GLYPHS_DRUID
-from .glyphs.hunter import GLYPHS_HUNTER
-from .glyphs.mage import GLYPHS_MAGE
-from .glyphs.paladin import GLYPHS_PALADIN
-from .glyphs.priest import GLYPHS_PRIEST
-from .glyphs.rogue import GLYPHS_ROGUE
-from .glyphs.shaman import GLYPHS_SHAMAN
-from .glyphs.warlock import GLYPHS_WARLOCK
-from .glyphs.warrior import GLYPHS_WARRIOR
+GLYPHS = [Glyph(model) for model in GLYPH_MODELS]
+
 from .heirlooms import heirlooms_for
 
 BROWN_LEATHER_SATCHEL = WoWItem("Brown Leather Satchel", 4498, ItemClassification.filler, pool_count=2)
