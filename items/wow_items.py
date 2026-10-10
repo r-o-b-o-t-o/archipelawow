@@ -21,10 +21,13 @@ class WoWItemsContainer(ItemContainer["WoWItem"]):
         return items
 
     def get_slot_data(self, world: "World"):
-        return [[item.id, item.wow_item_id] for item in self.build_pool(world)]
+        return [[item.id, item.wow_item_id] for item in [*self.build_pool(world), *CONSUMABLES]]
 
     def get_items_for_pool(self, world: "World") -> list[Item]:
         return list(self.build_pool(world))
+
+    def get_filler_weights(self, world: "World") -> dict[str, int]:
+        return {item.name: item.filler_weight for item in CONSUMABLES}
 
 
 class WoWItem(Item):
@@ -32,6 +35,15 @@ class WoWItem(Item):
         super().__init__(name, classification, pool_count)
         WOW_ITEMS_CONTAINER.add(self)
         self.wow_item_id = wow_item_id
+
+
+class Consumable(WoWItem):
+    """A filler item whose effect the module applies when it is used up. Its item template is defined by
+    the module's database updates."""
+
+    def __init__(self, name: str, wow_item_id: int, filler_weight: int):
+        super().__init__(name, wow_item_id, ItemClassification.filler)
+        self.filler_weight = filler_weight
 
 
 class Glyph(WoWItem):
@@ -51,3 +63,9 @@ HUGE_BROWN_SACK = WoWItem("Huge Brown Sack", 4499, ItemClassification.filler, po
 TRAVELERS_BACKPACK = WoWItem("Traveler's Backpack", 4500, ItemClassification.filler, pool_count=2)
 FROSTWEAVE_BAG = WoWItem("Frostweave Bag", 41599, ItemClassification.filler, pool_count=2)
 BAGS = [BROWN_LEATHER_SATCHEL, HUGE_BROWN_SACK, TRAVELERS_BACKPACK, FROSTWEAVE_BAG]
+
+# Weighted against the Gold Pouch in money.py. The scroll hints 3 of the world's unchecked locations, the
+# tome gives a quarter of the experience to the next Archipelago level.
+SCROLL_OF_DIVINATION = Consumable("Scroll of Divination", 4427, filler_weight=6)
+TOME_OF_INSIGHT = Consumable("Tome of Insight", 1335, filler_weight=6)
+CONSUMABLES = [SCROLL_OF_DIVINATION, TOME_OF_INSIGHT]
