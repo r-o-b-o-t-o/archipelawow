@@ -29,6 +29,7 @@ class ItemRegistry:
         from .money import MONEY_CONTAINER
         from .progressive import PROGRESSIVE_CONTAINER
         from .spells import SPELLS_CONTAINER
+        from .stone import STONE_CONTAINER
         from .wow_items import WOW_ITEMS_CONTAINER
         from .zones import ZONES_CONTAINER
 
@@ -39,6 +40,7 @@ class ItemRegistry:
         self.__containers["money"] = MONEY_CONTAINER
         self.__containers["progressive"] = PROGRESSIVE_CONTAINER
         self.__containers["spells"] = SPELLS_CONTAINER
+        self.__containers["stone"] = STONE_CONTAINER
 
     def get_container(self, container_name: str):
         return self.__containers.get(container_name)
