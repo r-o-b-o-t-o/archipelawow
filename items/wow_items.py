@@ -13,7 +13,11 @@ from .item_registry import Item
 class WoWItemsContainer(ItemContainer["WoWItem"]):
     def build_pool(self, world: "World"):
         items: list[WoWItem] = [*BAGS, *heirlooms_for(world)]
-        items += [glyph for glyph in GLYPHS if glyph.model.class_id == world.options.character_class.value]
+        items += [
+            glyph
+            for glyph in GLYPHS
+            if glyph.model.class_id == world.options.character_class.value and glyph.model.required_level <= world.level_cap()
+        ]
         return items
 
     def get_slot_data(self, world: "World"):
