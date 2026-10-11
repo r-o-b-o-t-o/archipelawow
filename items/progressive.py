@@ -78,7 +78,8 @@ class ProgressiveItem(Item):
             if not world.has_tbc_content():
                 steps = steps[:-1]
 
-        return steps
+        # Copies trimmed from an overflowing pool take the top steps with them
+        return steps[: len(steps) - world.trimmed_items[self.name]]
 
     def levels_for(self, world: "World") -> list[int]:
         """The character level each step is worth reaching, where a track has one. Empty otherwise."""

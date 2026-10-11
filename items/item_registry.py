@@ -118,6 +118,40 @@ class ItemRegistry:
         number_of_unfilled_locations = len(world.multiworld.get_unfilled_locations(world.player))
         needed_number_of_filler_items = number_of_unfilled_locations - number_of_items
         pool += [world.create_filler() for _ in range(needed_number_of_filler_items)]
+        self.trim_pool(pool, -needed_number_of_filler_items, world)
 
         # Submit items to the multiworld pool
         world.multiworld.itempool += pool
+
+    def trim_pool(self, pool: list[BaseItem], excess: int, world: "World"):
+        """Drop the least useful items from a pool that outgrows the world's locations, rather than leave
+        Archipelago to discard whatever it fails to place. A seed with a low level cap and few quests can hold
+        fewer locations than its fixed items, and this does not always cover the difference.
+
+        Groups are trimmed in order, and the items of a group one copy each in turn.
+        """
+        from .money import GOLD_POUCH
+        from .progressive import PROGRESSIVE_DRINK, PROGRESSIVE_EXPERIENCE_RATE, PROGRESSIVE_FOOD
+        from .wow_items import BROWN_LEATHER_SATCHEL, FROSTWEAVE_BAG, HUGE_BROWN_SACK, TRAVELERS_BACKPACK
+
+        # Smallest bags first
+        groups = [
+            [BROWN_LEATHER_SATCHEL],
+            [HUGE_BROWN_SACK],
+            [TRAVELERS_BACKPACK],
+            [FROSTWEAVE_BAG],
+            [PROGRESSIVE_FOOD, PROGRESSIVE_DRINK],
+            [PROGRESSIVE_EXPERIENCE_RATE],
+            [GOLD_POUCH],
+        ]
+        for group in groups:
+            trimmed = True
+            while excess > 0 and trimmed:
+                trimmed = False
+                for data in group:
+                    copy = next((item for item in pool if item.name == data.name), None)
+                    if excess > 0 and copy is not None:
+                        pool.remove(copy)
+                        world.trimmed_items[data.name] += 1
+                        excess -= 1
+                        trimmed = True

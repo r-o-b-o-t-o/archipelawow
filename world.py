@@ -1,3 +1,4 @@
+from collections import Counter
 from collections.abc import Mapping
 from typing import Any
 
@@ -38,7 +39,12 @@ class World(BaseWorld):
     location_name_to_id = locations.get_name_to_id_dict()
     origin_region_name = regions.LEVELS_01_05
 
+    # Copies of each item dropped from an overflowing pool, by name -- see ItemRegistry.trim_pool
+    trimmed_items: Counter[str]
+
     def generate_early(self) -> None:
+        self.trimmed_items = Counter()
+
         # Options.__post_init__ has already rerolled any pair the YAML weights allow a playable one for.
         race, character_class = self.options.character_race, self.options.character_class
         if (race.value, character_class.value) not in PLAYABLE_COMBINATIONS:
