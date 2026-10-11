@@ -5,7 +5,7 @@ if TYPE_CHECKING:
 
 from ..boss_model import BOSS_MODELS, BossModel
 from ..conditions import has_zone, required_level
-from ..items.zones import Zone
+from ..items.zones import ZONES_CONTAINER, Zone
 from ..options import Dungeonsanity
 from . import achievements
 from .achievements import Achievement
@@ -27,12 +27,14 @@ class BossesContainer(LocationContainer[Boss]):
         locations: list[Boss] = []
         if world.options.classic_dungeonsanity.value == Dungeonsanity.option_all:
             locations += CLASSIC_DUNGEONS
-        if world.has_tbc_content() and world.options.outland_dungeonsanity.value == Dungeonsanity.option_all:
+        if world.options.outland_dungeonsanity.value == Dungeonsanity.option_all:
             locations += OUTLAND_DUNGEONS
-        if world.has_wotlk_content() and world.options.northrend_dungeonsanity.value == Dungeonsanity.option_all:
+        if world.options.northrend_dungeonsanity.value == Dungeonsanity.option_all:
             locations += NORTHREND_DUNGEONS
 
-        return locations
+        # The pool already leaves out the dungeons past the seed's level cap
+        zones_in_pool = set(ZONES_CONTAINER.build_pool(world))
+        return [loc for loc in locations if loc.zone in zones_in_pool and loc.required_level <= world.level_cap()]
 
     def get_slot_data(self, world: "World"):
         return [[loc.encounter_id, loc.id] for loc in self.build_locations(world)]

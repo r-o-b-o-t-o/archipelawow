@@ -6,7 +6,7 @@ if TYPE_CHECKING:
 from .. import regions
 from ..conditions import required_level
 from ..items import zones
-from ..items.zones import Zone
+from ..items.zones import ZONES_CONTAINER, Zone
 from ..options import Dungeonsanity
 from .location_container import LocationContainer
 from .location_registry import Location
@@ -26,12 +26,18 @@ class AchievementsContainer(LocationContainer[Achievement]):
         locations = [*MISC]
         if world.options.classic_dungeonsanity.value != Dungeonsanity.option_none:
             locations += CLASSIC_DUNGEONS
-        if world.has_tbc_content() and world.options.outland_dungeonsanity.value != Dungeonsanity.option_none:
+        if world.options.outland_dungeonsanity.value != Dungeonsanity.option_none:
             locations += OUTLAND_DUNGEONS
-        if world.has_wotlk_content() and world.options.northrend_dungeonsanity.value != Dungeonsanity.option_none:
+        if world.options.northrend_dungeonsanity.value != Dungeonsanity.option_none:
             locations += NORTHREND_DUNGEONS
 
-        return locations
+        # The pool already leaves out the dungeons past the seed's level cap
+        zones_in_pool = set(ZONES_CONTAINER.build_pool(world))
+        return [
+            loc
+            for loc in locations
+            if (loc.zone is None or loc.zone in zones_in_pool) and (loc.required_level is None or loc.required_level <= world.level_cap())
+        ]
 
     def get_slot_data(self, world: "World"):
         return [[loc.achievement_id, loc.id] for loc in self.build_locations(world)]

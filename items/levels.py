@@ -11,15 +11,7 @@ from .item_registry import Item
 
 class LevelsContainer(ItemContainer["Level"]):
     def build_pool(self, world: "World"):
-        levels = 59
-
-        if world.has_tbc_content():
-            levels += 10
-
-        if world.has_wotlk_content():
-            levels += 10
-
-        return [LEVEL_UP for _ in range(levels)]
+        return [LEVEL_UP for _ in range(world.level_cap() - 1)]
 
     def get_slot_data(self, world: "World"):
         return LEVEL_UP.id

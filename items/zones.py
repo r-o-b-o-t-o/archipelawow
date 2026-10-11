@@ -27,27 +27,13 @@ class ZonesContainer(ItemContainer["Zone"]):
         super().add(zone)
 
     def build_pool(self, world: "World"):
-        zones: list[Zone] = []
-        zones += AZEROTH
-        zones += CLASSIC_DUNGEONS
-
-        if world.has_tbc_content():
-            zones += OUTLAND
-            zones += OUTLAND_DUNGEONS
-
-        if world.has_wotlk_content():
-            zones += NORTHREND
-            zones += NORTHREND_DUNGEONS
-
-        zones = list(
-            filter(
-                lambda z: z.side == Side.CONTESTED
-                or (z.side == Side.ALLIANCE and world.is_alliance())
-                or (z.side == Side.HORDE and world.is_horde()),
-                zones,
-            )
-        )
-        return zones
+        zones = [*AZEROTH, *CLASSIC_DUNGEONS, *OUTLAND, *OUTLAND_DUNGEONS, *NORTHREND, *NORTHREND_DUNGEONS]
+        return [
+            z
+            for z in zones
+            if z.is_below_level_cap(world)
+            and (z.side == Side.CONTESTED or (z.side == Side.ALLIANCE and world.is_alliance()) or (z.side == Side.HORDE and world.is_horde()))
+        ]
 
     def get_slot_data(self, world: "World"):
         return [[item.id, item.zone_id, item.icon, item.gossip_menu, item.teleport.to_list(), item.keys] for item in self.build_pool(world)]
@@ -99,6 +85,12 @@ class Zone(Item):
     def level(self, world: "World") -> int:
         """The level the zone opens at for the world's faction, or 0 where that faction has no bracket for it."""
         return regions.REGION_LEVELS.get(self.region(world), 0)
+
+    def is_below_level_cap(self, world: "World") -> bool:
+        """Whether the zone opens before the seed's level cap. A zone with no bracket for the world's faction, such as
+        Westfall for the Horde, goes by the other faction's."""
+        region = self.region(world) or self.region_a or self.region_h
+        return regions.REGION_LEVELS[region] < world.level_cap()
 
 
 ZONES_CONTAINER = ZonesContainer()

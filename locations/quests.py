@@ -275,6 +275,11 @@ class QuestsContainer(LocationContainer[Quest]):
             if regions.REGION_LEVELS[quest.region] >= world.level_cap():
                 continue
 
+            if quest.required_level > world.level_cap() or not all(zone.is_below_level_cap(world) for zone in quest.required_zones):
+                # Its prerequisites can ask for more than its own level -- Forbidden Knowledge is a 38 behind two 42s -- and a
+                # zone the cap leaves out of the pool would be dropped from its rule rather than asked for
+                continue
+
             data = self.quests_json[quest.quest_id]
             if data.is_missable:
                 # The game takes these away once the player gets to another quest first -- a breadcrumb's

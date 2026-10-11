@@ -32,7 +32,8 @@ def set_completion_conditions(world: "World") -> None:
         case Goal.option_classic_dungeonmaster:
             goal_zones = zones.CLASSIC_DUNGEONS
 
-        case Goal.option_level_60:
+        case Goal.option_level_10 | Goal.option_level_20 | Goal.option_level_30 | Goal.option_level_40 | Goal.option_level_50 | Goal.option_level_60:
+            # Only the zones opening below the cap are in the pool
             goal_zones = zones.AZEROTH
 
         case Goal.option_outland_dungeonmaster:

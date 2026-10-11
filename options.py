@@ -23,21 +23,39 @@ class Goal(Choice):
     Classic Dungeonmaster: Clear the classic 5-man dungeons
     Outland Dungeonmaster: Clear the Burning Crusade 5-man dungeons
     Northrend Dungeonmaster: Clear the Wrath of the Lich King 5-man dungeons
-    Level 60: Reach level 60
-    Level 70: Reach level 70
-    Level 80: Reach level 80
+    Level 10 to 80: Reach that level, which the seed is capped at
     """
 
     display_name = "Goal"
 
+    # Each value is the id of the achievement that completes the goal
     option_classic_dungeonmaster = 1283
     option_outland_dungeonmaster = 1284
     option_northrend_dungeonmaster = 1288
+    option_level_10 = 6
+    option_level_20 = 7
+    option_level_30 = 8
+    option_level_40 = 9
+    option_level_50 = 10
     option_level_60 = 11
     option_level_70 = 12
     option_level_80 = 13
 
     default = option_level_60
+
+    level_caps = {
+        option_classic_dungeonmaster: 60,
+        option_outland_dungeonmaster: 70,
+        option_northrend_dungeonmaster: 80,
+        option_level_10: 10,
+        option_level_20: 20,
+        option_level_30: 30,
+        option_level_40: 40,
+        option_level_50: 50,
+        option_level_60: 60,
+        option_level_70: 70,
+        option_level_80: 80,
+    }
 
 
 class RerollableChoice(Choice):

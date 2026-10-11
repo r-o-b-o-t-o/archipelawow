@@ -85,12 +85,7 @@ class World(BaseWorld):
         }
 
     def level_cap(self) -> int:
-        match self.options.goal.value:
-            case Goal.option_outland_dungeonmaster | Goal.option_level_70:
-                return 70
-            case Goal.option_northrend_dungeonmaster | Goal.option_level_80:
-                return 80
-        return 60
+        return Goal.level_caps[self.options.goal.value]
 
     def is_alliance(self):
         return self.options.character_race.value in CharacterRace.alliance

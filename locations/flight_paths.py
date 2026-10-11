@@ -33,11 +33,7 @@ class FlightPath(Location):
 
 class FlightPathsContainer(LocationContainer[FlightPath]):
     def build_locations(self, world: "World"):
-        locations = [*EASTERN_KINGDOMS, *KALIMDOR]
-        if world.has_tbc_content():
-            locations += OUTLAND
-        if world.has_wotlk_content():
-            locations += NORTHREND
+        locations = [*EASTERN_KINGDOMS, *KALIMDOR, *OUTLAND, *NORTHREND]
 
         exclude: list[FlightPath] = []
         if world.is_alliance():
@@ -64,7 +60,9 @@ class FlightPathsContainer(LocationContainer[FlightPath]):
                 exclude.append(SILVERMOON_CITY)
 
         exclude_set = set([x.id for x in exclude])
-        return [loc for loc in locations if loc.id not in exclude_set]
+        # The pool already leaves out the zones past the seed's level cap
+        zones_in_pool = set(ZONES_CONTAINER.build_pool(world))
+        return [loc for loc in locations if loc.id not in exclude_set and loc.zone in zones_in_pool]
 
     def get_slot_data(self, world: "World"):
         return [[loc.node_id, loc.id] for loc in self.build_locations(world)]
@@ -97,7 +95,7 @@ class FlightPathsContainer(LocationContainer[FlightPath]):
         zone_ids = set([zone.id for zone in ZONES_CONTAINER.build_pool(world)])
 
         for _, fp in self.build_placed_locations(world):
-            rules: list[Rule] = [has_zone(fp.zone, world)] if fp.zone.id in zone_ids else []
+            rules: list[Rule] = [has_zone(fp.zone, world)]
             through = [has_zone(zone, world) for zone in fp.reached_through if zone.id in zone_ids]
             if through:
                 rules.append(Or(*through))
