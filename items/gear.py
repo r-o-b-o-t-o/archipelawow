@@ -63,8 +63,8 @@ class GearItem(Item):
 
 GEAR_CONTAINER = GearContainer()
 
-# Weights are relative to the Gold Pouch's, and together they come to the same total, so gear and
-# gold split the filler slots evenly. Rare is rolled less often than uncommon, and armor more often
+# Weights are relative to the Gold Pouch's, and together they come to several times it, so gear makes up
+# most of the filler slots. Rare is rolled less often than uncommon, and armor more often
 # than weapons or jewelry, matching how many slots of each a character actually wears.
 RANDOM_UNCOMMON_WEAPON = GearItem("Random Uncommon Weapon", GearCategory.WEAPON, GearQuality.UNCOMMON, filler_weight=16)
 RANDOM_RARE_WEAPON = GearItem("Random Rare Weapon", GearCategory.WEAPON, GearQuality.RARE, filler_weight=12, min_level=13)
