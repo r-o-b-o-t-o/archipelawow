@@ -141,11 +141,11 @@ class ProgressiveRidingItem(ProgressiveItem):
 PROGRESSIVE_CONTAINER = ProgressiveContainer()
 
 # Movement speed multiplies whatever the character is already moving at, mount speed included, so
-# the last step makes a ground mount half again as fast. Experience rate multiplies the hidden
-# Archipelago experience that levels the slot up -- the character's own experience bar never moves
-# -- so the last step halves the grind between level checks.
-PROGRESSIVE_MOVEMENT_SPEED = ProgressiveItem("Progressive Movement Speed", ProgressiveType.MOVEMENT_SPEED, [10, 20, 30, 40, 50])
-PROGRESSIVE_EXPERIENCE_RATE = ProgressiveItem("Progressive Experience Rate", ProgressiveType.EXPERIENCE_RATE, [20, 40, 60, 80, 100])
+# the last step makes a ground mount 60% faster. Experience rate multiplies the hidden Archipelago
+# experience that levels the slot up -- the character's own experience bar never moves -- so the
+# last step cuts the grind between level checks by more than half.
+PROGRESSIVE_MOVEMENT_SPEED = ProgressiveItem("Progressive Movement Speed", ProgressiveType.MOVEMENT_SPEED, [20, 40, 60])
+PROGRESSIVE_EXPERIENCE_RATE = ProgressiveItem("Progressive Experience Rate", ProgressiveType.EXPERIENCE_RATE, [40, 80, 120])
 
 # Eternal food and drink: each step is a WoW item with unlimited uses that restores more than the
 # one before it, and the server swaps the old one out as the new one lands. The item templates are
