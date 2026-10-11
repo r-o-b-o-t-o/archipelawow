@@ -14,12 +14,12 @@ class GearCategory(IntEnum):
     """The bucket a gear item rolls from. Kept in step with GearCategory in the module's AP_Gear.h.
 
     Shields and off-hand holdables count as weapons, and relics -- librams, idols, totems, sigils --
-    as jewellery, which is how a player thinks of them even though the game files call them armor.
+    as jewelry, which is how a player thinks of them even though the game files call them armor.
     """
 
     WEAPON = 1
     ARMOR = 2
-    JEWELLERY = 3
+    JEWELRY = 3
 
 
 class GearQuality(IntEnum):
@@ -62,19 +62,19 @@ GEAR_CONTAINER = GearContainer()
 
 # Weights are relative to the Gold Pouch's, and together they come to the same total, so gear and
 # gold split the filler slots evenly. Rare is rolled less often than uncommon, and armor more often
-# than weapons or jewellery, matching how many slots of each a character actually wears.
+# than weapons or jewelry, matching how many slots of each a character actually wears.
 RANDOM_UNCOMMON_WEAPON = GearItem("Random Uncommon Weapon", GearCategory.WEAPON, GearQuality.UNCOMMON, filler_weight=16)
 RANDOM_RARE_WEAPON = GearItem("Random Rare Weapon", GearCategory.WEAPON, GearQuality.RARE, filler_weight=12)
 RANDOM_UNCOMMON_ARMOR = GearItem("Random Uncommon Armor", GearCategory.ARMOR, GearQuality.UNCOMMON, filler_weight=20)
 RANDOM_RARE_ARMOR = GearItem("Random Rare Armor", GearCategory.ARMOR, GearQuality.RARE, filler_weight=16)
-RANDOM_UNCOMMON_JEWELLERY = GearItem("Random Uncommon Jewellery", GearCategory.JEWELLERY, GearQuality.UNCOMMON, filler_weight=12)
-RANDOM_RARE_JEWELLERY = GearItem("Random Rare Jewellery", GearCategory.JEWELLERY, GearQuality.RARE, filler_weight=9)
+RANDOM_UNCOMMON_JEWELRY = GearItem("Random Uncommon Jewelry", GearCategory.JEWELRY, GearQuality.UNCOMMON, filler_weight=12)
+RANDOM_RARE_JEWELRY = GearItem("Random Rare Jewelry", GearCategory.JEWELRY, GearQuality.RARE, filler_weight=9)
 
 ALL_GEAR = [
     RANDOM_UNCOMMON_WEAPON,
     RANDOM_RARE_WEAPON,
     RANDOM_UNCOMMON_ARMOR,
     RANDOM_RARE_ARMOR,
-    RANDOM_UNCOMMON_JEWELLERY,
-    RANDOM_RARE_JEWELLERY,
+    RANDOM_UNCOMMON_JEWELRY,
+    RANDOM_RARE_JEWELRY,
 ]

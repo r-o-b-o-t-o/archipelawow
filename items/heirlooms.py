@@ -115,13 +115,13 @@ HEIRLOOM_ARMOR = [
     Heirloom("Tattered Dreadmist Robe", 48691, CASTER_CLOTH),
 ]
 
-HEIRLOOM_JEWELLERY = [
+HEIRLOOM_JEWELRY = [
     Heirloom("Swift Hand of Justice", 42991, PURE_MELEE + HYBRID),
     Heirloom("Discerning Eye of the Beast", 42992, PURE_CASTER + HYBRID),
     Heirloom("Dread Pirate Ring", 50255, ALL_CLASSES),
 ]
 
-ALL_HEIRLOOMS = [*HEIRLOOM_WEAPONS, *HEIRLOOM_ARMOR, *HEIRLOOM_JEWELLERY]
+ALL_HEIRLOOMS = [*HEIRLOOM_WEAPONS, *HEIRLOOM_ARMOR, *HEIRLOOM_JEWELRY]
 
 
 def heirlooms_for(world: "World") -> list[Heirloom]:
