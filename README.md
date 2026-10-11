@@ -45,6 +45,7 @@ These are the actions you take in-game to send rewards to yourself or other play
 - **Eternal Food & Drink**: No more visiting the innkeeper every 2 hours
 - **Scroll of Divination**: Hints 3 of your world's unchecked locations
 - **Tome of Insight**: Grants a quarter of the experience needed for your next level check
+- **Enduring Soulstone**: Stores your soul, or a group member's, for an hour, so you can come back to life where you died
 - **Teleport to Friend**: Lets the Archipelago Stone teleport you to another World of Warcraft player of the multiworld, every 30 minutes. Only in seeds with more than one World of Warcraft player
 
 ## 🚀 Installation & Usage

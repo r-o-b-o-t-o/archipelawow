@@ -65,7 +65,9 @@ FROSTWEAVE_BAG = WoWItem("Frostweave Bag", 41599, ItemClassification.filler, poo
 BAGS = [BROWN_LEATHER_SATCHEL, HUGE_BROWN_SACK, TRAVELERS_BACKPACK, FROSTWEAVE_BAG]
 
 # Weighted against the Gold Pouch in money.py. The scroll hints 3 of the world's unchecked locations, the
-# tome gives a quarter of the experience to the next Archipelago level.
+# tome gives a quarter of the experience to the next Archipelago level, and the soulstone stores the
+# character's soul for an hour.
 SCROLL_OF_DIVINATION = Consumable("Scroll of Divination", 4427, filler_weight=6)
 TOME_OF_INSIGHT = Consumable("Tome of Insight", 1335, filler_weight=6)
-CONSUMABLES = [SCROLL_OF_DIVINATION, TOME_OF_INSIGHT]
+ENDURING_SOULSTONE = Consumable("Enduring Soulstone", 2767, filler_weight=6)
+CONSUMABLES = [SCROLL_OF_DIVINATION, TOME_OF_INSIGHT, ENDURING_SOULSTONE]
