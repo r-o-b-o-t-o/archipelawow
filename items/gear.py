@@ -40,7 +40,7 @@ class GearContainer(ItemContainer["GearItem"]):
         return []
 
     def get_filler_weights(self, world: "World") -> dict[str, int]:
-        return {item.name: item.filler_weight for item in self.build_pool(world)}
+        return {item.name: item.filler_weight for item in self.build_pool(world) if item.min_level <= world.level_cap()}
 
 
 class GearItem(Item):
@@ -50,12 +50,15 @@ class GearItem(Item):
     class can wear at the level it has reached by then -- neither of which is known at generation.
     """
 
-    def __init__(self, name: str, category: GearCategory, quality: GearQuality, filler_weight: int):
+    def __init__(self, name: str, category: GearCategory, quality: GearQuality, filler_weight: int, min_level: int = 1):
         super().__init__(name, ItemClassification.filler)
         GEAR_CONTAINER.add(self)
         self.category = category
         self.quality = quality
         self.filler_weight = filler_weight
+        # The lowest level cap it is filler under. Below the lowest level any of its pieces asks for, the server
+        # could only hand out one the character never gets to wear.
+        self.min_level = min_level
 
 
 GEAR_CONTAINER = GearContainer()
@@ -64,11 +67,12 @@ GEAR_CONTAINER = GearContainer()
 # gold split the filler slots evenly. Rare is rolled less often than uncommon, and armor more often
 # than weapons or jewelry, matching how many slots of each a character actually wears.
 RANDOM_UNCOMMON_WEAPON = GearItem("Random Uncommon Weapon", GearCategory.WEAPON, GearQuality.UNCOMMON, filler_weight=16)
-RANDOM_RARE_WEAPON = GearItem("Random Rare Weapon", GearCategory.WEAPON, GearQuality.RARE, filler_weight=12)
+RANDOM_RARE_WEAPON = GearItem("Random Rare Weapon", GearCategory.WEAPON, GearQuality.RARE, filler_weight=12, min_level=13)
 RANDOM_UNCOMMON_ARMOR = GearItem("Random Uncommon Armor", GearCategory.ARMOR, GearQuality.UNCOMMON, filler_weight=20)
-RANDOM_RARE_ARMOR = GearItem("Random Rare Armor", GearCategory.ARMOR, GearQuality.RARE, filler_weight=16)
-RANDOM_UNCOMMON_JEWELRY = GearItem("Random Uncommon Jewelry", GearCategory.JEWELRY, GearQuality.UNCOMMON, filler_weight=12)
-RANDOM_RARE_JEWELRY = GearItem("Random Rare Jewelry", GearCategory.JEWELRY, GearQuality.RARE, filler_weight=9)
+RANDOM_RARE_ARMOR = GearItem("Random Rare Armor", GearCategory.ARMOR, GearQuality.RARE, filler_weight=16, min_level=13)
+# The 1 Ring, at level 10, is the only uncommon jewelry under 11: a level 10 seed would hand out nothing else
+RANDOM_UNCOMMON_JEWELRY = GearItem("Random Uncommon Jewelry", GearCategory.JEWELRY, GearQuality.UNCOMMON, filler_weight=12, min_level=11)
+RANDOM_RARE_JEWELRY = GearItem("Random Rare Jewelry", GearCategory.JEWELRY, GearQuality.RARE, filler_weight=9, min_level=17)
 
 ALL_GEAR = [
     RANDOM_UNCOMMON_WEAPON,
