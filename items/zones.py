@@ -142,7 +142,7 @@ STRANGLETHORN_VALE = Zone("Stranglethorn Vale", "Zone_Stranglethorn_01", 33, L30
 SWAMP_OF_SORROWS = Zone("Swamp of Sorrows", "Zone_SwampSorrows_01", 8, "", L35, TP(0, -10515.52, -2377, 80.42, 5.79))
 THE_HINTERLANDS = Zone("The Hinterlands", "Zone_Hinterlands_01", 47, L40, L45, TP(0, 45.39, -1953.78, 155.99, 5.98))
 TIRISFAL_GLADES = Zone("Tirisfal Glades", "Zone_TirisfalGlades_01", 85, "", L01, TP(0, 1676.71, 1678.31, 121.68, 3.14), side=H)
-UNDERCITY = Zone("Undercity", "Spell_Arcane_TeleportUnderCity", 1497, "", L05, TP(0, 1834.23, 238.46, 60.35, 3.19), side=H)
+UNDERCITY = Zone("Undercity", "Spell_Arcane_TeleportUnderCity", 1497, "", L05, TP(0, 1558.15, 224.24, -42.42, 0.46), side=H)
 WESTERN_PLAGUELANDS = Zone("Western Plaguelands", "Zone_WesternPlaguelands_01", 28, L50, L50, TP(0, 1631.83, -1393.31, 67.51, 3.58))
 WESTFALL = Zone("Westfall", "Zone_WestFall_01", 40, L10, "", TP(0, -9817.96, 852.6, 26.96, 2.15))
 WETLANDS = Zone("Wetlands", "Zone_Wetlands_01", 11, L20, "", TP(0, -4469.739, -2690.02, 266.04, 0.76), side=A)
