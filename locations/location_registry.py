@@ -27,6 +27,7 @@ class LocationRegistry:
         from .bosses import BOSSES_CONTAINER
         from .explorations import EXPLORATIONS_CONTAINER
         from .flight_paths import FLIGHT_PATHS_CONTAINER
+        from .leaders import LEADERS_CONTAINER
         from .levels import LEVELS_CONTAINER
         from .quests import QUESTS_CONTAINER
         from .skills import SKILLS_CONTAINER
@@ -36,6 +37,7 @@ class LocationRegistry:
         self.__containers["bosses"] = BOSSES_CONTAINER
         self.__containers["explorations"] = EXPLORATIONS_CONTAINER
         self.__containers["flightpaths"] = FLIGHT_PATHS_CONTAINER
+        self.__containers["leaders"] = LEADERS_CONTAINER
         self.__containers["levels"] = LEVELS_CONTAINER
         self.__containers["quests"] = QUESTS_CONTAINER
         self.__containers["skills"] = SKILLS_CONTAINER

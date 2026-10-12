@@ -29,6 +29,7 @@ These are the actions you take in-game to send rewards to yourself or other play
 - **Dungeon Completions & Bosses**
 - **Achievements**
 - **Flight Paths**
+- **Faction Leaders**: Greeting your faction's leaders with `/hi` or `/salute`
 - **Quests**
 - **Exploration**: Discovering the subzones the exploration achievements ask for
 - **Experience Gains**: Gaining experience completes checks but doesn't level up your character normally - your actual level stays the same until you receive level-up rewards
