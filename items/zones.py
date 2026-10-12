@@ -255,7 +255,7 @@ RAGEFIRE_CHASM = Zone("Ragefire Chasm", "Spell_Shadow_SummonFelGuard", 2437, L10
 RAZORFEN_DOWNS = Zone("Razorfen Downs", "Boss_Amnennar_the_Coldbringer", 722, L35, L35, TP(129, 2592.6, 1107.5, 52.29, 4.74))
 RAZORFEN_KRAUL = Zone("Razorfen Kraul", "Boss_CharlgaRazorflank", 491, L25, L25, TP(47, 1943, 1544.63, 83, 1.38))
 SCARLET_MONASTERY = Zone("Scarlet Monastery", "INV_Helmet_52", 796, L30, L30, TP(189, 1689, 1053.5, 19.68, 0), keys=[7146])
-SCHOLOMANCE = Zone("Scholomance", "Spell_Holy_SenseUndead", 2057, L55, L55, TP(289, 196.37, 127.05, 135.91, 6.09))
+SCHOLOMANCE = Zone("Scholomance", "Spell_Holy_SenseUndead", 2057, L55, L55, TP(289, 196.37, 127.05, 135.91, 6.09), keys=[13704])
 SHADOWFANG_KEEP = Zone("Shadowfang Keep", "Boss_ArchmageArugal", 209, L15, L15, TP(33, -228.24, 2111.87, 77.9, 5.92))
 STRATHOLME = Zone("Stratholme", "Spell_DeathKnight_ArmyOfTheDead", 2017, L55, L55, TP(329, 3395.1, -3380.25, 143.7, 0), keys=[12382])
 SUNKEN_TEMPLE = Zone("Sunken Temple", "Boss_ShadeOfEranikus", 1477, L45, L45, TP(109, -319.2, 100, -130.8, 3.19))
