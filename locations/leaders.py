@@ -4,18 +4,18 @@ if TYPE_CHECKING:
     from ..world import World
 
 from ..conditions import has_zone
-from ..items import zones
-from ..items.zones import ZONES_CONTAINER, Zone
+from ..items.zones import ZONES_CONTAINER
+from ..leader_model import LEADER_MODELS, LeaderModel
 from .location_container import LocationContainer
 from .location_registry import Location
 
 
 class Leader(Location):
-    def __init__(self, title: str, name: str, creature_id: int, zone: Zone):
-        super().__init__(f"{title}: say /hi to {name}")
+    def __init__(self, data: LeaderModel):
+        super().__init__(f"{TITLES[data.name]}: say /hi to {data.name}")
         LEADERS_CONTAINER.add(self)
-        self.creature_id = creature_id
-        self.zone = zone
+        self.creature_id = data.id
+        self.zone = ZONES_CONTAINER.zones[data.zone_id]
 
 
 class LeadersContainer(LocationContainer[Leader]):
@@ -37,13 +37,16 @@ class LeadersContainer(LocationContainer[Leader]):
 
 LEADERS_CONTAINER = LeadersContainer()
 
-LEADERS = [
-    Leader("Hungry Like the Wolf", "King Varian Wrynn", 29611, zones.STORMWIND_CITY),
-    Leader("In the Hall of the Mountain King", "King Magni Bronzebeard", 2784, zones.IRONFORGE),
-    Leader("Careless Whisper", "Tyrande Whisperwind", 7999, zones.DARNASSUS),
-    Leader("Space Truckin'", "Prophet Velen", 17468, zones.THE_EXODAR),
-    Leader("Riders on the Storm", "Thrall", 4949, zones.ORGRIMMAR),
-    Leader("Buffalo Soldier", "Cairne Bloodhoof", 3057, zones.THUNDER_BLUFF),
-    Leader("Bring Me to Life", "Lady Sylvanas Windrunner", 10181, zones.UNDERCITY),
-    Leader("Eye of the Tiger", "Lor'themar Theron", 16802, zones.SILVERMOON_CITY),
-]
+# What each leader's location is titled, by the name the extract gives the leader
+TITLES = {
+    "King Varian Wrynn": "Hungry Like the Wolf",
+    "King Magni Bronzebeard": "In the Hall of the Mountain King",
+    "Tyrande Whisperwind": "Careless Whisper",
+    "Prophet Velen": "Space Truckin'",
+    "Thrall": "Riders on the Storm",
+    "Cairne Bloodhoof": "Buffalo Soldier",
+    "Lady Sylvanas Windrunner": "Bring Me to Life",
+    "Lor'themar Theron": "Eye of the Tiger",
+}
+
+LEADERS = [Leader(data) for data in LEADER_MODELS]
