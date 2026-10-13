@@ -20,6 +20,7 @@ SKILL_PER_LEVEL = 5
 
 # SkillLine.dbc
 SKILL_DEFENSE = 95
+SKILL_WANDS = 228
 
 # How many weapon skills a seed picks among those its character can raise, on top of Defense. Each is a grind to its
 # cap, and all of them would come to well over a hundred checks for most classes.
@@ -61,10 +62,11 @@ class SkillsContainer(LocationContainer[Skill]):
         return skills
 
     def pick_skills(self, world: "World") -> dict[int, str | None]:
-        if world.options.character_class.value in CharacterClass.pure_casters:
-            return {}
-
         character_class, race = world.options.character_class.value, world.options.character_race.value
+        if character_class in CharacterClass.pure_casters:
+            # Every race of these classes is created holding Wands, their one weapon skill raised in normal play
+            return {SKILL_WANDS: None}
+
         items = {item.data.id: item.name for item in SPELL_ITEMS_CONTAINER.build_pool(world) if item.data.kind == SpellKind.WEAPON}
         available: dict[int, str | None] = {}
         for skill in SKILL_MODELS:

@@ -143,7 +143,7 @@ class CharacterClass(RerollableChoice):
     # Warriors run on rage and rogues on energy, so anything that restores mana is dead weight
     # for them.
     no_mana = [option_warrior, option_rogue]
-    # Classes that fight with spells rather than weapons, so their weapon skills and Defense aren't locations
+    # Classes that fight with spells rather than weapons, so Wands is their only skill with locations
     pure_casters = [option_priest, option_mage, option_warlock]
     # The races each class is open to, by CharacterRace value.
     races = {
