@@ -42,8 +42,13 @@ class SpellsContainer(ItemContainer["SpellItem"]):
 
     def build_pool(self, world: "World") -> list["SpellItem"]:
         # Riding is not here: its ranks are a ladder, so they are handed out as the progressive item
-        # in progressive.py rather than as one item each.
-        return [item for item in self.all_spells if item.data.kind != SpellKind.RIDING and item.data.is_learnable_by(world)]
+        # in progressive.py rather than as one item each. The ladder keeps a rank sold at a level goal's
+        # cap, while a spell sold there would only arrive once the goal is won.
+        return [
+            item
+            for item in self.all_spells
+            if item.data.kind != SpellKind.RIDING and item.data.is_learnable_by(world) and item.data.req_level <= world.max_location_level()
+        ]
 
     def get_slot_data(self, world: "World"):
         # The taught spells matter for the handful of trainer entries that are a wrapper: the game

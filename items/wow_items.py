@@ -16,7 +16,7 @@ class WoWItemsContainer(ItemContainer["WoWItem"]):
         items += [
             glyph
             for glyph in GLYPHS
-            if glyph.model.class_id == world.options.character_class.value and glyph.model.required_level <= world.level_cap()
+            if glyph.model.class_id == world.options.character_class.value and glyph.model.required_level <= world.max_location_level()
         ]
         return items
 
