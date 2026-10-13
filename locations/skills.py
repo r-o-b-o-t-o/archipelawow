@@ -9,7 +9,7 @@ from rule_builder.rules import Has, Rule
 from .. import regions
 from ..conditions import required_level
 from ..items.spells import SPELLS_CONTAINER as SPELL_ITEMS_CONTAINER
-from ..options import CharacterClass
+from ..options import CharacterClass, Goal
 from ..skill_model import SKILL_MODELS, SkillModel
 from ..spell_model import SpellKind
 from .location_container import LocationContainer
@@ -81,7 +81,10 @@ class SkillsContainer(LocationContainer[Skill]):
 
     def build_locations(self, world: "World") -> list[Skill]:
         skills = self.skill_items(world)
-        return [loc for loc in self.all_skills if loc.data.id in skills and loc.level <= world.level_cap()]
+        # A skill only rises past the previous tier's cap once the character holds the tier's level, so a level goal is
+        # already won before the last tier can be raised
+        max_level = world.level_cap() - 1 if world.options.goal.value in Goal.level_goals else world.level_cap()
+        return [loc for loc in self.all_skills if loc.data.id in skills and loc.level <= max_level]
 
     def get_slot_data(self, world: "World"):
         return [[loc.data.id, loc.level * SKILL_PER_LEVEL, loc.id] for loc in self.build_locations(world)]

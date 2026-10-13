@@ -57,6 +57,18 @@ class Goal(Choice):
         option_level_80: 80,
     }
 
+    # Won the moment the character reaches the cap, so nothing asking for the cap itself is ever played
+    level_goals = [
+        option_level_10,
+        option_level_20,
+        option_level_30,
+        option_level_40,
+        option_level_50,
+        option_level_60,
+        option_level_70,
+        option_level_80,
+    ]
+
 
 class RerollableChoice(Choice):
     """A choice that keeps the YAML weight of each value, so the world may reroll it from them."""
