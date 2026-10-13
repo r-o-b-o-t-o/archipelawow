@@ -34,7 +34,7 @@ class BossesContainer(LocationContainer[Boss]):
 
         # The pool already leaves out the dungeons past the seed's level cap
         zones_in_pool = set(ZONES_CONTAINER.build_pool(world))
-        return [loc for loc in locations if loc.zone in zones_in_pool and loc.required_level <= world.level_cap()]
+        return [loc for loc in locations if loc.zone in zones_in_pool and loc.required_level <= world.max_location_level()]
 
     def get_slot_data(self, world: "World"):
         return [[loc.encounter_id, loc.id] for loc in self.build_locations(world)]

@@ -36,7 +36,7 @@ class AchievementsContainer(LocationContainer[Achievement]):
         return [
             loc
             for loc in locations
-            if (loc.zone is None or loc.zone in zones_in_pool) and (loc.required_level is None or loc.required_level <= world.level_cap())
+            if (loc.zone is None or loc.zone in zones_in_pool) and (loc.required_level is None or loc.required_level <= world.max_location_level())
         ]
 
     def get_slot_data(self, world: "World"):
