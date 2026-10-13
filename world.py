@@ -93,6 +93,10 @@ class World(BaseWorld):
     def level_cap(self) -> int:
         return Goal.level_caps[self.options.goal.value]
 
+    def max_location_level(self) -> int:
+        """The highest level a location may ask for: a level goal is won the moment the character reaches the cap."""
+        return self.level_cap() - 1 if self.options.goal.value in Goal.level_goals else self.level_cap()
+
     def is_alliance(self):
         return self.options.character_race.value in CharacterRace.alliance
 

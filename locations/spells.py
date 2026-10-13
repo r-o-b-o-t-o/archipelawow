@@ -38,7 +38,9 @@ class SpellsContainer(LocationContainer[Spell]):
         self.all_spells.append(location)
 
     def build_locations(self, world: "World") -> list[Spell]:
-        return [loc for loc in self.all_spells if loc.data.is_learnable_by(world)]
+        # The spell's item stays in the pool even when its check is past the last level a location may ask for: it can
+        # still turn up in time to be used
+        return [loc for loc in self.all_spells if loc.data.is_learnable_by(world) and loc.data.req_level <= world.max_location_level()]
 
     def get_slot_data(self, world: "World"):
         return [[loc.data.id, loc.id] for loc in self.build_locations(world)]
