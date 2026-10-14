@@ -25,6 +25,7 @@ class ItemRegistry:
 
     def load_containers(self):
         from .gear import GEAR_CONTAINER
+        from .heirlooms import HEIRLOOM_CONTAINER
         from .levels import LEVELS_CONTAINER
         from .money import MONEY_CONTAINER
         from .progressive import PROGRESSIVE_CONTAINER
@@ -36,6 +37,7 @@ class ItemRegistry:
         self.__containers["levels"] = LEVELS_CONTAINER
         self.__containers["items"] = WOW_ITEMS_CONTAINER
         self.__containers["gear"] = GEAR_CONTAINER
+        self.__containers["heirlooms"] = HEIRLOOM_CONTAINER
         self.__containers["zones"] = ZONES_CONTAINER
         self.__containers["money"] = MONEY_CONTAINER
         self.__containers["progressive"] = PROGRESSIVE_CONTAINER

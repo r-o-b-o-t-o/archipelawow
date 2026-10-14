@@ -80,7 +80,6 @@ class World(BaseWorld):
                 "character_class",
                 "death_link",
                 "gear_reward_level_window",
-                "gear_include_all_armor_types",
                 "spells_randomize_starter_abilities",
             ),
             "locations": self.locations.get_slot_data(self),

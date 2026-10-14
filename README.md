@@ -38,6 +38,7 @@ These are the actions you take in-game to send rewards to yourself or other play
 
 ### 🎁 Randomized Rewards
 - **Items**: Receive powerful gear and artifacts at unexpected times
+- **Heirlooms**: An heirloom chest, shoulders and trinket for the role you play, the Dread Pirate Ring, and up to three heirloom weapons you pick in the Archipelago Stone's Preferences
 - **Zone Unlocks**: Access new areas through randomized progression
 - **Level Ups**: Increase your character level - these can be sent by other players or by completing location checks
 - **Spells & Skills**: The first rank of each class spell, plus the weapon skills your class can learn, arrive from the multiworld - once you have a first rank, your trainer sells the higher ones as usual

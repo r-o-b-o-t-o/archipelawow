@@ -145,6 +145,8 @@ class CharacterClass(RerollableChoice):
     no_mana = [option_warrior, option_rogue]
     # Classes that fight with spells rather than weapons, so Wands is their only skill with locations
     pure_casters = [option_priest, option_mage, option_warlock]
+    # Classes that can play either as casters or in melee, and pick which from the Archipelago Stone's preferences
+    hybrids = [option_paladin, option_shaman, option_druid]
     # The races each class is open to, by CharacterRace value.
     races = {
         option_warrior: [1, 2, 3, 4, 5, 6, 7, 8, 11],
@@ -304,17 +306,6 @@ class GearRewardLevelWindow(NamedRange):
     }
 
 
-class GearIncludeAllArmorTypes(Toggle):
-    """
-    Include armor of any type your class can wear, instead of only the heaviest one available. Can be worth enabling if you intend on playing a caster specialization.
-
-    No: a paladin would receive mail then plate around level 40; a druid would only ever receive leather.
-    Yes: a paladin would receive cloth, leather, mail and plate; a druid would receive cloth and leather.
-    """
-
-    display_name = "All armor types"
-
-
 class SpellsRandomizeStarterAbilities(Toggle):
     """
     Shuffle away the abilities your character should have on creation, such as a mage's Fireball or a warrior's Heroic Strike.
@@ -340,7 +331,6 @@ class Options(PerGameCommonOptions):
     northrend_dungeonsanity: NorthrendDungeonsanity
     explorersanity: Explorersanity
     gear_reward_level_window: GearRewardLevelWindow
-    gear_include_all_armor_types: GearIncludeAllArmorTypes
     spells_randomize_starter_abilities: SpellsRandomizeStarterAbilities
     death_link: DeathLink
     start_inventory_from_pool: StartInventoryPool
@@ -368,7 +358,7 @@ option_groups = [
     OptionGroup("Quest Options", [Questsanity, QuestsAllStartingZones, QuestsMaxPartySize, QuestsIncludeDungeons]),
     OptionGroup("Dungeon Options", [ClassicDungeonsanity, OutlandDungeonsanity, NorthrendDungeonsanity]),
     OptionGroup("Exploration Options", [Explorersanity]),
-    OptionGroup("Gear Options", [GearRewardLevelWindow, GearIncludeAllArmorTypes]),
+    OptionGroup("Gear Options", [GearRewardLevelWindow]),
     OptionGroup("Spell Options", [SpellsRandomizeStarterAbilities]),
     OptionGroup("Advanced Options", [DeathLink, ProgressionBalancing, Accessibility]),
 ]

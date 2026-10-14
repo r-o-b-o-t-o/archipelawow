@@ -12,7 +12,7 @@ from .item_registry import Item
 
 class WoWItemsContainer(ItemContainer["WoWItem"]):
     def build_pool(self, world: "World"):
-        items: list[WoWItem] = [*BAGS, *heirlooms_for(world)]
+        items: list[WoWItem] = [*BAGS, DREAD_PIRATE_RING]
         items += [
             glyph
             for glyph in GLYPHS
@@ -56,13 +56,14 @@ WOW_ITEMS_CONTAINER = WoWItemsContainer()
 
 GLYPHS = [Glyph(model) for model in GLYPH_MODELS]
 
-from .heirlooms import heirlooms_for
-
 BROWN_LEATHER_SATCHEL = WoWItem("Brown Leather Satchel", 4498, ItemClassification.filler, pool_count=2)
 HUGE_BROWN_SACK = WoWItem("Huge Brown Sack", 4499, ItemClassification.filler, pool_count=2)
 TRAVELERS_BACKPACK = WoWItem("Traveler's Backpack", 4500, ItemClassification.filler, pool_count=2)
 FROSTWEAVE_BAG = WoWItem("Frostweave Bag", 41599, ItemClassification.filler, pool_count=2)
 BAGS = [BROWN_LEATHER_SATCHEL, HUGE_BROWN_SACK, TRAVELERS_BACKPACK, FROSTWEAVE_BAG]
+
+# The one heirloom every class wants as it is, so unlike the others (see heirlooms.py) it is sent as itself.
+DREAD_PIRATE_RING = WoWItem("Dread Pirate Ring", 50255, ItemClassification.useful)
 
 # Weighted against the Gold Pouch in money.py. The scroll hints 3 of the world's unchecked locations, the
 # tome gives a quarter of the experience to the next Archipelago level, and the soulstone stores the
