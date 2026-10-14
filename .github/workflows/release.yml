@@ -1,0 +1,126 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Check the tag
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@v7
+        with:
+          # All of it, so master is there to check the tagged commit against
+          fetch-depth: 0
+
+      - name: Check it is on master and names the world version
+        run: |
+          if ! git merge-base --is-ancestor HEAD origin/master; then
+            echo "::error::$GITHUB_REF_NAME does not point to a commit on master"
+            exit 1
+          fi
+          version=$(jq -r .world_version archipelago.json)
+          if [ "$GITHUB_REF_NAME" != "v$version" ]; then
+            echo "::error::$GITHUB_REF_NAME does not match world_version $version in archipelago.json"
+            exit 1
+          fi
+
+  apworld:
+    name: APWorld
+    needs: check
+    uses: ./.github/workflows/apworld.yml
+
+  mod:
+    name: Zip mod-i-found-your-sword
+    needs: check
+    runs-on: ubuntu-latest
+    outputs:
+      sha: ${{ steps.zip.outputs.sha }}
+
+    steps:
+      - name: Check out mod-i-found-your-sword
+        uses: actions/checkout@v7
+        with:
+          repository: r-o-b-o-t-o/mod-i-found-your-sword
+          ref: master
+
+      # git archive leaves out .git and anything marked export-ignore, and puts the files at the root of
+      # the zip, so it extracts straight into modules/mod-i-found-your-sword
+      - name: Zip it
+        id: zip
+        run: |
+          git archive --format=zip -o mod-i-found-your-sword.zip HEAD
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Upload the zip
+        uses: actions/upload-artifact@v7
+        with:
+          name: mod-i-found-your-sword
+          path: mod-i-found-your-sword.zip
+          if-no-files-found: error
+
+  release:
+    name: Create the release
+    needs: [apworld, mod]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download the assets
+        uses: actions/download-artifact@v8
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: Create the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        # Pre-release while the version is 0.x, like the releases made by hand before this workflow. The
+        # notes start as the generated changelog link, to edit on GitHub.
+        run: |
+          prerelease=()
+          if [[ "$GITHUB_REF_NAME" == v0.* ]]; then
+            prerelease=(--prerelease)
+          fi
+          gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --verify-tag --generate-notes "${prerelease[@]}" \
+            dist/custom_worlds/worldofwarcraft.apworld \
+            dist/Player.yaml \
+            dist/mod-i-found-your-sword.zip
+
+  tag-mod:
+    name: Tag mod-i-found-your-sword
+    needs: [mod, release]
+    runs-on: ubuntu-latest
+
+    steps:
+      # The workflow's own token cannot write to another repository, so this takes a token with Contents
+      # write access on mod-i-found-your-sword
+      - name: Check for the token
+        env:
+          MOD_REPO_TOKEN: ${{ secrets.MOD_REPO_TOKEN }}
+        run: |
+          if [ -z "$MOD_REPO_TOKEN" ]; then
+            echo "::error::Add a MOD_REPO_TOKEN repository secret with Contents write access on mod-i-found-your-sword"
+            exit 1
+          fi
+
+      # The commit that was zipped, in case master moved since
+      - name: Check out mod-i-found-your-sword
+        uses: actions/checkout@v7
+        with:
+          repository: r-o-b-o-t-o/mod-i-found-your-sword
+          ref: ${{ needs.mod.outputs.sha }}
+          token: ${{ secrets.MOD_REPO_TOKEN }}
+
+      - name: Push the tag
+        run: |
+          git tag "$GITHUB_REF_NAME"
+          git push origin "refs/tags/$GITHUB_REF_NAME"
