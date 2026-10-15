@@ -49,6 +49,7 @@ These are the actions you take in-game to send rewards to yourself or other play
 - **Tome of Insight**: Grants a quarter of the experience needed for your next level check
 - **Enduring Soulstone**: Stores your soul, or a group member's, for an hour, so you can come back to life where you died
 - **World Buffs**: Rallying Cry of the Dragonslayer, Spirit of Zandalar, the Darkmoon Faire fortunes and the Dire Maul buffs, picked for the role you play
+- **Traps**: Dazed, Shackle, Sheep, Poison, Teleport, Ambush, Disarming and Bombs traps take the place of some of the filler, as many as the trap options ask for
 - **Teleport to Friend**: Lets the Archipelago Stone teleport you to another World of Warcraft player of the multiworld, every 30 minutes. Only in seeds with more than one World of Warcraft player
 
 ## 🚀 Installation & Usage

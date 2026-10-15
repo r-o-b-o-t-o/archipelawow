@@ -31,6 +31,7 @@ class ItemRegistry:
         from .progressive import PROGRESSIVE_CONTAINER
         from .spells import SPELLS_CONTAINER
         from .stone import STONE_CONTAINER
+        from .traps import TRAP_CONTAINER
         from .world_buffs import WORLD_BUFF_CONTAINER
         from .wow_items import WOW_ITEMS_CONTAINER
         from .zones import ZONES_CONTAINER
@@ -45,6 +46,7 @@ class ItemRegistry:
         self.__containers["spells"] = SPELLS_CONTAINER
         self.__containers["stone"] = STONE_CONTAINER
         self.__containers["world_buffs"] = WORLD_BUFF_CONTAINER
+        self.__containers["traps"] = TRAP_CONTAINER
 
     def get_container(self, container_name: str):
         return self.__containers.get(container_name)
@@ -74,6 +76,13 @@ class ItemRegistry:
         return slot_data
 
     def get_random_filler_item_name(self, world: "World") -> str:
+        from .traps import TRAP_CONTAINER
+
+        if world.random.randrange(100) < world.options.trap_percentage.value:
+            trap = TRAP_CONTAINER.get_random_trap_name(world)
+            if trap is not None:
+                return trap
+
         weights: dict[str, int] = {}
         for container in self.__containers.values():
             weights.update(container.get_filler_weights(world))

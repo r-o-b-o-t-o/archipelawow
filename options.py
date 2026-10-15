@@ -8,6 +8,7 @@ from Options import (
     Choice,
     DeathLink,
     NamedRange,
+    OptionCounter,
     OptionError,
     OptionGroup,
     PerGameCommonOptions,
@@ -306,6 +307,61 @@ class GearRewardLevelWindow(NamedRange):
     }
 
 
+# The trap items, by the key the module knows each one by. items/traps.py makes an item of each.
+TRAPS = {
+    "dazed": "Dazed Trap",
+    "shackle": "Shackle Trap",
+    "sheep": "Sheep Trap",
+    "poison": "Poison Trap",
+    "teleport": "Teleport Trap",
+    "ambush": "Ambush Trap",
+    "disarm": "Disarming Trap",
+    "bombs": "Bombs Trap",
+}
+
+
+class TrapPercentage(NamedRange):
+    """
+    Percentage of the filler items replaced with traps.
+
+    Dazed Trap: slows you down for 30 seconds.
+    Shackle Trap: roots you in place for 15 seconds. You can still attack and cast.
+    Sheep Trap: turns you into a sheep for 15 seconds, or until you take damage.
+    Poison Trap: deals 40% of your maximum health over 30 seconds.
+    Teleport Trap: sends you to a random spot out in the wild of a zone you have unlocked, dungeons aside.
+    Ambush Trap: two or three hostile creatures of your level appear around you and attack.
+    Disarming Trap: moves your weapons from your hands to your bags, as far as they have room.
+    Bombs Trap: bombs rain around you for 10 seconds, each blast taking 60% of your maximum health. Fire on the ground shows where each lands.
+
+    No dispel or immunity removes a trap's effect.
+    """
+
+    display_name = "Trap percentage"
+
+    range_start = 0
+    range_end = 100
+    default = 10
+
+    special_range_names = {
+        "none": 0,
+        "few": 10,
+        "some": 25,
+        "half": 50,
+        "all": 100,
+    }
+
+
+class TrapWeights(OptionCounter):
+    """
+    How often each trap is picked, relative to the others. A trap with a weight of 0 is never picked.
+    """
+
+    display_name = "Trap weights"
+    valid_keys = list(TRAPS.values())
+    min = 0
+    default = {name: 1 for name in TRAPS.values()}
+
+
 class SpellsRandomizeStarterAbilities(Toggle):
     """
     Shuffle away the abilities your character should have on creation, such as a mage's Fireball or a warrior's Heroic Strike.
@@ -332,6 +388,8 @@ class Options(PerGameCommonOptions):
     explorersanity: Explorersanity
     gear_reward_level_window: GearRewardLevelWindow
     spells_randomize_starter_abilities: SpellsRandomizeStarterAbilities
+    trap_percentage: TrapPercentage
+    trap_weights: TrapWeights
     death_link: DeathLink
     start_inventory_from_pool: StartInventoryPool
 
@@ -360,6 +418,7 @@ option_groups = [
     OptionGroup("Exploration Options", [Explorersanity]),
     OptionGroup("Gear Options", [GearRewardLevelWindow]),
     OptionGroup("Spell Options", [SpellsRandomizeStarterAbilities]),
+    OptionGroup("Trap Options", [TrapPercentage, TrapWeights]),
     OptionGroup("Advanced Options", [DeathLink, ProgressionBalancing, Accessibility]),
 ]
 
