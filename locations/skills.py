@@ -21,6 +21,7 @@ SKILL_PER_LEVEL = 5
 # SkillLine.dbc
 SKILL_DEFENSE = 95
 SKILL_WANDS = 228
+SKILL_POLEARMS = 229
 
 # How many weapon skills a seed picks among those its character can raise, on top of Defense. Each is a grind to its
 # cap, and all of them would come to well over a hundred checks for most classes.
@@ -70,6 +71,9 @@ class SkillsContainer(LocationContainer[Skill]):
         items = {item.data.id: item.name for item in SPELL_ITEMS_CONTAINER.build_pool(world) if item.data.kind == SpellKind.WEAPON}
         available: dict[int, str | None] = {}
         for skill in SKILL_MODELS:
+            # Before Outland, only Stormwind and Undercity sell a polearm, from level 20: too rare a weapon to send a seed looking for
+            if skill.id == SKILL_POLEARMS:
+                continue
             if skill.is_starting_skill_of(character_class, race):
                 available[skill.id] = None
             elif skill.spell in items:
