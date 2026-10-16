@@ -54,29 +54,23 @@ class ProgressiveItem(Item):
     WoW item to hand over. The server holds on the last step if a stray extra copy ever shows up.
     """
 
-    def __init__(self, name: str, type: ProgressiveType, steps: list[int], expansion_gated=False, classification=ItemClassification.useful):
+    def __init__(
+        self, name: str, type: ProgressiveType, steps: list[int], req_levels: list[int] | None = None, classification=ItemClassification.useful
+    ):
         super().__init__(name, classification)
         PROGRESSIVE_CONTAINER.add(self)
         self.type = type
         self.steps = steps
-        self.expansion_gated = expansion_gated
+        self.req_levels = req_levels
 
     def steps_for(self, world: "World") -> list[int]:
         """The steps this seed actually hands out.
 
-        The food and drink ladders climb out of Azeroth: their fifth rung is a Burning Crusade
-        vendor spell and their sixth a Wrath one. A seed whose goal stops short of that content
-        stops at the rung before it, rather than promising a character food from a continent the
-        seed never opens.
+        A track with required levels only keeps the steps whose level is below the seed's level cap.
         """
         steps = list(self.steps)
-        if self.expansion_gated:
-            # Sliced rather than popped: a slice is still well defined on a ladder too short to
-            # have the rung being dropped.
-            if not world.has_wotlk_content():
-                steps = steps[:-1]
-            if not world.has_tbc_content():
-                steps = steps[:-1]
+        if self.req_levels is not None:
+            steps = [step for step, level in zip(steps, self.req_levels, strict=True) if level < world.level_cap()]
 
         # Copies trimmed from an overflowing pool take the top steps with them
         return steps[: len(steps) - world.trimmed_items[self.name]]
@@ -150,8 +144,10 @@ PROGRESSIVE_EXPERIENCE_RATE = ProgressiveItem("Progressive Experience Rate", Pro
 # Eternal food and drink: each step is a WoW item with unlimited uses that restores more than the
 # one before it, and the server swaps the old one out as the new one lands. The item templates are
 # defined by the module's archipelawow_world_005 database update, which also documents which vendor
-# spell each tier carries. The last two rungs of each ladder are the Burning Crusade and Wrath
-# spells, and drop out of seeds that never reach that content -- see steps_for().
+# spell each tier carries. A tier only goes to seeds whose level cap is above the required level of
+# the vendor item its spell comes from -- see steps_for().
+FOOD_AND_DRINK_REQ_LEVELS = [15, 35, 45, 55, 65, 75]
+
 PROGRESSIVE_FOOD = ProgressiveItem(
     "Progressive Food",
     ProgressiveType.FOOD,
@@ -163,7 +159,7 @@ PROGRESSIVE_FOOD = ProgressiveItem(
         43496,  # Cinderfowl Drumstick
         36831,  # Ribs of the Endless Banquet
     ],
-    expansion_gated=True,
+    req_levels=FOOD_AND_DRINK_REQ_LEVELS,
 )
 PROGRESSIVE_DRINK = ProgressiveItem(
     "Progressive Drink",
@@ -176,7 +172,7 @@ PROGRESSIVE_DRINK = ProgressiveItem(
         41374,  # Netherbloom Nectar
         42548,  # Elixir of the Everlasting Toast
     ],
-    expansion_gated=True,
+    req_levels=FOOD_AND_DRINK_REQ_LEVELS,
 )
 
 PROGRESSIVE_RIDING = ProgressiveRidingItem()
