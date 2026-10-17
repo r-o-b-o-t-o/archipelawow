@@ -3,8 +3,10 @@ from typing import TYPE_CHECKING, Optional
 if TYPE_CHECKING:
     from ..world import World
 
+from rule_builder.rules import Or, Rule
+
 from .. import regions
-from ..conditions import required_level
+from ..conditions import has_zone, required_level
 from ..items import zones
 from ..items.zones import ZONES_CONTAINER, Zone
 from ..options import Dungeonsanity
@@ -13,12 +15,22 @@ from .location_registry import Location
 
 
 class Achievement(Location):
-    def __init__(self, name: str, achievement_id: int, zone: Optional[Zone] = None, required_level: Optional[int] = None):
+    def __init__(
+        self,
+        name: str,
+        achievement_id: int,
+        zone: Optional[Zone] = None,
+        required_level: Optional[int] = None,
+        served_in: tuple[Zone, ...] = (),
+    ):
+        """`zone` is where the achievement is earned, and is opened with its bracket. `served_in` lists the zones
+        with a vendor or barber that serves the achievement, one of which it asks for unless the character starts in one."""
         super().__init__(f"Achievement: {name}")
         ACHIEVEMENTS_CONTAINER.add(self)
         self.achievement_id = achievement_id
         self.zone = zone
         self.required_level = required_level
+        self.served_in = served_in
 
 
 class AchievementsContainer(LocationContainer[Achievement]):
@@ -59,9 +71,19 @@ class AchievementsContainer(LocationContainer[Achievement]):
         return result
 
     def set_rules(self, world: "World"):
+        zones_in_pool = ZONES_CONTAINER.build_pool(world)
+        starting_zones = ZONES_CONTAINER.get_precollected_items(world)
         for ach in self.build_locations(world):
-            if ach.required_level:
-                world.set_rule(world.get_location(ach.name), required_level(ach.required_level))
+            rule: Optional[Rule] = required_level(ach.required_level) if ach.required_level else None
+
+            # Only the zones of the pool count, which leaves out the other faction's
+            vendor_zones = [zone for zone in ach.served_in if zone in zones_in_pool]
+            if vendor_zones and not any(zone in starting_zones for zone in vendor_zones):
+                zone_rule = Or(*[has_zone(zone, world) for zone in vendor_zones])
+                rule = zone_rule if rule is None else rule & zone_rule
+
+            if rule is not None:
+                world.set_rule(world.get_location(ach.name), rule)
 
 
 ACHIEVEMENTS_CONTAINER = AchievementsContainer()
@@ -173,9 +195,29 @@ NORTHREND_DUNGEONS = [
 ]
 
 # General
-CAN_I_KEEP_HIM = Achievement("Can I Keep Him?", 1017, None, 10)
-REPRESENT = Achievement("Represent", 621, None, 20)
-SHAVE_AND_A_HAIRCUT = Achievement("Shave and a Haircut", 545, None, 30)
+# The vendors selling a pet for gold all year round. Those of the starting zones and capitals charge 20 to 60 silver, while a quest below
+# level 10 pays a few silver.
+PET_VENDOR_ZONES = (
+    zones.DARNASSUS,
+    zones.DUN_MOROGH,
+    zones.ELWYNN_FOREST,
+    zones.EVERSONG_WOODS,
+    zones.NETHERSTORM,
+    zones.ORGRIMMAR,
+    zones.STORMWIND_CITY,
+    zones.STRANGLETHORN_VALE,
+    zones.THE_EXODAR,
+    zones.THOUSAND_NEEDLES,
+    zones.THUNDER_BLUFF,
+    zones.UNDERCITY,
+)
+CAN_I_KEEP_HIM = Achievement("Can I Keep Him?", 1017, None, 10, PET_VENDOR_ZONES)
+# Every capital's tabard vendor sells the Guild Tabard for 1 gold, to a character outside a guild too
+REPRESENT = Achievement("Represent", 621, None, 15, tuple(zones.CAPITAL_CITIES))
+# A barber charges by level, a few copper at level 5, so the capital's own level is enough
+SHAVE_AND_A_HAIRCUT = Achievement(
+    "Shave and a Haircut", 545, None, None, (zones.IRONFORGE, zones.NETHERSTORM, zones.ORGRIMMAR, zones.STORMWIND_CITY, zones.UNDERCITY)
+)
 _50_QUESTS_COMPLETED = Achievement("50 Quests Completed", 503, None, 15)
 _100_QUESTS_COMPLETED = Achievement("100 Quests Completed", 504, None, 30)
 _250_QUESTS_COMPLETED = Achievement("250 Quests Completed", 505, None, 50)
