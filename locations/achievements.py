@@ -218,7 +218,7 @@ REPRESENT = Achievement("Represent", 621, None, 15, tuple(zones.CAPITAL_CITIES))
 SHAVE_AND_A_HAIRCUT = Achievement(
     "Shave and a Haircut", 545, None, None, (zones.IRONFORGE, zones.NETHERSTORM, zones.ORGRIMMAR, zones.STORMWIND_CITY, zones.UNDERCITY)
 )
-_50_QUESTS_COMPLETED = Achievement("50 Quests Completed", 503, None, 15)
+_50_QUESTS_COMPLETED = Achievement("50 Quests Completed", 503, None, 12)
 _100_QUESTS_COMPLETED = Achievement("100 Quests Completed", 504, None, 30)
 _250_QUESTS_COMPLETED = Achievement("250 Quests Completed", 505, None, 50)
 MISC = [CAN_I_KEEP_HIM, REPRESENT, SHAVE_AND_A_HAIRCUT, _50_QUESTS_COMPLETED, _100_QUESTS_COMPLETED, _250_QUESTS_COMPLETED]
