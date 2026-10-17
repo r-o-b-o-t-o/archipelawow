@@ -14,6 +14,9 @@ class SkillModel:
     spell: int
     # The races of each class created holding the skill, keyed by class id
     starting_class_races: tuple[tuple[int, int], ...]
+    # Where a weapon of the skill is sold: zone id, the lowest level such a weapon is equipped at there, and the
+    # races it is sold to at that level, 0 for all
+    vendor_zones: tuple[tuple[int, int, int], ...]
 
     @staticmethod
     def from_dict(data: object) -> "SkillModel | None":
@@ -27,6 +30,7 @@ class SkillModel:
 
         spell = data.get("spell")
         class_races = data.get("startingClassRaces")
+        vendor_zones = data.get("vendorZones")
         return SkillModel(
             id=skill_id,
             name=name,
@@ -37,12 +41,25 @@ class SkillModel:
                 if isinstance(class_races, dict)
                 else ()
             ),
+            vendor_zones=(
+                tuple(
+                    (zone["zone"], zone["level"], zone["races"])
+                    for zone in vendor_zones
+                    if isinstance(zone, dict) and all(isinstance(zone.get(key), int) for key in ("zone", "level", "races"))
+                )
+                if isinstance(vendor_zones, list)
+                else ()
+            ),
         )
 
     def is_starting_skill_of(self, class_id: int, race: int) -> bool:
         """Whether a character of this class and race is created holding the skill."""
         races = next((races for skill_class, races in self.starting_class_races if skill_class == class_id), 0)
         return bool(races & (1 << (race - 1)))
+
+    def zones_selling(self, race: int, level: int) -> set[int]:
+        """The zones a character of this race can buy a weapon of the skill in, one it can equip by `level`."""
+        return {zone for zone, req_level, races in self.vendor_zones if req_level <= level and (not races or races & (1 << (race - 1)))}
 
 
 def load_skill_models(resource: str) -> list[SkillModel]:
