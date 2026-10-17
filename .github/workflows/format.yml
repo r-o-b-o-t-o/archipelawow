@@ -2,9 +2,9 @@ name: Format
 
 on:
   push:
+    # Every branch, so a branch is known good before it reaches master. Tags are left to release.yml.
     branches:
-      - master
-      - ci
+      - "**"
   pull_request:
     branches:
       - master
