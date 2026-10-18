@@ -6,7 +6,7 @@ if TYPE_CHECKING:
 
 from BaseClasses import ItemClassification
 
-from ..spell_model import SPELL_MODELS, SpellKind
+from ..spell_model import SPELL_MODELS, SpellExpansion, SpellKind, SpellModel
 from .item_container import ItemContainer
 from .item_registry import Item
 
@@ -97,9 +97,11 @@ class ProgressiveRidingItem(ProgressiveItem):
 
     Apprentice, Journeyman, Expert and then Artisan, in that order, so a copy is never the rank above
     one the character has not got yet. Which rungs a seed carries is the spell extract's answer rather
-    than a list here: the flying ranks are only sold in Outland, so a seed that stops short of it drops
-    them. Cold Weather Flying is no part of this -- it is a permit to fly over Northrend rather than a
-    faster mount, and an Expert rider can buy it without ever reaching Artisan.
+    than a list here. The ground ranks are in every seed whatever its level cap, as a quality of life
+    item: the module teaches a mount with each rank, since the mount items ask for a level. The flying
+    ranks are only sold in Outland, so a seed that stops short of it drops them. Cold Weather Flying is
+    no part of this -- it is a permit to fly over Northrend rather than a faster mount, and an Expert
+    rider can buy it without ever reaching Artisan.
     """
 
     def __init__(self):
@@ -107,8 +109,13 @@ class ProgressiveRidingItem(ProgressiveItem):
 
     def ranks_for(self, world: "World"):
         return sorted(
-            (spell for spell in SPELL_MODELS if spell.kind == SpellKind.RIDING and spell.is_learnable_by(world)), key=lambda spell: spell.req_level
+            (spell for spell in SPELL_MODELS if spell.kind == SpellKind.RIDING and self.is_rank_in_seed(spell, world)),
+            key=lambda spell: spell.req_level,
         )
+
+    @staticmethod
+    def is_rank_in_seed(spell: SpellModel, world: "World") -> bool:
+        return spell.expansion == SpellExpansion.CLASSIC or spell.is_learnable_by(world)
 
     def steps_for(self, world: "World") -> list[int]:
         return [spell.id for spell in self.ranks_for(world)]
