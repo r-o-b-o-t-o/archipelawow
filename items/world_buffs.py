@@ -72,4 +72,4 @@ class WorldBuffItem(Item):
 WORLD_BUFF_CONTAINER = WorldBuffContainer()
 
 # Weighted against the Gold Pouch in money.py, like the consumables in wow_items.py
-RANDOM_WORLD_BUFF = WorldBuffItem("Random World Buff", filler_weight=6)
+RANDOM_WORLD_BUFF = WorldBuffItem("Random World Buff", filler_weight=10)

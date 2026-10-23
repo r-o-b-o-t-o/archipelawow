@@ -5,3 +5,4 @@
 docs/*.xlsx
 docs/*.csv
 CLAUDE.md
+tools/

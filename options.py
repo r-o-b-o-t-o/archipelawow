@@ -286,6 +286,27 @@ class NorthrendDungeonsanity(Dungeonsanity):
     display_name = "Northrend dungeonsanity"
 
 
+class StoneShopItemsPerTier(NamedRange):
+    """
+    How many items the Archipelago Stone's shop sells for each level bracket. Each one is a location bought with gold.
+    """
+
+    display_name = "Shop items per tier"
+
+    range_start = 0
+    # The vendor window the module shows the shop in holds 150 items, room for 9 in each of the 16 tiers of a level 80 seed.
+    range_end = 9
+    default = 3
+
+    special_range_names = {
+        "none": 0,
+        "few": 1,
+        "some": 3,
+        "many": 6,
+        "most": 9,
+    }
+
+
 class GearRewardLevelWindow(NamedRange):
     """
     How many levels away you can be from a piece of gear's required level for it to be included in the random gear pool.
@@ -386,6 +407,7 @@ class Options(PerGameCommonOptions):
     outland_dungeonsanity: OutlandDungeonsanity
     northrend_dungeonsanity: NorthrendDungeonsanity
     explorersanity: Explorersanity
+    stone_shop_items_per_tier: StoneShopItemsPerTier
     gear_reward_level_window: GearRewardLevelWindow
     spells_randomize_starter_abilities: SpellsRandomizeStarterAbilities
     trap_percentage: TrapPercentage
@@ -416,6 +438,7 @@ option_groups = [
     OptionGroup("Quest Options", [Questsanity, QuestsAllStartingZones, QuestsMaxPartySize, QuestsIncludeDungeons]),
     OptionGroup("Dungeon Options", [ClassicDungeonsanity, OutlandDungeonsanity, NorthrendDungeonsanity]),
     OptionGroup("Exploration Options", [Explorersanity]),
+    OptionGroup("Shop Options", [StoneShopItemsPerTier]),
     OptionGroup("Gear Options", [GearRewardLevelWindow]),
     OptionGroup("Spell Options", [SpellsRandomizeStarterAbilities]),
     OptionGroup("Trap Options", [TrapPercentage, TrapWeights]),

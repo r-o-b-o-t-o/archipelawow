@@ -68,7 +68,7 @@ DREAD_PIRATE_RING = WoWItem("Dread Pirate Ring", 50255, ItemClassification.usefu
 # Weighted against the Gold Pouch in money.py. The scroll hints 3 of the world's unchecked locations, the
 # tome gives a quarter of the experience to the next Archipelago level, and the soulstone stores the
 # character's soul for an hour.
-SCROLL_OF_DIVINATION = Consumable("Scroll of Divination", 4427, filler_weight=6)
-TOME_OF_INSIGHT = Consumable("Tome of Insight", 1335, filler_weight=6)
-ENDURING_SOULSTONE = Consumable("Enduring Soulstone", 2767, filler_weight=6)
+SCROLL_OF_DIVINATION = Consumable("Scroll of Divination", 4427, filler_weight=10)
+TOME_OF_INSIGHT = Consumable("Tome of Insight", 1335, filler_weight=10)
+ENDURING_SOULSTONE = Consumable("Enduring Soulstone", 2767, filler_weight=10)
 CONSUMABLES = [SCROLL_OF_DIVINATION, TOME_OF_INSIGHT, ENDURING_SOULSTONE]

@@ -30,6 +30,7 @@ class LocationRegistry:
         from .leaders import LEADERS_CONTAINER
         from .levels import LEVELS_CONTAINER
         from .quests import QUESTS_CONTAINER
+        from .shop import SHOP_CONTAINER
         from .skills import SKILLS_CONTAINER
         from .spells import SPELLS_CONTAINER
 
@@ -42,6 +43,7 @@ class LocationRegistry:
         self.__containers["quests"] = QUESTS_CONTAINER
         self.__containers["skills"] = SKILLS_CONTAINER
         self.__containers["spells"] = SPELLS_CONTAINER
+        self.__containers["shop"] = SHOP_CONTAINER
 
     def get_container(self, container_name: str):
         return self.__containers.get(container_name)

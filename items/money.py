@@ -29,6 +29,6 @@ class GoldPouch(Item):
 MONEY_CONTAINER = MoneyContainer()
 
 # The reference weight the gear fillers in gear.py are set against.
-GOLD_POUCH_FILLER_WEIGHT = 15
+GOLD_POUCH_FILLER_WEIGHT = 8
 
 GOLD_POUCH = GoldPouch()

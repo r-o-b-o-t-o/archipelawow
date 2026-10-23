@@ -43,6 +43,8 @@ Archipelago APWorld for World of Warcraft 3.3.5a. It runs inside an Archipelago 
   twice and every result is meaningless.
 - For unit-style checks without a full generation, subclass `test.bases.WorldTestBase` from the
   Archipelago checkout and run from its root so its `test` and `worlds` packages resolve.
+- Stone Shop prices, Gold Pouch amounts and filler weights are balanced with `tools/gold_sim` (its
+  README says how to run it); rerun it after changing any of them, and keep its copies in step.
 
 ## Packaging
 

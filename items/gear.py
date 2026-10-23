@@ -63,16 +63,16 @@ class GearItem(Item):
 
 GEAR_CONTAINER = GearContainer()
 
-# Weights are relative to the Gold Pouch's, and together they come to several times it, so gear makes up
+# Weights are relative to the Gold Pouch's, and together they come to many times it, so gear makes up
 # most of the filler slots. Rare is rolled less often than uncommon, and armor more often
 # than weapons or jewelry, matching how many slots of each a character actually wears.
-RANDOM_UNCOMMON_WEAPON = GearItem("Random Uncommon Weapon", GearCategory.WEAPON, GearQuality.UNCOMMON, filler_weight=16)
-RANDOM_RARE_WEAPON = GearItem("Random Rare Weapon", GearCategory.WEAPON, GearQuality.RARE, filler_weight=12, min_level=13)
-RANDOM_UNCOMMON_ARMOR = GearItem("Random Uncommon Armor", GearCategory.ARMOR, GearQuality.UNCOMMON, filler_weight=20)
-RANDOM_RARE_ARMOR = GearItem("Random Rare Armor", GearCategory.ARMOR, GearQuality.RARE, filler_weight=16, min_level=13)
+RANDOM_UNCOMMON_WEAPON = GearItem("Random Uncommon Weapon", GearCategory.WEAPON, GearQuality.UNCOMMON, filler_weight=18)
+RANDOM_RARE_WEAPON = GearItem("Random Rare Weapon", GearCategory.WEAPON, GearQuality.RARE, filler_weight=13, min_level=13)
+RANDOM_UNCOMMON_ARMOR = GearItem("Random Uncommon Armor", GearCategory.ARMOR, GearQuality.UNCOMMON, filler_weight=22)
+RANDOM_RARE_ARMOR = GearItem("Random Rare Armor", GearCategory.ARMOR, GearQuality.RARE, filler_weight=18, min_level=13)
 # The 1 Ring, at level 10, is the only uncommon jewelry under 11: a level 10 seed would hand out nothing else
-RANDOM_UNCOMMON_JEWELRY = GearItem("Random Uncommon Jewelry", GearCategory.JEWELRY, GearQuality.UNCOMMON, filler_weight=12, min_level=11)
-RANDOM_RARE_JEWELRY = GearItem("Random Rare Jewelry", GearCategory.JEWELRY, GearQuality.RARE, filler_weight=9, min_level=17)
+RANDOM_UNCOMMON_JEWELRY = GearItem("Random Uncommon Jewelry", GearCategory.JEWELRY, GearQuality.UNCOMMON, filler_weight=13, min_level=11)
+RANDOM_RARE_JEWELRY = GearItem("Random Rare Jewelry", GearCategory.JEWELRY, GearQuality.RARE, filler_weight=10, min_level=17)
 
 ALL_GEAR = [
     RANDOM_UNCOMMON_WEAPON,
