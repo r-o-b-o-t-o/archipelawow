@@ -179,7 +179,7 @@ class QuestsIncludeDungeons(Toggle):
     Include quests that take place inside dungeons.
     """
 
-    display_name = "Dungeons"
+    display_name = "Dungeon quests"
 
 
 class Questsanity(NamedRange):
