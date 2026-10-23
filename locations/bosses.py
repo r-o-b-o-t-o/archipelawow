@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from ..world import World
 
-from ..boss_model import BOSS_MODELS, BossModel
+from ..boss_model import BOSS_MODELS, BossFaction, BossModel
 from ..conditions import has_zone, required_level
 from ..items.zones import ZONES_CONTAINER, Zone
 from ..options import Dungeonsanity
@@ -20,6 +20,14 @@ class Boss(Location):
         self.encounter_id = data.id
         self.zone = zone
         self.required_level = required_level
+        self.faction = data.faction
+
+    def is_fightable(self, world: "World"):
+        if self.faction == BossFaction.ALLIANCE:
+            return world.is_alliance()
+        if self.faction == BossFaction.HORDE:
+            return world.is_horde()
+        return True
 
 
 class BossesContainer(LocationContainer[Boss]):
@@ -34,7 +42,9 @@ class BossesContainer(LocationContainer[Boss]):
 
         # The pool already leaves out the dungeons past the seed's level cap
         zones_in_pool = set(ZONES_CONTAINER.build_pool(world))
-        return [loc for loc in locations if loc.zone in zones_in_pool and loc.required_level <= world.max_location_level()]
+        return [
+            loc for loc in locations if loc.zone in zones_in_pool and loc.required_level <= world.max_location_level() and loc.is_fightable(world)
+        ]
 
     def get_slot_data(self, world: "World"):
         return [[loc.encounter_id, loc.id] for loc in self.build_locations(world)]

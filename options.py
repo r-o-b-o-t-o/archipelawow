@@ -257,7 +257,6 @@ class ClassicDungeonsanity(Dungeonsanity):
     None: nothing.
     Completion: completing each dungeon, through its achievement.
     All: completing each dungeon, and defeating each of its bosses.
-    Bosses summoned with an item from outside the dungeon (Avatar of Hakkar, Kirtonos the Herald) are left out.
     """
 
     display_name = "Classic dungeonsanity"

@@ -1,8 +1,17 @@
 import json
 import pkgutil
 from dataclasses import dataclass
+from enum import IntEnum
 
 from .constants import DATA_PACKAGE
+
+
+class BossFaction(IntEnum):
+    """The one team that can fight a boss, the other being friendly with it."""
+
+    ANY = 0
+    ALLIANCE = 1
+    HORDE = 2
 
 
 @dataclass(frozen=True)
@@ -11,6 +20,7 @@ class BossModel:
     id: int
     name: str
     map_id: int
+    faction: BossFaction
 
     @staticmethod
     def from_dict(data: object) -> "BossModel | None":
@@ -24,7 +34,8 @@ class BossModel:
         if not isinstance(boss_id, int) or not isinstance(name, str) or not isinstance(map_id, int):
             return None
 
-        return BossModel(id=boss_id, name=name, map_id=map_id)
+        factions = data.get("factions")
+        return BossModel(id=boss_id, name=name, map_id=map_id, faction=BossFaction(factions if isinstance(factions, int) else 0))
 
 
 def load_boss_models(resource: str) -> list[BossModel]:
