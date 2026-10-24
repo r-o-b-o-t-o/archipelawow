@@ -74,8 +74,14 @@ def create_and_connect_regions(world: "World") -> None:
     connect_regions(world)
 
 
+def regions_for(world: "World") -> list[str]:
+    """The brackets a check may sit in. One opens at its first level, so the last starts at the highest level a check
+    may ask for: a dungeonmaster goal's cap keeps the bracket holding that level's Stone Shop tier, a level goal's does not."""
+    return [r for r in ALL_REGIONS if REGION_LEVELS[r] <= world.max_location_level()]
+
+
 def create_all_regions(world: "World") -> None:
-    world.multiworld.regions += [Region(r, world.player, world.multiworld) for r in ALL_REGIONS]
+    world.multiworld.regions += [Region(r, world.player, world.multiworld) for r in regions_for(world)]
 
 
 def connect_regions(world: "World") -> None:
@@ -84,9 +90,10 @@ def connect_regions(world: "World") -> None:
     from .items.zones import CAPITAL_CITIES, ZONES_CONTAINER
 
     zones_in_pool = [zone for zone in ZONES_CONTAINER.build_pool(world) if zone not in CAPITAL_CITIES]
-    for i in range(1, len(ALL_REGIONS)):
-        r_from = world.get_region(ALL_REGIONS[i - 1])
-        r_to = world.get_region(ALL_REGIONS[i])
+    seed_regions = regions_for(world)
+    for i in range(1, len(seed_regions)):
+        r_from = world.get_region(seed_regions[i - 1])
+        r_to = world.get_region(seed_regions[i])
         level = REGION_LEVELS[r_to.name]
         rule = required_level_and_zones(
             level,
@@ -98,7 +105,7 @@ def connect_regions(world: "World") -> None:
         # cannot be expected to keep climbing on a kit the multiworld never handed over. The lag is
         # deliberate: asking for the bracket just below would force every one of its spells into its
         # own handful of locations, which leaves the fill nowhere to put them in a lean seed.
-        spells = SPELLS_CONTAINER.names_for_region(ALL_REGIONS[i - 2], world) if i >= 2 else []
+        spells = SPELLS_CONTAINER.names_for_region(seed_regions[i - 2], world) if i >= 2 else []
 
         # Riding asks for no such lag: a rank is bought the moment its level is reached, so a bracket
         # can expect the ranks it is old enough for. Nothing is asked for where the ladder has no rung
