@@ -17,7 +17,20 @@ class LevelsContainer(ItemContainer["Level"]):
         return LEVEL_UP.id
 
     def get_items_for_pool(self, world: "World") -> list[Item]:
+        if not world.options.randomize_level_ups:
+            return []
         return list(self.build_pool(world))
+
+    def place_locked_items(self, world: "World") -> None:
+        if world.options.randomize_level_ups:
+            return
+
+        from ..locations.levels import LEVELS_CONTAINER as LEVEL_LOCATIONS
+
+        # One Level Up for each level from 2 to the cap. The bracket holding Level N's location asks for a level below N,
+        # which the Level Ups of the levels before it give, so none is locked behind itself.
+        for data, location in zip(self.build_pool(world), LEVEL_LOCATIONS.build_locations(world), strict=True):
+            world.get_location(location.name).place_locked_item(world.create_item(data.name))
 
 
 class Level(Item):

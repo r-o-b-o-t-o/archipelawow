@@ -115,6 +115,10 @@ class ItemRegistry:
         return precollected
 
     def create_all_items(self, world: "World"):
+        # Locked items first, so the locations they fill are not counted for filler below
+        for container in self.__containers.values():
+            container.place_locked_items(world)
+
         # Create world items
         pool = self.create_items_pool(world)
         pool_ids = [item.code for item in pool]

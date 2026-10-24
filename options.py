@@ -7,6 +7,7 @@ from Options import (
     Accessibility,
     Choice,
     DeathLink,
+    DefaultOnToggle,
     NamedRange,
     OptionCounter,
     OptionError,
@@ -69,6 +70,17 @@ class Goal(Choice):
         option_level_70,
         option_level_80,
     ]
+
+
+class RandomizeLevelUps(DefaultOnToggle):
+    """
+    Shuffle the Level Up items into the multiworld.
+
+    No: each "Level" location holds a Level Up, so earning the experience for a level gives you that level, as in the base game.
+    Yes: your Level Ups can be found anywhere in the multiworld, and the "Level" locations can hold any item.
+    """
+
+    display_name = "Randomize level-ups"
 
 
 class RerollableChoice(Choice):
@@ -396,6 +408,7 @@ class SpellsRandomizeStarterAbilities(Toggle):
 @dataclass
 class Options(PerGameCommonOptions):
     goal: Goal
+    randomize_level_ups: RandomizeLevelUps
     character_race: CharacterRace
     character_class: CharacterClass
     questsanity: Questsanity
@@ -432,7 +445,7 @@ class Options(PerGameCommonOptions):
 
 
 option_groups = [
-    OptionGroup("General Options", [Goal]),
+    OptionGroup("General Options", [Goal, RandomizeLevelUps]),
     OptionGroup("Character Options", [CharacterRace, CharacterClass]),
     OptionGroup("Quest Options", [Questsanity, QuestsAllStartingZones, QuestsMaxPartySize, QuestsIncludeDungeons]),
     OptionGroup("Dungeon Options", [ClassicDungeonsanity, OutlandDungeonsanity, NorthrendDungeonsanity]),

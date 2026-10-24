@@ -36,6 +36,9 @@ class ItemContainer(Generic[ItemT]):
     def get_precollected_items(self, world: "World") -> list["Item"]:
         return []
 
+    def place_locked_items(self, world: "World") -> None:
+        """Place the items this container keeps out of the pool on the locations they are fixed to."""
+
     def get_filler_weights(self, world: "World") -> dict[str, int]:
         """The items this container offers as filler, and how often each should be picked
         relative to the others. Containers holding nothing filler-worthy return nothing."""
