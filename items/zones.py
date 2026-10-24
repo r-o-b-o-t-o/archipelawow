@@ -193,7 +193,7 @@ SILITHUS = Zone("Silithus", "Zone_Silithus_01", 1377, L55, L55, TP(1, -6309.21, 
 STONETALON_MOUNTAINS = Zone("Stonetalon Mountains", "Zone_Stonetalon_01", 406, L20, L20, TP(1, -217.57, -744, 4.63, 1))
 TANARIS = Zone("Tanaris", "Zone_Tanaris_01", 440, L45, L45, TP(1, -6853.43, -3754.62, 36.03, 3.16))
 TELDRASSIL = Zone("Teldrassil", "Zone_Darnassus", 141, L01, "", TP(1, 10311.3, 832.5, 1327, 5.7), side=A)
-THE_BARRENS = Zone("The Barrens", "Zone_Barrens_01", 17, "", L10, TP(1, 257.94, -3496.47, 28.75, 1.94))
+THE_BARRENS = Zone("The Barrens", "Zone_Barrens_01", 17, L15, L10, TP(1, 257.94, -3496.47, 28.75, 1.94))
 THE_EXODAR = Zone("The Exodar", "Spell_Arcane_TeleportExodar", 3557, L05, "", TP(530, -4017.51, -11899.35, -1.49, 1.06), side=A)
 THOUSAND_NEEDLES = Zone("Thousand Needles", "Zone_ThousandNeedles_01", 400, L25, L25, TP(1, -4586.42, -1858.81, 86.2, 2.91))
 THUNDER_BLUFF = Zone("Thunder Bluff", "Spell_Arcane_TeleportThunderBluff", 1638, "", L05, TP(1, -1283.78, 135.48, 131.63, 5.12), side=H)

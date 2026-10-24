@@ -206,7 +206,6 @@ EVERLOOK_H = FlightPath("Everlook [H]", zones.WINTERSPRING, 53, Side.HORDE)
 FREEWIND_POST = FlightPath("Freewind Post", zones.THOUSAND_NEEDLES, 30, Side.HORDE)
 GADGETZAN_H = FlightPath("Gadgetzan [H]", zones.TANARIS, 40, Side.HORDE)
 ORGRIMMAR = FlightPath("Orgrimmar", zones.ORGRIMMAR, 23, Side.HORDE)
-RATCHET = FlightPath("Ratchet", zones.THE_BARRENS, 80, Side.HORDE)
 SHADOWPREY_VILLAGE = FlightPath("Shadowprey Village", zones.DESOLACE, 38, Side.HORDE)
 SPLINTERTREE_POST = FlightPath("Splintertree Post", zones.ASHENVALE, 61, Side.HORDE)
 SUN_ROCK_RETREAT = FlightPath("Sun Rock Retreat", zones.STONETALON_MOUNTAINS, 29, Side.HORDE)
@@ -218,6 +217,7 @@ ZORAMGAR_OUTPOST = FlightPath("Zoram'gar Outpost", zones.ASHENVALE, 58, Side.HOR
 EMERALD_SANCTUARY = FlightPath("Emerald Sanctuary", zones.FELWOOD, 166, Side.BOTH)
 MARSHALS_REFUGE = FlightPath("Marshal's Refuge", zones.UNGORO_CRATER, 79, Side.BOTH)
 MUDSPROCKET = FlightPath("Mudsprocket", zones.DUSTWALLOW_MARSH, 179, Side.BOTH)
+RATCHET = FlightPath("Ratchet", zones.THE_BARRENS, 80, Side.BOTH)
 
 KALIMDOR = [
     ASTRANAAR,
@@ -245,7 +245,6 @@ KALIMDOR = [
     FREEWIND_POST,
     GADGETZAN_H,
     ORGRIMMAR,
-    RATCHET,
     SHADOWPREY_VILLAGE,
     SPLINTERTREE_POST,
     SUN_ROCK_RETREAT,
@@ -256,6 +255,7 @@ KALIMDOR = [
     EMERALD_SANCTUARY,
     MARSHALS_REFUGE,
     MUDSPROCKET,
+    RATCHET,
 ]
 
 # Outland
