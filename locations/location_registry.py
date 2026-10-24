@@ -66,9 +66,7 @@ class LocationRegistry:
             data += container.get_locations(world)
 
         for region_name, location in data:
-            region = world.get_region(region_name)
-            if region:
-                region.add_locations({location.name: location.id}, BaseLocation)
+            world.get_region(region_name).add_locations({location.name: location.id}, BaseLocation)
 
         for _, loc in data:
             world.get_location(loc.name).progress_type = loc.progress_type
