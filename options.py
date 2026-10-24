@@ -177,6 +177,37 @@ class CharacterClass(RerollableChoice):
 # Every (race, class) pair a character can be created as.
 PLAYABLE_COMBINATIONS = [(race, character_class) for character_class, races in CharacterClass.races.items() for race in races]
 
+FACTIONS = {"Alliance": CharacterRace.alliance, "Horde": CharacterRace.horde}
+
+
+def playable_weights(race: CharacterRace, character_class: CharacterClass, faction: list[int] | None = None) -> dict[tuple[int, int], float]:
+    """The playable (race, class) pairs the YAML weights allow, optionally on one faction, each weighted by its race's and its class's weight."""
+    return {
+        (race_id, class_id): race.weights[race_id] * character_class.weights[class_id]
+        for race_id, class_id in PLAYABLE_COMBINATIONS
+        if race_id in race.weights and class_id in character_class.weights and (faction is None or race_id in faction)
+    }
+
+
+def reroll_into_faction(race: CharacterRace, character_class: CharacterClass, faction: list[int], rng: random.Random) -> None:
+    # A pair already on the faction is as fair a draw as a reroll restricted to it would be, so it stays.
+    if race.value in faction:
+        return
+    combinations = playable_weights(race, character_class, faction)
+    race.value, character_class.value = rng.choices(list(combinations), list(combinations.values()))[0]
+
+
+class SameFaction(DefaultOnToggle):
+    """
+    Put your character on the same faction as the other World of Warcraft players when your race is picked at random.
+
+    No: your race is rolled on its own.
+    Yes: you join the faction of the races the other players picked. If some picked an Alliance race and others a Horde race, you join the faction more of them picked, or a random one on a tie.
+    When all races are picked at random, everyone is rolled onto one faction together.
+    """
+
+    display_name = "Same faction"
+
 
 class QuestsAllStartingZones(Toggle):
     """
@@ -411,6 +442,7 @@ class Options(PerGameCommonOptions):
     randomize_level_ups: RandomizeLevelUps
     character_race: CharacterRace
     character_class: CharacterClass
+    same_faction: SameFaction
     questsanity: Questsanity
     quests_all_starting_zones: QuestsAllStartingZones
     quests_include_dungeons: QuestsIncludeDungeons
@@ -434,19 +466,16 @@ class Options(PerGameCommonOptions):
         if (race.value, character_class.value) in PLAYABLE_COMBINATIONS:
             return
 
-        combinations = [
-            (race_id, class_id) for race_id, class_id in PLAYABLE_COMBINATIONS if race_id in race.weights and class_id in character_class.weights
-        ]
+        # Weighting each combination by the YAML weights of its race and class is the same as rerolling both until they make one.
+        combinations = playable_weights(race, character_class)
         # With nothing to reroll into, the pair is left for generate_early to report under the player's name.
         if combinations:
-            # Weighting each combination by the YAML weights of its race and class is the same as rerolling both until they make one.
-            weights = [race.weights[race_id] * character_class.weights[class_id] for race_id, class_id in combinations]
-            race.value, character_class.value = random.choices(combinations, weights)[0]
+            race.value, character_class.value = random.choices(list(combinations), list(combinations.values()))[0]
 
 
 option_groups = [
     OptionGroup("General Options", [Goal, RandomizeLevelUps]),
-    OptionGroup("Character Options", [CharacterRace, CharacterClass]),
+    OptionGroup("Character Options", [CharacterRace, CharacterClass, SameFaction]),
     OptionGroup("Quest Options", [Questsanity, QuestsAllStartingZones, QuestsMaxPartySize, QuestsIncludeDungeons]),
     OptionGroup("Dungeon Options", [ClassicDungeonsanity, OutlandDungeonsanity, NorthrendDungeonsanity]),
     OptionGroup("Exploration Options", [Explorersanity]),
