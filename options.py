@@ -158,6 +158,8 @@ class CharacterClass(RerollableChoice):
     no_mana = [option_warrior, option_rogue]
     # Classes that fight with spells rather than weapons, so Wands is their only skill with locations
     pure_casters = [option_priest, option_mage, option_warlock]
+    # Classes that fight in melee and use a ranged weapon little beyond pulling, so their ranged weapon skills have no locations
+    melee_only = [option_warrior, option_rogue]
     # Classes that can play either as casters or in melee, and pick which from the Archipelago Stone's preferences
     hybrids = [option_paladin, option_shaman, option_druid]
     # The races each class is open to, by CharacterRace value.

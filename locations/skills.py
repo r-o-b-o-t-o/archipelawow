@@ -20,9 +20,15 @@ from .location_registry import Location
 SKILL_PER_LEVEL = 5
 
 # SkillLine.dbc
+SKILL_BOWS = 45
+SKILL_GUNS = 46
 SKILL_DEFENSE = 95
+SKILL_THROWN = 176
+SKILL_CROSSBOWS = 226
 SKILL_WANDS = 228
 SKILL_POLEARMS = 229
+
+RANGED_SKILLS = {SKILL_BOWS, SKILL_GUNS, SKILL_THROWN, SKILL_CROSSBOWS}
 
 # How many weapon skills a seed picks among those its character can raise, on top of Defense. Each is a grind to its
 # cap, and all of them would come to well over a hundred checks for most classes.
@@ -76,6 +82,8 @@ class SkillsContainer(LocationContainer[Skill]):
         for skill in SKILL_MODELS:
             # Before Outland, only Stormwind and Undercity sell a polearm, from level 20: too rare a weapon to send a seed looking for
             if skill.id == SKILL_POLEARMS:
+                continue
+            if character_class in CharacterClass.melee_only and skill.id in RANGED_SKILLS:
                 continue
             # A pick with no tier left would be a wasted one. A weapon on sale by one tier stays on sale for the later ones.
             if not self.is_raisable(skill, last_tier_level, zones_in_pool, world):
