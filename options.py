@@ -80,7 +80,7 @@ class RandomizeLevelUps(DefaultOnToggle):
     Yes: your Level Ups can be found anywhere in the multiworld, and the "Level" locations can hold any item.
     """
 
-    display_name = "Randomize level-ups"
+    display_name = "Shuffle level-ups"
 
 
 class RerollableChoice(Choice):
@@ -216,7 +216,7 @@ class QuestsAllStartingZones(Toggle):
     Include quests from other races' starting zones (levels 1-10).
     """
 
-    display_name = "All starting zones"
+    display_name = "Quests from any starting zone"
 
 
 class QuestsIncludeDungeons(Toggle):
@@ -236,16 +236,7 @@ class Questsanity(NamedRange):
 
     range_start = 0
     range_end = 100
-    default = 25
-
-    special_range_names = {
-        "none": 0,
-        "minimal": 10,
-        "sparse": 25,
-        "half": 50,
-        "most": 75,
-        "all": 100,
-    }
+    default = 10
 
 
 class QuestsMaxPartySize(NamedRange):
@@ -254,7 +245,7 @@ class QuestsMaxPartySize(NamedRange):
     "Solo" keeps only the quests one player can finish alone, and every step above it opens up the group quests written for that many players.
     """
 
-    display_name = "Maximum party size"
+    display_name = "Maximum quest party size"
 
     range_start = 1
     range_end = 5
@@ -276,16 +267,7 @@ class Explorersanity(NamedRange):
 
     range_start = 0
     range_end = 100
-    default = 0
-
-    special_range_names = {
-        "none": 0,
-        "minimal": 10,
-        "sparse": 25,
-        "half": 50,
-        "most": 75,
-        "all": 100,
-    }
+    default = 10
 
 
 class Dungeonsanity(Choice):
@@ -435,7 +417,7 @@ class SpellsRandomizeStarterAbilities(Toggle):
     Yes: your starting abilities are moved to the multiworld, and your class trainer sells their checks like any other spell.
     """
 
-    display_name = "Randomize starter abilities"
+    display_name = "Shuffle starter abilities"
 
 
 @dataclass
