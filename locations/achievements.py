@@ -55,20 +55,7 @@ class AchievementsContainer(LocationContainer[Achievement]):
         return [[loc.achievement_id, loc.id] for loc in self.build_locations(world)]
 
     def get_locations(self, world: "World") -> list[tuple[str, Location]]:
-        locations = self.build_locations(world)
-        result: list[tuple[str, Location]] = []
-
-        for loc in locations:
-            region = regions.LEVELS_01_05
-            if loc.zone:
-                if world.is_alliance() and loc.zone.region_a:
-                    region = loc.zone.region_a
-                elif world.is_horde() and loc.zone.region_h:
-                    region = loc.zone.region_h
-
-            result.append((region, loc))
-
-        return result
+        return [(loc.zone.region(world) if loc.zone else regions.LEVELS_01_05, loc) for loc in self.build_locations(world)]
 
     def set_rules(self, world: "World"):
         zones_in_pool = ZONES_CONTAINER.build_pool(world)
