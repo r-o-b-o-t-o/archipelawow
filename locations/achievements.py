@@ -6,6 +6,7 @@ if TYPE_CHECKING:
 from rule_builder.rules import Or, Rule
 
 from .. import regions
+from ..boss_model import hardest_boss_level
 from ..conditions import has_zone, required_level
 from ..items import zones
 from ..items.zones import ZONES_CONTAINER, Zone
@@ -80,26 +81,33 @@ class AchievementsContainer(LocationContainer[Achievement]):
 
 ACHIEVEMENTS_CONTAINER = AchievementsContainer()
 
+
+def dungeon(name: str, achievement_id: int, zone: Zone) -> Achievement:
+    """A dungeon's achievement, which asks for the level of the dungeon's hardest boss. The classic and Outland ones' criteria
+    only name the last boss or a few, but none of the others asks for more than the ones named."""
+    return Achievement(name, achievement_id, zone, hardest_boss_level(zone.teleport.map))
+
+
 # Classic Dungeons
-RAGEFIRE_CHASM = Achievement("Ragefire Chasm", 629, zones.RAGEFIRE_CHASM, 13)
-DEADMINES = Achievement("Deadmines", 628, zones.THE_DEADMINES, 17)
-WAILING_CAVERNS = Achievement("Wailing Caverns", 630, zones.WAILING_CAVERNS, 17)
-SHADOWFANG_KEEP = Achievement("Shadowfang Keep", 631, zones.SHADOWFANG_KEEP, 18)
-BLACKFATHOM_DEEPS = Achievement("Blackfathom Deeps", 632, zones.BLACKFATHOM_DEEPS, 21)
-STORMWIND_STOCKADE = Achievement("Stormwind Stockade", 633, zones.THE_STOCKADE, 22)
-RAZORFEN_KRAUL = Achievement("Razorfen Kraul", 635, zones.RAZORFEN_KRAUL, 24)
-GNOMEREGAN = Achievement("Gnomeregan", 634, zones.GNOMEREGAN, 25)
-RAZORFEN_DOWNS = Achievement("Razorfen Downs", 636, zones.RAZORFEN_DOWNS, 34)
-SCARLET_MONASTERY = Achievement("Scarlet Monastery", 637, zones.SCARLET_MONASTERY, 29)
-ULDAMAN = Achievement("Uldaman", 638, zones.ULDAMAN, 37)
-ZUL_FARRAK = Achievement("Zul'Farrak", 639, zones.ZULFARRAK, 43)
-MARAUDON = Achievement("Maraudon", 640, zones.MARAUDON, 41)
-SUNKEN_TEMPLE = Achievement("Sunken Temple", 641, zones.SUNKEN_TEMPLE, 47)
-BLACKROCK_DEPTHS = Achievement("Blackrock Depths", 642, zones.BLACKROCK_DEPTHS, 49)
-KING_OF_DIRE_MAUL = Achievement("King of Dire Maul", 644, zones.DIRE_MAUL, 55)
-LOWER_BLACKROCK_SPIRE = Achievement("Lower Blackrock Spire", 643, zones.BLACKROCK_SPIRE, 56)
-SCHOLOMANCE = Achievement("Scholomance", 645, zones.SCHOLOMANCE, 58)
-STRATHOLME = Achievement("Stratholme", 646, zones.STRATHOLME, 58)
+RAGEFIRE_CHASM = dungeon("Ragefire Chasm", 629, zones.RAGEFIRE_CHASM)
+DEADMINES = dungeon("Deadmines", 628, zones.THE_DEADMINES)
+WAILING_CAVERNS = dungeon("Wailing Caverns", 630, zones.WAILING_CAVERNS)
+SHADOWFANG_KEEP = dungeon("Shadowfang Keep", 631, zones.SHADOWFANG_KEEP)
+BLACKFATHOM_DEEPS = dungeon("Blackfathom Deeps", 632, zones.BLACKFATHOM_DEEPS)
+STORMWIND_STOCKADE = dungeon("Stormwind Stockade", 633, zones.THE_STOCKADE)
+RAZORFEN_KRAUL = dungeon("Razorfen Kraul", 635, zones.RAZORFEN_KRAUL)
+GNOMEREGAN = dungeon("Gnomeregan", 634, zones.GNOMEREGAN)
+RAZORFEN_DOWNS = dungeon("Razorfen Downs", 636, zones.RAZORFEN_DOWNS)
+SCARLET_MONASTERY = dungeon("Scarlet Monastery", 637, zones.SCARLET_MONASTERY)
+ULDAMAN = dungeon("Uldaman", 638, zones.ULDAMAN)
+ZUL_FARRAK = dungeon("Zul'Farrak", 639, zones.ZULFARRAK)
+MARAUDON = dungeon("Maraudon", 640, zones.MARAUDON)
+SUNKEN_TEMPLE = dungeon("Sunken Temple", 641, zones.SUNKEN_TEMPLE)
+BLACKROCK_DEPTHS = dungeon("Blackrock Depths", 642, zones.BLACKROCK_DEPTHS)
+KING_OF_DIRE_MAUL = dungeon("King of Dire Maul", 644, zones.DIRE_MAUL)
+LOWER_BLACKROCK_SPIRE = dungeon("Lower Blackrock Spire", 643, zones.BLACKROCK_SPIRE)
+SCHOLOMANCE = dungeon("Scholomance", 645, zones.SCHOLOMANCE)
+STRATHOLME = dungeon("Stratholme", 646, zones.STRATHOLME)
 CLASSIC_DUNGEONS = [
     RAGEFIRE_CHASM,
     DEADMINES,
@@ -123,22 +131,22 @@ CLASSIC_DUNGEONS = [
 ]
 
 # Outland Dungeons
-AUCHENAI_CRYPTS = Achievement("Auchenai Crypts", 666, zones.AUCHENAI_CRYPTS, 66)
-HELLFIRE_RAMPARTS = Achievement("Hellfire Ramparts", 647, zones.HELLFIRE_RAMPARTS, 61)
-MAGISTERS_TERRACE = Achievement("Magister's Terrace", 661, zones.MAGISTERS_TERRACE, 68)
-MANA_TOMBS = Achievement("Mana-Tombs", 651, zones.MANA_TOMBS, 65)
-OPENING_OF_THE_DARK_PORTAL = Achievement("Opening of the Dark Portal", 655, zones.THE_BLACK_MORASS, 68)
-SETHEKK_HALLS = Achievement("Sethekk Halls", 653, zones.SETHEKK_HALLS, 67)
-SHADOW_LABYRINTH = Achievement("Shadow Labyrinth", 654, zones.SHADOW_LABYRINTH, 68)
-THE_ARCATRAZ = Achievement("The Arcatraz", 660, zones.THE_ARCATRAZ, 68)
-THE_BLOOD_FURNACE = Achievement("The Blood Furnace", 648, zones.THE_BLOOD_FURNACE, 62)
-THE_BOTANICA = Achievement("The Botanica", 659, zones.THE_BOTANICA, 68)
-THE_ESCAPE_FROM_DURNHOLDE = Achievement("The Escape From Durnholde", 652, zones.OLD_HILLSBRAD_FOOTHILLS, 67)
-THE_MECHANAR = Achievement("The Mechanar", 658, zones.THE_MECHANAR, 68)
-THE_SHATTERED_HALLS = Achievement("The Shattered Halls", 657, zones.THE_SHATTERED_HALLS, 68)
-THE_SLAVE_PENS = Achievement("The Slave Pens", 649, zones.THE_SLAVE_PENS, 63)
-THE_STEAMVAULT = Achievement("The Steamvault", 656, zones.THE_STEAMVAULT, 68)
-UNDERBOG = Achievement("Underbog", 650, zones.THE_UNDERBOG, 64)
+AUCHENAI_CRYPTS = dungeon("Auchenai Crypts", 666, zones.AUCHENAI_CRYPTS)
+HELLFIRE_RAMPARTS = dungeon("Hellfire Ramparts", 647, zones.HELLFIRE_RAMPARTS)
+MAGISTERS_TERRACE = dungeon("Magister's Terrace", 661, zones.MAGISTERS_TERRACE)
+MANA_TOMBS = dungeon("Mana-Tombs", 651, zones.MANA_TOMBS)
+OPENING_OF_THE_DARK_PORTAL = dungeon("Opening of the Dark Portal", 655, zones.THE_BLACK_MORASS)
+SETHEKK_HALLS = dungeon("Sethekk Halls", 653, zones.SETHEKK_HALLS)
+SHADOW_LABYRINTH = dungeon("Shadow Labyrinth", 654, zones.SHADOW_LABYRINTH)
+THE_ARCATRAZ = dungeon("The Arcatraz", 660, zones.THE_ARCATRAZ)
+THE_BLOOD_FURNACE = dungeon("The Blood Furnace", 648, zones.THE_BLOOD_FURNACE)
+THE_BOTANICA = dungeon("The Botanica", 659, zones.THE_BOTANICA)
+THE_ESCAPE_FROM_DURNHOLDE = dungeon("The Escape From Durnholde", 652, zones.OLD_HILLSBRAD_FOOTHILLS)
+THE_MECHANAR = dungeon("The Mechanar", 658, zones.THE_MECHANAR)
+THE_SHATTERED_HALLS = dungeon("The Shattered Halls", 657, zones.THE_SHATTERED_HALLS)
+THE_SLAVE_PENS = dungeon("The Slave Pens", 649, zones.THE_SLAVE_PENS)
+THE_STEAMVAULT = dungeon("The Steamvault", 656, zones.THE_STEAMVAULT)
+UNDERBOG = dungeon("Underbog", 650, zones.THE_UNDERBOG)
 OUTLAND_DUNGEONS = [
     AUCHENAI_CRYPTS,
     HELLFIRE_RAMPARTS,
@@ -159,18 +167,18 @@ OUTLAND_DUNGEONS = [
 ]
 
 # Northrend Dungeons
-AHNKAHET_THE_OLD_KINGDOM = Achievement("Ahn'Kahet: The Old Kingdom", 481, zones.AHNKAHET_THE_OLD_KINGDOM, 73)
-AZJOL_NERUB = Achievement("Azjol-Nerub", 480, zones.AZJOL_NERUB, 72)
-DRAKTHARON_KEEP = Achievement("Drak'Tharon Keep", 482, zones.DRAKTHARON_KEEP, 73)
-GUNDRAK = Achievement("Gundrak", 484, zones.GUNDRAK, 76)
-HALLS_OF_LIGHTNING = Achievement("Halls of Lightning", 486, zones.HALLS_OF_LIGHTNING, 78)
-HALLS_OF_STONE = Achievement("Halls of Stone", 485, zones.HALLS_OF_STONE, 76)
-THE_CULLING_OF_STRATHOLME = Achievement("The Culling of Stratholme", 479, zones.THE_CULLING_OF_STRATHOLME, 78)
-THE_NEXUS = Achievement("The Nexus", 478, zones.THE_NEXUS, 71)
-THE_OCULUS = Achievement("The Oculus", 487, zones.THE_OCULUS, 78)
-THE_VIOLET_HOLD = Achievement("The Violet Hold", 483, zones.VIOLET_HOLD, 74)
-UTGARDE_KEEP = Achievement("Utgarde Keep", 477, zones.UTGARDE_KEEP, 70)
-UTGARDE_PINNACLE = Achievement("Utgarde Pinnacle", 488, zones.UTGARDE_PINNACLE, 78)
+AHNKAHET_THE_OLD_KINGDOM = dungeon("Ahn'Kahet: The Old Kingdom", 481, zones.AHNKAHET_THE_OLD_KINGDOM)
+AZJOL_NERUB = dungeon("Azjol-Nerub", 480, zones.AZJOL_NERUB)
+DRAKTHARON_KEEP = dungeon("Drak'Tharon Keep", 482, zones.DRAKTHARON_KEEP)
+GUNDRAK = dungeon("Gundrak", 484, zones.GUNDRAK)
+HALLS_OF_LIGHTNING = dungeon("Halls of Lightning", 486, zones.HALLS_OF_LIGHTNING)
+HALLS_OF_STONE = dungeon("Halls of Stone", 485, zones.HALLS_OF_STONE)
+THE_CULLING_OF_STRATHOLME = dungeon("The Culling of Stratholme", 479, zones.THE_CULLING_OF_STRATHOLME)
+THE_NEXUS = dungeon("The Nexus", 478, zones.THE_NEXUS)
+THE_OCULUS = dungeon("The Oculus", 487, zones.THE_OCULUS)
+THE_VIOLET_HOLD = dungeon("The Violet Hold", 483, zones.VIOLET_HOLD)
+UTGARDE_KEEP = dungeon("Utgarde Keep", 477, zones.UTGARDE_KEEP)
+UTGARDE_PINNACLE = dungeon("Utgarde Pinnacle", 488, zones.UTGARDE_PINNACLE)
 NORTHREND_DUNGEONS = [
     AHNKAHET_THE_OLD_KINGDOM,
     AZJOL_NERUB,

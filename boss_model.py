@@ -5,6 +5,9 @@ from enum import IntEnum
 
 from .constants import DATA_PACKAGE
 
+# The game's level cap
+MAX_LEVEL = 80
+
 
 class BossFaction(IntEnum):
     """The one team that can fight a boss, the other being friendly with it."""
@@ -22,6 +25,13 @@ class BossModel:
     name: str
     map_id: int
     faction: BossFaction
+    # The highest level among the creatures fought
+    level: int
+
+    @property
+    def required_level(self) -> int:
+        """Two levels below the boss, where it stops showing orange and turns yellow."""
+        return min(self.level - 2, MAX_LEVEL)
 
     @staticmethod
     def from_dict(data: object) -> "BossModel | None":
@@ -32,11 +42,12 @@ class BossModel:
         name = data.get("name")
         map_data = data.get("map")
         map_id = map_data.get("id") if isinstance(map_data, dict) else None
-        if not isinstance(boss_id, int) or not isinstance(name, str) or not isinstance(map_id, int):
+        level = data.get("level")
+        if not isinstance(boss_id, int) or not isinstance(name, str) or not isinstance(map_id, int) or not isinstance(level, int):
             return None
 
         factions = data.get("factions")
-        return BossModel(id=boss_id, name=name, map_id=map_id, faction=BossFaction(factions if isinstance(factions, int) else 0))
+        return BossModel(id=boss_id, name=name, map_id=map_id, faction=BossFaction(factions if isinstance(factions, int) else 0), level=level)
 
 
 def load_boss_models(resource: str) -> list[BossModel]:
@@ -57,3 +68,8 @@ def load_boss_models(resource: str) -> list[BossModel]:
 
 
 BOSS_MODELS = load_boss_models("bosses.json")
+
+
+def hardest_boss_level(map_id: int) -> int:
+    """The highest level the bosses of a dungeon ask for."""
+    return max(boss.required_level for boss in BOSS_MODELS if boss.map_id == map_id)

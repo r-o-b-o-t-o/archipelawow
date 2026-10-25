@@ -14,12 +14,12 @@ from .location_registry import Location
 
 
 class Boss(Location):
-    def __init__(self, data: BossModel, zone: Zone, required_level: int):
+    def __init__(self, data: BossModel, zone: Zone):
         super().__init__(f"Boss: {data.name} ({zone.name})")
         BOSSES_CONTAINER.add(self)
         self.encounter_id = data.id
         self.zone = zone
-        self.required_level = required_level
+        self.required_level = data.required_level
         self.faction = data.faction
 
     def is_fightable(self, world: "World"):
@@ -61,14 +61,14 @@ BOSSES_CONTAINER = BossesContainer()
 
 
 def bosses_of(dungeons: list[Achievement]) -> list[Boss]:
-    """The bosses of one bracket's dungeons, which open with the dungeon's achievement: same zone, same level.
+    """The bosses of one bracket's dungeons, which open with the dungeon's zone, each at its own level.
 
     The extract names a boss's dungeon by its map, the one the dungeon's zone teleports into.
     """
     bosses: list[Boss] = []
     for dungeon in dungeons:
-        assert dungeon.zone and dungeon.required_level
-        bosses += [Boss(data, dungeon.zone, dungeon.required_level) for data in BOSS_MODELS if data.map_id == dungeon.zone.teleport.map]
+        assert dungeon.zone
+        bosses += [Boss(data, dungeon.zone) for data in BOSS_MODELS if data.map_id == dungeon.zone.teleport.map]
     return bosses
 
 
