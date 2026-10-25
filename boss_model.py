@@ -17,7 +17,7 @@ class BossFaction(IntEnum):
 @dataclass(frozen=True)
 class BossModel:
     # DungeonEncounter.dbc, normal difficulty: the server module checks the location when the core credits this encounter.
-    # Past the DBC's ids, an encounter the module credits itself, such as Sergeant Bly's.
+    # Past the DBC's ids, an encounter the module credits itself, such as Sergeant Bly's or the Obsidian Sentinel's.
     id: int
     name: str
     map_id: int
