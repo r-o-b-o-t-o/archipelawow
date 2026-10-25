@@ -85,6 +85,9 @@ class SkillsContainer(LocationContainer[Skill]):
                 continue
             if character_class in CharacterClass.melee_only and skill.id in RANGED_SKILLS:
                 continue
+            # Hunters shoot a bow, crossbow or gun and never reach for a thrown weapon
+            if character_class == CharacterClass.option_hunter and skill.id == SKILL_THROWN:
+                continue
             # A pick with no tier left would be a wasted one. A weapon on sale by one tier stays on sale for the later ones.
             if not self.is_raisable(skill, last_tier_level, zones_in_pool, world):
                 continue
