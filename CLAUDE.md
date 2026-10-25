@@ -46,6 +46,17 @@ Archipelago APWorld for World of Warcraft 3.3.5a. It runs inside an Archipelago 
 - Stone Shop prices, Gold Pouch amounts and filler weights are balanced with `tools/gold_sim` (its
   README says how to run it); rerun it after changing any of them, and keep its copies in step.
 
+## Launcher options schema
+
+- Whenever a change touches the player options (`options.py` or anything else that changes them) and
+  the session runs on a local computer with both this checkout and `archipelawow-launcher`, always
+  regenerate the launcher's options schema. From the launcher checkout, with a Python that has
+  Archipelago's requirements installed (`<Archipelago>/.venv/Scripts/python.exe` if the checkout has a
+  venv; the system Python may lack the `schema` package):
+  `<python> scripts/dump-options-schema.py --archipelago <Archipelago> --world <this repo> --output ui/src/data/options-schema.json`.
+- The output is gitignored in the launcher, so there is nothing to commit there. The launcher's CI
+  builds its schema from the newest apworld release instead.
+
 ## Packaging
 
 `.apignore` lists what stays out of the `.apworld`; add any new repository-only file (docs, CI, editor
