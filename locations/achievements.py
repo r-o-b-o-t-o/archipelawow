@@ -76,6 +76,11 @@ class AchievementsContainer(LocationContainer[Achievement]):
         for ach in self.build_locations(world):
             rule: Optional[Rule] = required_level(ach.required_level) if ach.required_level else None
 
+            # The zone's bracket already asks for it, but the launcher's tracker opens a bracket on its level alone
+            if ach.zone:
+                zone_rule = has_zone(ach.zone, world)
+                rule = zone_rule if rule is None else zone_rule & rule
+
             # Only the zones of the pool count, which leaves out the other faction's
             vendor_zones = [zone for zone in ach.served_in if zone in zones_in_pool]
             if vendor_zones and not any(zone in starting_zones for zone in vendor_zones):
