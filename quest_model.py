@@ -40,6 +40,8 @@ class QuestModel:
     is_dungeon: bool
     requires_any: list[int]
     requires_all: list[int]
+    # Only the quest's own: those of its prerequisites are not repeated
+    required_spells: list[int]
     start_zones: list[QuestZoneModel]
     end_zones: list[QuestZoneModel]
     objective_zones: list[QuestZoneModel]
@@ -78,6 +80,7 @@ class QuestModel:
             is_dungeon=QuestModel._to_bool(data.get("isDungeon")),
             requires_any=QuestModel._to_int_list(data.get("requiresAny")),
             requires_all=QuestModel._to_int_list(data.get("requiresAll")),
+            required_spells=QuestModel._to_int_list(data.get("requiredSpells")),
             start_zones=start_zones,
             end_zones=end_zones,
             objective_zones=objective_zones,

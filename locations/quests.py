@@ -9,6 +9,7 @@ from rule_builder.rules import HasAll
 
 from .. import regions
 from ..conditions import required_level
+from ..items.spells import SPELLS_CONTAINER
 from ..items.zones import EXPANSION_ZONE_IDS, ZONES_CONTAINER, Zone
 from ..quest_model import QuestModel, load_quest_models_by_id
 from .location_container import LocationContainer
@@ -52,6 +53,7 @@ class Quest(Location):
         # Filled in by resolve_requirements once the whole prerequisite graph exists
         self.required_zones: list[Zone] = zones
         self.required_level: int = level
+        self.required_spells: set[int] = set()
 
         QUESTS_CONTAINER.add(self)
 
@@ -92,12 +94,12 @@ class QuestsContainer(LocationContainer[Quest]):
         alone it will happily rule that a Westfall quest is in logic while the quest that unlocks it waits
         in Tanaris. Requirements therefore travel up the chain -- every `requires_all` prerequisite adds
         its own, and a `requires_any` set adds only what all of its alternatives agree on, since the player
-        picks one.
+        picks one. Spells travel the same way as zones.
         """
-        resolved: dict[int, tuple[dict[int, Zone], int]] = {}
+        resolved: dict[int, tuple[dict[int, Zone], int, set[int]]] = {}
 
-        def requirements(quest_id: int, chain: set[int]) -> tuple[dict[int, Zone], int, bool]:
-            """The zones and level a quest takes, plus whether a cycle left that answer provisional."""
+        def requirements(quest_id: int, chain: set[int]) -> tuple[dict[int, Zone], int, set[int], bool]:
+            """The zones, level and spells a quest takes, plus whether a cycle left that answer provisional."""
             cached = resolved.get(quest_id)
             if cached is not None:
                 return (*cached, False)
@@ -106,43 +108,47 @@ class QuestsContainer(LocationContainer[Quest]):
                 # Back edge: it can only repeat what the chain already carries, but it does mean the
                 # answer we are building depends on a quest still being worked out, so nothing on the
                 # way back up may be cached
-                return {}, 0, True
+                return {}, 0, set(), True
 
             quest = self.quests.get(quest_id)
             data = self.quests_json.get(quest_id)
             if quest is None or data is None:
-                return {}, 0, False
+                return {}, 0, set(), False
 
             chain.add(quest_id)
             zones = {z.zone_id: z for z in quest.zones}
             level = quest.level
+            spells = set(data.required_spells)
             provisional = False
 
             for id in data.requires_all:
-                prerequisite_zones, prerequisite_level, unsettled = requirements(id, chain)
+                prerequisite_zones, prerequisite_level, prerequisite_spells, unsettled = requirements(id, chain)
                 zones.update(prerequisite_zones)
                 level = max(level, prerequisite_level)
+                spells |= prerequisite_spells
                 provisional = provisional or unsettled
 
             if len(data.requires_any) > 0:
                 alternatives = [requirements(id, chain) for id in data.requires_any]
-                shared = set.intersection(*[set(zone_map) for zone_map, _, _ in alternatives])
-                for zone_map, _, unsettled in alternatives:
+                shared = set.intersection(*[set(zone_map) for zone_map, _, _, _ in alternatives])
+                for zone_map, _, _, unsettled in alternatives:
                     provisional = provisional or unsettled
                     zones.update({id: zone for id, zone in zone_map.items() if id in shared})
                 # Whichever alternative the player takes, the cheapest one still has to be cleared
-                level = max(level, min(alternative_level for _, alternative_level, _ in alternatives))
+                level = max(level, min(alternative_level for _, alternative_level, _, _ in alternatives))
+                spells |= set.intersection(*[alternative_spells for _, _, alternative_spells, _ in alternatives])
 
             chain.discard(quest_id)
             if not provisional:
-                resolved[quest_id] = (zones, level)
+                resolved[quest_id] = (zones, level, spells)
 
-            return zones, level, provisional
+            return zones, level, spells, provisional
 
         for quest_id, quest in self.quests.items():
-            zones, level, _ = requirements(quest_id, set())
+            zones, level, spells, _ = requirements(quest_id, set())
             quest.required_zones = list(zones.values())
             quest.required_level = level
+            quest.required_spells = spells
 
     def starts_in_other_starting_zone(self, quest_id: int, world: "World") -> bool:
         """Whether the quest itself sits in a level 01-10 zone reserved for other races."""
@@ -270,6 +276,7 @@ class QuestsContainer(LocationContainer[Quest]):
         """Every quest this world could hold a location on, before the density roll."""
         result: list[Quest] = []
         unreachable_quests = self.resolve_unreachable_quests(world)
+        spells_in_pool = {item.data.id for item in SPELLS_CONTAINER.build_pool(world)}
 
         for quest in self.quests.values():
             if regions.REGION_LEVELS[quest.region] >= world.level_cap():
@@ -294,6 +301,10 @@ class QuestsContainer(LocationContainer[Quest]):
                 # zone the options rule out, or follows on from a quest that does
                 continue
 
+            if not quest.required_spells <= spells_in_pool:
+                # A spell the pool leaves out, such as one past the level cap, would keep the quest out of logic for good
+                continue
+
             result.append(quest)
 
         return result
@@ -307,6 +318,7 @@ class QuestsContainer(LocationContainer[Quest]):
 
     def set_rules(self, world: "World"):
         zones_in_pool = set(ZONES_CONTAINER.build_pool(world))
+        spell_names = {item.data.id: item.name for item in SPELLS_CONTAINER.build_pool(world)}
         for q in self.build_locations(world):
             # A quest lists every zone either faction might use for it, so the list is a superset of what
             # this player needs -- "The Islander" names all six capitals -- and zones outside the pool are
@@ -315,7 +327,8 @@ class QuestsContainer(LocationContainer[Quest]):
             # level, and its region gates just the bracket floor
             required_zones = [z for z in q.required_zones if z in zones_in_pool]
             level_rule = required_level(max([q.required_level, *[z.level(world) for z in required_zones]]))
-            world.set_rule(world.get_location(q.name), HasAll(*[z.name for z in required_zones]) & level_rule)
+            spells = [spell_names[spell] for spell in sorted(q.required_spells)]
+            world.set_rule(world.get_location(q.name), HasAll(*[z.name for z in required_zones], *spells) & level_rule)
 
 
 QUESTS_CONTAINER = QuestsContainer()
