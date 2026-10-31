@@ -5,19 +5,22 @@ from weakref import WeakKeyDictionary
 if TYPE_CHECKING:
     from ..world import World
 
-from ..conditions import has_zone
+from ..conditions import has_zone_reached_through
 from ..exploration_model import EXPLORATION_MODELS
 from ..items.zones import ZONES_CONTAINER, Zone
+from .flight_paths import RUTTHERAN_VILLAGE
 from .location_container import LocationContainer
 from .location_registry import Location
 
 
 class Exploration(Location):
-    def __init__(self, name: str, criteria_id: int, zone: Zone):
+    def __init__(self, name: str, criteria_id: int, zone: Zone, reached_through: list[Zone] | None = None):
         super().__init__(f"Exploration: {name}" if name == zone.name else f"Exploration: {name} ({zone.name})")
         EXPLORATIONS_CONTAINER.add(self)
         self.criteria_id = criteria_id
         self.zone = zone
+        # Zones of which one is needed on top of `zone`, for a subzone that `zone` does not lead to
+        self.reached_through = reached_through or []
 
 
 class ExplorationsContainer(LocationContainer[Exploration]):
@@ -54,14 +57,18 @@ class ExplorationsContainer(LocationContainer[Exploration]):
         return [(loc.zone.region(world), loc) for loc in self.build_locations(world)]
 
     def set_rules(self, world: "World"):
+        zones_in_pool = set(ZONES_CONTAINER.build_pool(world))
         for loc in self.build_locations(world):
-            world.set_rule(world.get_location(loc.name), has_zone(loc.zone, world))
+            world.set_rule(world.get_location(loc.name), has_zone_reached_through(loc.zone, loc.reached_through, zones_in_pool, world))
 
 
 EXPLORATIONS_CONTAINER = ExplorationsContainer()
+
+# The subzones their zone does not lead to, by criteria ID: they need the same zones as their flight path
+REACHED_THROUGH: dict[int, list[Zone]] = {1309: RUTTHERAN_VILLAGE.reached_through}
 
 for model in EXPLORATION_MODELS:
     # A zone with no item, such as Moonglade or Deadwind Pass, is open to anyone and has no bracket to file it under
     zone = ZONES_CONTAINER.zones.get(model.zone_id)
     if zone is not None:
-        Exploration(model.name, model.id, zone)
+        Exploration(model.name, model.id, zone, REACHED_THROUGH.get(model.id))
