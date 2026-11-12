@@ -202,6 +202,16 @@ We welcome contributions! Whether you're fixing bugs, adding features, or improv
 4. Test thoroughly
 5. Submit a pull request
 
+## 💜 Show your support
+
+⭐️ Give the project a star if you like it!
+
+<a href="https://ko-fi.com/roboto" target="_blank"><img height="35" style="border:0px; height:46px;" src="https://cdn.ko-fi.com/cdn/kofi5.png?v=3" border="0" alt="Buy Me a Coffee at ko-fi.com" />
+
+## 💬 Contact
+
+<img src="https://img.shields.io/badge/Discord-5865F2?style=flat&logo=discord&logoColor=white"/> Feel free to get in touch with me on Discord: `roboto_`
+
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
