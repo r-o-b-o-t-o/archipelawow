@@ -15,6 +15,8 @@ An [APWorld](https://archipelago.miraheze.org/wiki/APWorld) definition for the [
 - [Installation & Usage](#-installation--usage)
 - [Development](#%EF%B8%8F-development)
 - [Contributing](#-contributing)
+- [Show your support](#-show-your-support)
+- [Contact](#-contact)
 - [License](#-license)
 
 ## 🏰 About
