@@ -333,6 +333,26 @@ class StoneShopItemsPerTier(NamedRange):
     }
 
 
+class StoneShopPriceMultiplier(NamedRange):
+    """
+    Percentage of the usual price of the Archipelago Stone's shop items: 50 halves it, 200 doubles it, 0 makes them free.
+    The amount a Gold Pouch contains is set by the shop prices, so this scales it too, and 0 takes the pouches out of the item pool.
+    """
+
+    display_name = "Shop price multiplier"
+
+    range_start = 0
+    range_end = 500
+    default = 100
+
+    special_range_names = {
+        "free": 0,
+        "half": 50,
+        "normal": 100,
+        "double": 200,
+    }
+
+
 class GearRewardLevelWindow(NamedRange):
     """
     How many levels away you can be from a piece of gear's required level for it to be included in the random gear pool.
@@ -351,6 +371,83 @@ class GearRewardLevelWindow(NamedRange):
         "standard": 3,
         "wide": 5,
         "very_wide": 10,
+    }
+
+
+class ScrollOfDivinationHints(NamedRange):
+    """
+    How many of your world's unchecked locations a Scroll of Divination hints.
+    0 takes the scrolls out of the item pool.
+    """
+
+    display_name = "Scroll of Divination hints"
+
+    range_start = 0
+    range_end = 10
+    default = 3
+
+    special_range_names = {
+        "disabled": 0,
+    }
+
+
+class TomeOfInsightExperience(NamedRange):
+    """
+    Percentage of the experience needed for your next Archipelago level that a Tome of Insight grants.
+    0 takes the tomes out of the item pool.
+    """
+
+    display_name = "Tome of Insight experience"
+
+    range_start = 0
+    range_end = 100
+    default = 25
+
+    special_range_names = {
+        "disabled": 0,
+        "quarter": 25,
+        "half": 50,
+        "full_level": 100,
+    }
+
+
+class EnduringSoulstoneDuration(NamedRange):
+    """
+    How many minutes an Enduring Soulstone lasts.
+    0 takes the soulstones out of the item pool.
+    """
+
+    display_name = "Enduring Soulstone duration"
+
+    range_start = 0
+    range_end = 240
+    default = 60
+
+    special_range_names = {
+        "disabled": 0,
+        "fifteen_minutes": 15,
+        "one_hour": 60,
+        "two_hours": 120,
+    }
+
+
+class GoldPouchMultiplier(NamedRange):
+    """
+    Percentage of the usual amount a Gold Pouch contains, which is set by the Stone Shop prices at your level: 50 halves it, 200 doubles it.
+    0 takes the pouches out of the item pool.
+    """
+
+    display_name = "Gold Pouch multiplier"
+
+    range_start = 0
+    range_end = 500
+    default = 100
+
+    special_range_names = {
+        "disabled": 0,
+        "half": 50,
+        "normal": 100,
+        "double": 200,
     }
 
 
@@ -436,8 +533,13 @@ class Options(PerGameCommonOptions):
     northrend_dungeonsanity: NorthrendDungeonsanity
     explorersanity: Explorersanity
     stone_shop_items_per_tier: StoneShopItemsPerTier
+    stone_shop_price_multiplier: StoneShopPriceMultiplier
     gear_reward_level_window: GearRewardLevelWindow
     spells_randomize_starter_abilities: SpellsRandomizeStarterAbilities
+    scroll_of_divination_hints: ScrollOfDivinationHints
+    tome_of_insight_experience: TomeOfInsightExperience
+    enduring_soulstone_duration: EnduringSoulstoneDuration
+    gold_pouch_multiplier: GoldPouchMultiplier
     trap_percentage: TrapPercentage
     trap_weights: TrapWeights
     death_link: DeathLink
@@ -463,9 +565,10 @@ option_groups = [
     OptionGroup("Quest Options", [Questsanity, QuestsAllStartingZones, QuestsMaxPartySize, QuestsIncludeDungeons]),
     OptionGroup("Dungeon Options", [ClassicDungeonsanity, OutlandDungeonsanity, NorthrendDungeonsanity]),
     OptionGroup("Exploration Options", [Explorersanity]),
-    OptionGroup("Shop Options", [StoneShopItemsPerTier]),
+    OptionGroup("Shop Options", [StoneShopItemsPerTier, StoneShopPriceMultiplier]),
     OptionGroup("Gear Options", [GearRewardLevelWindow]),
     OptionGroup("Spell Options", [SpellsRandomizeStarterAbilities]),
+    OptionGroup("Filler Options", [ScrollOfDivinationHints, TomeOfInsightExperience, EnduringSoulstoneDuration, GoldPouchMultiplier]),
     OptionGroup("Trap Options", [TrapPercentage, TrapWeights]),
     OptionGroup("Advanced Options", [DeathLink, ProgressionBalancing, Accessibility]),
 ]

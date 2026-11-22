@@ -14,10 +14,19 @@ class MoneyContainer(ItemContainer["GoldPouch"]):
         return GOLD_POUCH.id
 
     def get_items_for_pool(self, world: "World") -> list[Item]:
+        if not has_gold_pouches(world):
+            return []
         return [GOLD_POUCH]
 
     def get_filler_weights(self, world: "World") -> dict[str, int]:
+        if not has_gold_pouches(world):
+            return {}
         return {GOLD_POUCH.name: GOLD_POUCH_FILLER_WEIGHT}
+
+
+def has_gold_pouches(world: "World") -> bool:
+    # A pouch contains the price of a shop item, so free shop items leave it empty as well
+    return world.options.gold_pouch_multiplier.value > 0 and world.options.stone_shop_price_multiplier.value > 0
 
 
 class GoldPouch(Item):

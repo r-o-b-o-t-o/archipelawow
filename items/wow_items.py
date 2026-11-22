@@ -27,7 +27,13 @@ class WoWItemsContainer(ItemContainer["WoWItem"]):
         return list(self.build_pool(world))
 
     def get_filler_weights(self, world: "World") -> dict[str, int]:
-        return {item.name: item.filler_weight for item in CONSUMABLES}
+        # An option of 0 takes its consumable out of the pool
+        enabled = {
+            SCROLL_OF_DIVINATION.name: world.options.scroll_of_divination_hints.value > 0,
+            TOME_OF_INSIGHT.name: world.options.tome_of_insight_experience.value > 0,
+            ENDURING_SOULSTONE.name: world.options.enduring_soulstone_duration.value > 0,
+        }
+        return {item.name: item.filler_weight for item in CONSUMABLES if enabled[item.name]}
 
 
 class WoWItem(Item):
@@ -65,9 +71,9 @@ BAGS = [BROWN_LEATHER_SATCHEL, HUGE_BROWN_SACK, TRAVELERS_BACKPACK, FROSTWEAVE_B
 # The one heirloom every class wants as it is, so unlike the others (see heirlooms.py) it is sent as itself.
 DREAD_PIRATE_RING = WoWItem("Dread Pirate Ring", 50255, ItemClassification.useful)
 
-# Weighted against the Gold Pouch in money.py. The scroll hints 3 of the world's unchecked locations, the
-# tome gives a quarter of the experience to the next Archipelago level, and the soulstone stores the
-# character's soul for an hour.
+# Weighted against the Gold Pouch in money.py. How many locations the scroll hints, how much of the experience
+# to the next Archipelago level the tome gives and how long the soulstone stores a soul are player options,
+# which the module reads from the slot data.
 SCROLL_OF_DIVINATION = Consumable("Scroll of Divination", 4427, filler_weight=10)
 TOME_OF_INSIGHT = Consumable("Tome of Insight", 1335, filler_weight=10)
 ENDURING_SOULSTONE = Consumable("Enduring Soulstone", 2767, filler_weight=10)
